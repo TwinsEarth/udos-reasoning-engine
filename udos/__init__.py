@@ -1,5 +1,5 @@
 """
-UDOS 推演引擎 (UDOS Reasoning Engine) — v5.4.3
+UDOS 推演引擎 (UDOS Reasoning Engine) — v5.4.4
 ==============================================
 双引擎架构:
     GPM (Generative Physics engine)  —— 机制对齐 Sakana AI Doc-to-LoRA:
@@ -53,11 +53,11 @@ v2.7.x 迭代 (从预测到行动的闭环):
     5. hierarchical.HierarchicalRollout: 粗粒度跳步 + 细粒度修正的多尺度长时域 rollout
     6. experiment.ExperimentRegistry: 实验元数据注册 + 多种子 sweep (mean/std/best) 治理
 
-上游开源代码库 (已随工程克隆到 third_party/):
+上游开源代码库 (开源包不内置其源码; 可选适配器在显式启用时经 huggingface_hub 运行时拉取):
     - SakanaAI/continuous-thought-machines
     - SakanaAI/doc-to-lora
 
-版本: v5.4.3
+版本: v5.4.4
 """
 
 import logging as _logging
@@ -197,7 +197,7 @@ from .resource_registry import (ResourceRegistry, ResourceConnector,
                                 normalize_trajectory)
 from .connectors import build_default_registry as build_default_resource_registry
 
-__version__ = "5.4.3"
+__version__ = "5.4.4"
 
 __all__ = [
     "PhysicalToken",

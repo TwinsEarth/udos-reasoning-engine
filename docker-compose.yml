@@ -1,13 +1,13 @@
 services:
   udos-engine:
     build: .
-    image: udos-reasoning-engine:5.4.3
+    image: udos-reasoning-engine:5.4.4
     container_name: udos-engine
     ports:
       - "8000:8000"
     command: ["python", "-m", "udos.server",
               "--host", "0.0.0.0", "--port", "8000", "--preset", "small",
-              "--checkpoint", "checkpoints/predictor_v3.3.3.pt"]
+              "--checkpoint", "checkpoints/predictor_v4.3.9.pt"]
     restart: unless-stopped
     deploy:
       resources:

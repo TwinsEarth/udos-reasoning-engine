@@ -2,13 +2,35 @@
 """构建 web/udos_console.html 的内联真实数据。
 数字全部回算自 benchmarks/results/*.json 与 registry 探测, 不手抄编造。"""
 import json
+import re
+import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+import udos  # noqa: E402
 from udos.connectors import build_default_registry  # noqa: E402
+
+VERSION = udos.__version__
+
+
+def collect_test_count() -> int:
+    """实时统计 pytest 用例数 (不硬编码); 收集失败直接报错, 绝不编造数字。兼容 pytest 9。"""
+    proc = subprocess.run(
+        [sys.executable, "-m", "pytest", "--collect-only", "-p", "no:warnings"],
+        cwd=ROOT, capture_output=True, text=True, timeout=600,
+    )
+    text = proc.stdout + proc.stderr
+    matches = re.findall(r"(\d+)\s+tests?\s+collected", text)
+    if matches:
+        return int(matches[-1])
+    # pytest >=9 的 quiet 收集按文件输出 "tests/test_x.py: N", 兜底逐文件求和
+    per_file = re.findall(r":\s*(\d+)\s*$", text, flags=re.MULTILINE)
+    if per_file:
+        return sum(int(x) for x in per_file)
+    raise SystemExit("无法从 pytest --collect-only 解析用例数, 请先确认测试可被正常收集")
 
 
 def load(name):
@@ -57,7 +79,7 @@ def main():
 
     data = {
         "overview": {
-            "version": "4.5.6", "tests": 1492, "coverage": 93,
+            "version": VERSION, "tests": collect_test_count(), "coverage": 93,
             "checkpoints": 33, "main_params": 52191,
             "eval_mse": perf["baseline_predictor_mse"],
             "release_decision": "go",
@@ -90,9 +112,29 @@ def main():
             },
         },
     }
+    payload = json.dumps(data, ensure_ascii=False)
     out = ROOT / "web" / "dashboard_data.json"
-    out.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    out.write_text(payload, encoding="utf-8")
     print("wrote", out, "with", len(registry_rows), "registry rows")
+    _inline_into_html(payload)
+
+
+def _inline_into_html(payload: str) -> None:
+    """把同一份数据内联回 web/udos_console.html, 并同步 title/角标版本, 保证 json 与 html 单一来源。"""
+    html_path = ROOT / "web" / "udos_console.html"
+    lines = html_path.read_text(encoding="utf-8").split("\n")
+    for i, line in enumerate(lines):
+        if line.startswith("const DATA = "):
+            lines[i] = "const DATA = " + payload + ";"
+            break
+    else:
+        raise SystemExit("未在 udos_console.html 中找到 const DATA 行")
+    text = "\n".join(lines)
+    text = re.sub(r"(控制台 · v)[0-9][0-9.]*", lambda m: m.group(1) + VERSION, text)
+    text = re.sub(r'(<span class="ver">)v[0-9][0-9.]*',
+                  lambda m: m.group(1) + "v" + VERSION, text)
+    html_path.write_text(text, encoding="utf-8")
+    print("inlined DATA + version into", html_path)
 
 
 if __name__ == "__main__":

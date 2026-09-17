@@ -13,7 +13,7 @@ from udos.dynamics import build_parametric_dataset  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.4.3"
+    assert __version__ == "5.4.4"
 
 
 def _service(tmp_path, monkeypatch):

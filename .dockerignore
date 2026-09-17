@@ -6,8 +6,8 @@ htmlcov/
 benchmarks/results/
 *.zip
 .git/
-third_party/ctm/.git/
-third_party/d2l/
+# 开源包不内置任何上游源码; 若本地存在 third_party/ 也不进入镜像
+third_party/
 docs/
 tests/
 *.md

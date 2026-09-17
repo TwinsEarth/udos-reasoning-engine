@@ -17,7 +17,7 @@ AB = ROOT / "benchmarks" / "results" / "wm_imagine_v3.6.0.json"
 
 
 def test_version():
-    assert __version__ == "5.4.3"
+    assert __version__ == "5.4.4"
 
 
 def test_json_written():

@@ -22,7 +22,7 @@ CKPT_DIR = ROOT / "checkpoints"
 
 
 def test_version():
-    assert __version__ == "5.4.3"
+    assert __version__ == "5.4.4"
 
 
 def test_all_checkpoints_backcompat():

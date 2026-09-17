@@ -15,7 +15,7 @@ from udos.persistence import save_ensemble, load_ensemble, save_predictor, load_
 
 
 def test_version_bumped():
-    assert __version__ == "5.4.3"
+    assert __version__ == "5.4.4"
 
 
 def _factory():

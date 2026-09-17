@@ -49,7 +49,7 @@ def window():
 
 
 def test_version():
-    assert __version__ == "5.4.3"
+    assert __version__ == "5.4.4"
 
 
 # ---------------- policy ---------------- #

@@ -1,6 +1,6 @@
 # UDOS Reasoning Engine · UDOS 推演引擎
 
-**当前版本：v5.4.3** ｜ 双引擎（CTM 连续思维机 + GPM 场景内化）｜ 纯 CPU 可跑 ｜ 1572 个测试全绿 ｜ License: Apache-2.0
+**当前版本：v5.4.4** ｜ 双引擎（CTM 连续思维机 + GPM 场景内化）｜ 纯 CPU 可跑 ｜ 1572 个测试全绿 ｜ License: Apache-2.0
 
 UDOS 推演引擎是 UDOS 物理世界数字化基础设施的**认知架构内核**：以 PCE-Format 物理 Token 为数据层，融合 Sakana AI 连续思维机（CTM）的时序同步推理与 Doc-to-LoRA（GPM）的场景内化；并在其上以“外挂、零梯度、opt-in、可证伪”的方式，叠加可信推演、因果决策、具身闭环、空间/世界模型、多智能体协作、自进化，以及 v5.x 的安全治理、AGI/ASI 情报、KV Cache 分层、类脑树突与精细生物物理数值核。
 
@@ -69,6 +69,8 @@ PY
 - “最多 16 线程 / 约 10× / 100–1000× / 8 GPU 5 万神经元 / O(N³)→O(2N)” 以及 Intel QAT、TTFT≈5× 等数字为**论文或厂商特定条件口径，标 `[UNVERIFIED]`**；本仓库自测只报告本机 CPU 可复算的步数、层数、命中率与盈亏比。
 - v5.3.1 规划中的 MuJoCo 因果虚拟小鼠**尚未实现**（依赖中无 mujoco、无对应模块）。
 - 在线多 LLM 交叉打分、GPU + vLLM KV offload 实测、NEURON/DeepDendrite 对拍均未启动（需凭证 / GPU 预算）。
+- **双引擎耦合范围（避免被名字夸大）**：`reason()` 内是三条相互独立的支路——① GPM 生成的 LoRA 前向补丁只注入演示用 `TinyBaseModel`（`udos/gpm_engine.py`），当前 `reason()` **不调用该基座前向**，LoRA 可注入/撤销（`internalize`/`reset` 零误差）但尚未端到端改变物理轨迹；② GPM 的 `scene_embedding` 仅作为场景条件送入内部轻量 `CTMPhysicsEngine` 支路，产出机制演示用 `prediction`；③ 对外的下一状态与多步轨迹 `predicted_state`/`future_states` 来自独立训练、经 `attach_predictor` 挂载的 `PhysicsPredictor.rollout`，其输入只有位置/速度观测窗口，**不接收** GPM 场景嵌入或四维场景参数。
+- 自然语言 `query` 在 `reason()` 中仅被记录与回显，**不进入**任何预测计算；多模态为 RGB/深度/mask 的**低维代理头**（opt-in，A/B 显示不降低状态 MSE）；“自进化”是在**冻结主预测器**前提下对缓存/分片等运行配置做搜索；资源注册表中“列出某模型”仅代表元数据/懒加载契约就绪，**不等于已加载权重或已实际运行**。
 
 ## License
 
@@ -81,7 +83,7 @@ PY
   title   = {UDOS Reasoning Engine},
   author  = {UDOS Authors},
   year    = {2026},
-  version = {5.4.3},
+  version = {5.4.4},
   license = {Apache-2.0}
 }
 ```

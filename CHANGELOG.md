@@ -3,6 +3,20 @@
 本文件记录 UDOS 推演引擎的显著变更，遵循 Keep a Changelog 与语义化版本。
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 
+## v5.4.4（开源修订：打包硬伤 + 版本/看板一致性 + 能力边界精确化）
+
+> 性质：打包/文档/默认配置补丁。**不改模型、算法、checkpoint**；主 predictor 恒 52191 参数、eval_mse 恒 0.045556，全量 1570 passed + 2 skipped（共收集 1572）、0 failed。起因是外部对 v5.4.3 的只读代码评审，逐条经源码复核属实后修复（评审中"README 首页仍为 4.5.3"一条经核不成立）。
+
+- **build fix (P0)**：`Dockerfile` 曾 `COPY third_party/ctm`，而开源仓库并无 `third_party/` 目录，导致 `docker build` 必然失败。已删除该 COPY；`.dockerignore` 改为整体忽略 `third_party/`；镜像注释改为"不内置上游源码，CTM/D2L 适配器在显式启用时经 huggingface_hub 运行时拉取"。
+- **build fix**：容器与 `docker-compose.yml` 默认 checkpoint 由过时的 `predictor_v3.3.3.pt` 更新为最新正式件 `predictor_v4.3.9.pt`；镜像 OCI LABEL 与 compose image tag 同步到 5.4.4。
+- **consistency**：版本号单一来源统一到 5.4.4（`udos/__init__.py` 的 `__version__`/docstring、`pyproject.toml`、Dockerfile LABEL、compose、Web 控制台 title/角标/总览）；修正 `udos/__init__.py` docstring 中"上游开源代码库已随工程克隆到 third_party/"的过时表述。
+- **web console**：`scripts/build_console_data.py` 的总览版本改取 `udos.__version__`、测试数改为实时 `pytest --collect-only`（兼容 pytest 9 的每文件计数输出），并补齐脚本对内联 HTML `const DATA` 与 title/角标的回写，消除 `dashboard_data.json` 与 HTML 脱节；本次仅外科更新总览两字段，完整保留 registry/perf 的 v4.5.6 历史快照；看板明确标注"注册表/性能为静态快照，仅 /health、/resources、/reason/latent 实时"；QA 阈值更新为只增≥1572。
+- **docs**：README"能力边界"新增"双引擎耦合范围"（GPM 生成的 LoRA 仅注入演示用 `TinyBaseModel` 且 `reason()` 不调用其前向；GPM `scene_embedding` 只进内部轻量 `CTMPhysicsEngine` 支路；对外物理轨迹来自独立挂载的 `PhysicsPredictor.rollout`，不消费场景嵌入），并明确自然语言 `query` 仅回显、多模态为低维代理头、"自进化"是冻结主模型的配置搜索、资源注册表列出≠权重已运行。
+- 验证与未执行项见 `docs/VERIFICATION_v5.4.4.md`；发布说明见 `RELEASE_NOTES_v5.4.4.md`。
+
+## v5.4.3（首个开源版本）
+- 双引擎（CTM 连续思维机 + GPM 场景内化）认知架构内核以 Apache-2.0 开源；新增精细生物物理数值核 `udos/finesim/`（被动电缆 / Hodgkin–Huxley / NMDA 时序抑制可证伪对照 / Payeur 四类树突处理 / 突触位置鲁棒性 / Hines 串行 vs DHS 层级并行对拍）。详见 [RELEASE_NOTES_v5.4.3.md](RELEASE_NOTES_v5.4.3.md) 与 `docs/VERIFICATION_v5.4.3.md`。
+
 ## v5.0.1（安全补丁）
 - **security fix (P0)**：移除 `udos/debug.py` 硬编码调试口令；`DebugPanel` 改为 `enabled` 显式参数 + `UDOS_DEBUG` 环境变量（默认关）。清除 README/demos/docs 全部复述。新增安全守卫测试钉死无硬编码口令/秘密字面量。
 
