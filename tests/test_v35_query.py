@@ -8,7 +8,7 @@ from udos.spatial_query import SpatialQueryEngine
 
 
 def test_version():
-    assert __version__ == "5.5.4"
+    assert __version__ == "5.5.5"
 
 
 def _scene():

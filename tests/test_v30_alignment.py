@@ -16,7 +16,7 @@ from udos.future_multimodal import (CrossModalAlignmentLoss,
 
 
 def test_version():
-    assert __version__ == "5.5.4"
+    assert __version__ == "5.5.5"
 
 
 def test_loss_finite_nonneg():

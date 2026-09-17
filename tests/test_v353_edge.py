@@ -14,7 +14,7 @@ from udos.occupancy import OccupancyGrid
 
 
 def test_version():
-    assert __version__ == "5.5.4"
+    assert __version__ == "5.5.5"
 
 
 def test_zero_radius_rejected():

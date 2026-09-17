@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "udos-reasoning-engine"
-version = "5.5.4"
+version = "5.5.5"
 description = "UDOS dual-engine reasoning core: CTM (SakanaAI continuous-thought-machines) + GPM (SakanaAI doc-to-lora)"
 requires-python = ">=3.10"
 dependencies = ["torch>=2.0", "numpy>=1.24", "huggingface_hub>=0.20"]

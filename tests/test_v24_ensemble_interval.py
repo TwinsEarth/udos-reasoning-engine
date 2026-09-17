@@ -23,7 +23,7 @@ def _factory():
 
 
 def test_version_bumped():
-    assert __version__ == "5.5.4"
+    assert __version__ == "5.5.5"
 
 
 def _window(seed=3, n=4):

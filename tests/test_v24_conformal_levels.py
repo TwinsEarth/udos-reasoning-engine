@@ -17,7 +17,7 @@ from udos.training import PhysicsPredictor  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.5.4"
+    assert __version__ == "5.5.5"
     assert ALLOWED_ALPHAS == (0.2, 0.1, 0.05)
 
 

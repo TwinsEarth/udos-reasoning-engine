@@ -38,7 +38,7 @@ def window_batch():
 
 
 def test_version():
-    assert __version__ == "5.5.4"
+    assert __version__ == "5.5.5"
 
 
 def test_no_deviation_no_trigger(predictor, window_batch):

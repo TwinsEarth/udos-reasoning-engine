@@ -20,7 +20,7 @@ JSON = ROOT / "benchmarks" / "results" / "multi_agent_ab_v3.8.0.json"
 
 
 def test_version():
-    assert __version__ == "5.5.4"
+    assert __version__ == "5.5.5"
 
 
 def test_ab_json_exists_and_schema():

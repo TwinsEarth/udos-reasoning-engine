@@ -1,0 +1,128 @@
+{
+  "version": "5.5.5",
+  "increment_line": "v5.4.5 -> v5.5.5 (双引擎名副其实: CTM 主预测 + GPM 场景记忆真正影响主预测)",
+  "frozen_anchors": {
+    "predictor_params": 52191,
+    "predictor_buffers": 4,
+    "scene_head_params": 6788,
+    "predictor_unchanged": true,
+    "head_unchanged": true
+  },
+  "scene_gate_is_lifeline_549": {
+    "single_step": {
+      "blind": 0.5567,
+      "explicit": 0.0402,
+      "estimated": 0.0827,
+      "recovery": 0.9177
+    },
+    "rollout_4": {
+      "blind": 1.3595,
+      "explicit": 0.0784,
+      "estimated": 0.2418,
+      "recovery": 0.8725
+    }
+  },
+  "learned_head_550": {
+    "head_trainable_params": 6788,
+    "single_step": {
+      "blind": 0.5567,
+      "explicit": 0.0402,
+      "classical": 0.0827,
+      "learned": 0.0384,
+      "learned_recovery": 1.0034
+    },
+    "rollout_4": {
+      "blind": 1.3595,
+      "explicit": 0.0784,
+      "classical": 0.2418,
+      "learned": 0.0448,
+      "learned_recovery": 1.0262
+    }
+  },
+  "global_conformal_fan_551": {
+    "nominal": 0.8,
+    "n_samples": 64,
+    "inflation": 1.2642,
+    "raw_mc_coverage": 0.73,
+    "calibrated_coverage": 0.8134,
+    "calibrated_per_step": [
+      0.8121,
+      0.8237,
+      0.8137,
+      0.804
+    ],
+    "known_gap": "accel 类全局高斯欠覆盖, 交 5.5.2 类型条件化"
+  },
+  "kind_conditional_fan_552": {
+    "nominal": 0.8,
+    "raw_pooled": 0.667,
+    "calibrated_pooled": 0.8006,
+    "per_kind_calibrated": {
+      "uniform": 0.8162,
+      "accel": 0.7799,
+      "spring": 0.813,
+      "collision": 0.7932
+    },
+    "per_kind_inflation": {
+      "uniform": 0.995,
+      "accel": 8.249,
+      "spring": 1.502,
+      "collision": 0.845
+    },
+    "routed_rollout4_recovery": {
+      "uniform": 1.0,
+      "accel": 0.9912,
+      "spring": 1.0013,
+      "collision": 0.9166
+    },
+    "honest_note": "accel 膨胀因子 8.25 = 很宽带, 暴露高斯参数误差不覆盖加速 rollout 结构误差; 留 v7 多水平/残差建模根治"
+  },
+  "gate_observation_553": {
+    "source": "learned_head",
+    "per_kind": {
+      "uniform": {
+        "route_accuracy": 1.0,
+        "blind_rollout4_mse": 0.8921,
+        "conditioned_rollout4_mse": 0.017,
+        "gate_final_delta_mean": 2.3276
+      },
+      "accel": {
+        "route_accuracy": 0.75,
+        "blind_rollout4_mse": 1.3231,
+        "conditioned_rollout4_mse": 0.0209,
+        "gate_final_delta_mean": 2.2004
+      },
+      "spring": {
+        "route_accuracy": 1.0,
+        "blind_rollout4_mse": 0.6915,
+        "conditioned_rollout4_mse": 0.0664,
+        "gate_final_delta_mean": 1.8397
+      },
+      "collision": {
+        "route_accuracy": 0.7125,
+        "blind_rollout4_mse": 0.5896,
+        "conditioned_rollout4_mse": 0.0271,
+        "gate_final_delta_mean": 2.1432
+      }
+    },
+    "note": "route_confidence 为判别果断度启发式, 非概率; 干净合成数据饱和 1.0"
+  },
+  "lora_forward_path_554": {
+    "live_injection_delta": {
+      "uniform": 0.5971,
+      "accel": 0.535,
+      "spring": 0.3809,
+      "collision": 0.5663
+    },
+    "live_reset_error_max": 0.0,
+    "training_scaler_b_zero_injection_delta_max": 0.0,
+    "patched_modules": 6,
+    "lora_params": 3840,
+    "scope": "演示基座 GPM->LoRA->前向闭环; 不接入冻结物理预测员"
+  },
+  "deferred_to_v7": [
+    "conformal 多水平在 v4.3.9 失效 (名义 80/90/95 经验覆盖相同), 需残差/多水平重写",
+    "加速类结构误差的非高斯建模",
+    "GPU 栈 (vLLM KV offload / NEURON DHS / MuJoCo MIMIC / 0.5B 端到端) 需云预算"
+  ]
+}

@@ -17,7 +17,7 @@ import ablation_calibration as ab  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.5.4"
+    assert __version__ == "5.5.5"
 
 
 def _tiny_model():

@@ -39,7 +39,7 @@ def _evaluator(pred, repeats=2):
 
 
 def test_version():
-    assert __version__ == "5.5.4"
+    assert __version__ == "5.5.5"
     assert SELF_EVO_LINE_STAGES[-1] == "4.3.9"
     assert SELF_EVO_LINE_STAGES[0] == "4.3.0"
 

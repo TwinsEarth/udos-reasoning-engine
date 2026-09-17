@@ -1,0 +1,45 @@
+{
+  "version": "5.5.5",
+  "port": 8011,
+  "health": {
+    "status": "ok",
+    "predictor_trained": true,
+    "version": "5.5.5",
+    "internalized_scenes": []
+  },
+  "checkpoints_status": 200,
+  "checkpoint_count": 34,
+  "blind_predict_status": 200,
+  "blind_next_state": [
+    2.4952313899993896,
+    0.1138290986418724,
+    -0.04597950726747513,
+    -0.1950092613697052,
+    0.18775297701358795,
+    -0.0040693581104278564
+  ],
+  "predict_status": 200,
+  "predict_shape": [
+    1,
+    6
+  ],
+  "predict_version": "5.5.5",
+  "next_state": [
+    3.633253812789917,
+    -0.01250529382377863,
+    0.006833672523498535,
+    0.9217705726623535,
+    0.024184733629226685,
+    -0.020052611827850342
+  ],
+  "physics_check": {
+    "conditioned_x_advances": true,
+    "blind_x_regresses": true,
+    "conditioned_x_err": 0.3667,
+    "conditioned_v_err": 0.3782,
+    "blind_x_err": 1.5048,
+    "blind_v_err": 1.495,
+    "gate_corrects": true
+  },
+  "smoke_ok": true
+}

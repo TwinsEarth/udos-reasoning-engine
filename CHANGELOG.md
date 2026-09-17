@@ -3,6 +3,17 @@
 本文件记录 UDOS 推演引擎的显著变更，遵循 Keep a Changelog 与语义化版本。
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 
+## v5.5.5（双引擎增量线收尾：全量回归 / 服务实启动 / 发布一致性）
+
+> 性质：v5.4.5→v5.5.5"双引擎名副其实"增量线的**收尾与发布版**，无新算法；做全量回归、真实服务启动、版本/打包/容器/看板一致性核对与证据汇总。冻结锚点现场复核：主预测员 **52191 可学习参数 + 4 buffers**（更正早期笔记中"48 buffers"的误记）、场景头 **6788 参数**，均未改动。
+
+- **全量回归（CPU）**：`pytest tests/` 全量 **1656 通过 / 2 跳过 / 0 失败 / 0 错误**（2 跳过为环境相关既有 skip）；本机性能相关 `benchmarks/results/*.json` 的覆写已按惯例还原，不污染跨机基线。
+- **服务真实启动冒烟**（`scripts/v555_service_smoke.py` → `reports/v555_service_smoke.json`）：以 `python -m udos.server --checkpoint checkpoints/predictor_v4.3.9.pt` 真实拉起 HTTP 服务，`GET /health`=ok 且 `predictor_trained=true`、`GET /checkpoints`=200（34 件）、`POST /predict`=200。同一匀速窗口（vx=1.3）在线复现场景门效应：**盲预测下一位置倒退**（对期望位置误差 1.50、速度误差 1.50），带正确 `scene_params=[1.3,0,0,0]` 的条件化预测方向正确（位置误差 0.37、速度误差 0.38），`gate_corrects=true`。
+- **证据汇总**：`scripts/v555_regression_summary.py` → `reports/v555_regression_summary.json`，汇总 5.4.9 三路 A/B、5.5.0 学习头、5.5.1 全局 conformal、5.5.2 类型条件化、5.5.3 门观测、5.5.4 LoRA 前向闭环的关键数字与冻结锚点，并显式列出遗留 v7 项（conformal 多水平失效、加速类非高斯结构误差、GPU 栈需云预算）。
+- **打包/容器一致性（静态）**：`python -m udos.server --help` 干净导入；Dockerfile 的 COPY 路径（requirements.txt/udos/demos/checkpoints/predictor_v4.3.9.pt）全部存在，镜像 LABEL 与 compose image tag 已随 bump 同步到 5.5.5。**沙箱无 docker 守护进程，镜像未实际构建**，该项标记为未验证（需在有 Docker 的环境执行 `docker build` / `docker compose up` 后闭环）。
+- **版本一致性**：`scripts/bump_version.py 5.5.5` 已同步运行时 `udos/__init__.py`、pyproject、Dockerfile LABEL、compose image、web 看板数据/标题与全部测试 `__version__` 断言。
+- **能力边界（不变）**：全部结论为 CPU 合成数据（仅 x 轴非平凡）下的诚实档；主预测员/场景头权重全程冻结；LoRA 前向闭环位于演示基座通道，不接入物理预测员；GPU/多 LLM/双云/真实传感器为需资源授权的后续闸门。
+
 ## v5.5.4（消除 LoRA 死路：被注入基座真正参与场景前向编码）
 
 > 性质：修复"GPM 生成 LoRA 并注入演示基座、却从不调用基座前向"的死路。改动只作用于 GPM/LoRA/演示基座（TinyBaseModel）这条演示通道；**冻结主预测员 PhysicsPredictor（52191）与场景头（6788）权重、物理 rollout 完全不变**。
@@ -13,7 +24,7 @@
 - **Changed**：引擎**自建默认 GPM**（调用方未显式传 `gpm_config`）改为 live 演示档 `init_scaler_b_zero=False`，使 LoRA 前向通道默认可观察；调用方显式传入的 config（含训练零扰动档）原样尊重。`GPMConfig` 自身默认与 test_gpm 的零扰动约定不变。
 - **Added**：`ReasoningResult.lora_injection_active` / `lora_patched_modules` 并进入 `summary()`；`reason()` 反映当前 LoRA 前向通道状态。
 - **Added**：`scripts/lora_forward_selftest.py` → `reports/v554_lora_forward.json`。
-- **实测（演示基座，四类场景）**：live 档注入差 匀速 0.40 / 加速 0.53 / 弹簧 0.38 / 碰撞 0.57（非零，LoRA 确实改变场景编码），**复位误差恒 0.0**，每场景 6 个线性层补丁、3840 LoRA 参数；训练档（scaler_B=0）补丁照样打过（前向闭环存在）但注入差 0.0、复位误差 0.0，符合 LoRA 零扰动约定。
+- **实测（演示基座，四类场景）**：live 档注入差 匀速 0.60 / 加速 0.53 / 弹簧 0.38 / 碰撞 0.57（非零，LoRA 确实改变场景编码），**复位误差恒 0.0**，每场景 6 个线性层补丁、3840 LoRA 参数；训练档（scaler_B=0）补丁照样打过（前向闭环存在）但注入差 0.0、复位误差 0.0，符合 LoRA 零扰动约定。
 - **诚实边界**：该闭环位于**演示基座**通道，证明"内化→注入→前向→无损复位"机制真实成立；不把未训练的演示基座输出接入冻结物理预测员（那样只会污染已验证的轨迹预测，属造假）。要让 LoRA 承载真实场景增益，需训练 GPM 超网络（另立任务，非本版范围）。
 - **Tests**：`tests/test_v554_lora_forward_path.py` 7 项（live 注入差非零+复位逐位归零、自测确定性、编码随注入改变、internalize/reset 消息与精确复原、零 scaler 档闭环运行但零注入差、reason 通道状态、默认引擎 live）；连同 reasoning/gpm/contracts/conditioning/persistence/553/546/547 共 60 项回归全绿。
 
