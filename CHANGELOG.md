@@ -3,6 +3,20 @@
 本文件记录 UDOS 推演引擎的显著变更，遵循 Keep a Changelog 与语义化版本。
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 
+## v5.5.4（消除 LoRA 死路：被注入基座真正参与场景前向编码）
+
+> 性质：修复"GPM 生成 LoRA 并注入演示基座、却从不调用基座前向"的死路。改动只作用于 GPM/LoRA/演示基座（TinyBaseModel）这条演示通道；**冻结主预测员 PhysicsPredictor（52191）与场景头（6788）权重、物理 rollout 完全不变**。
+
+- **根因（双重死路）**：①`internalize_scene` 注入 LoRA 后从不调用 `base_model.forward()`；②`GPMConfig` 默认 `init_scaler_b_zero=True`（LoRA 训练零扰动约定）使 B=0，即使调用前向注入差也为 0。
+- **Added**：`UDOSReasoningEngine._scene_features` / `base_scene_encoding`（让被注入基座对场景特征真正跑一次前向，返回池化编码与补丁状态）/ `lora_path_self_test`（一次性：基线→注入→**注入差**→复位→**复位误差**，自测后不留补丁）。
+- **Changed**：`internalize_scene` 注入前后各跑一次基座前向，记录注入前基线与 `||Δ||` 注入差，消息附带；`reset_scene` 复位后重跑前向并与注入前基线比对，消息附带**复位误差**。
+- **Changed**：引擎**自建默认 GPM**（调用方未显式传 `gpm_config`）改为 live 演示档 `init_scaler_b_zero=False`，使 LoRA 前向通道默认可观察；调用方显式传入的 config（含训练零扰动档）原样尊重。`GPMConfig` 自身默认与 test_gpm 的零扰动约定不变。
+- **Added**：`ReasoningResult.lora_injection_active` / `lora_patched_modules` 并进入 `summary()`；`reason()` 反映当前 LoRA 前向通道状态。
+- **Added**：`scripts/lora_forward_selftest.py` → `reports/v554_lora_forward.json`。
+- **实测（演示基座，四类场景）**：live 档注入差 匀速 0.40 / 加速 0.53 / 弹簧 0.38 / 碰撞 0.57（非零，LoRA 确实改变场景编码），**复位误差恒 0.0**，每场景 6 个线性层补丁、3840 LoRA 参数；训练档（scaler_B=0）补丁照样打过（前向闭环存在）但注入差 0.0、复位误差 0.0，符合 LoRA 零扰动约定。
+- **诚实边界**：该闭环位于**演示基座**通道，证明"内化→注入→前向→无损复位"机制真实成立；不把未训练的演示基座输出接入冻结物理预测员（那样只会污染已验证的轨迹预测，属造假）。要让 LoRA 承载真实场景增益，需训练 GPM 超网络（另立任务，非本版范围）。
+- **Tests**：`tests/test_v554_lora_forward_path.py` 7 项（live 注入差非零+复位逐位归零、自测确定性、编码随注入改变、internalize/reset 消息与精确复原、零 scaler 档闭环运行但零注入差、reason 通道状态、默认引擎 live）；连同 reasoning/gpm/contracts/conditioning/persistence/553/546/547 共 60 项回归全绿。
+
 ## v5.5.3（双引擎可观测性：来源 / 置信 / 场景门贡献 / 盲-感知轨迹差）
 
 > 性质：只读可观测能力，不改任何模型权重与既有默认契约；主 predictor 恒 52191、场景头恒 6788。`reason(observe=False)` 默认行为与计算量逐位不变。

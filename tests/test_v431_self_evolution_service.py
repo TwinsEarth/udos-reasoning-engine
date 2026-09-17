@@ -22,7 +22,7 @@ CKPT = str(ROOT / "checkpoints" / "predictor_v4.3.0.pt")
 
 
 def test_version():
-    assert __version__ == "5.5.3"
+    assert __version__ == "5.5.4"
 
 
 @pytest.fixture(scope="module")
@@ -61,7 +61,7 @@ def _get(base, path):
 def test_health_ok(server):
     st, body, _ = _get(server, "/health")
     assert st == 200
-    assert json.loads(body)["version"] == __version__ == "5.5.3"
+    assert json.loads(body)["version"] == __version__ == "5.5.4"
 
 
 def test_metrics_plain_text(server):

@@ -17,7 +17,7 @@ from udos.experiment import ExperimentRegistry
 
 
 def test_version():
-    assert __version__ == "5.5.3"
+    assert __version__ == "5.5.4"
 
 
 def test_register_list_get():

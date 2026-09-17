@@ -17,7 +17,7 @@ from udos.dynamics import traj_spring
 
 
 def test_version():
-    assert __version__ == "5.5.3"
+    assert __version__ == "5.5.4"
 
 
 def _states_from_traj(traj):

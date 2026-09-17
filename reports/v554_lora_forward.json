@@ -1,0 +1,55 @@
+{
+  "version": "5.5.4",
+  "live": {
+    "uniform": {
+      "injection_delta": 0.597108,
+      "reset_error": 0.0,
+      "patched_modules": 6,
+      "lora_params": 3840
+    },
+    "accel": {
+      "injection_delta": 0.53498,
+      "reset_error": 0.0,
+      "patched_modules": 6,
+      "lora_params": 3840
+    },
+    "spring": {
+      "injection_delta": 0.380858,
+      "reset_error": 0.0,
+      "patched_modules": 6,
+      "lora_params": 3840
+    },
+    "collision": {
+      "injection_delta": 0.566308,
+      "reset_error": 0.0,
+      "patched_modules": 6,
+      "lora_params": 3840
+    }
+  },
+  "training_scaler_b_zero": {
+    "uniform": {
+      "injection_delta": 0.0,
+      "reset_error": 0.0,
+      "patched_modules": 6,
+      "lora_params": 3840
+    },
+    "accel": {
+      "injection_delta": 0.0,
+      "reset_error": 0.0,
+      "patched_modules": 6,
+      "lora_params": 3840
+    },
+    "spring": {
+      "injection_delta": 0.0,
+      "reset_error": 0.0,
+      "patched_modules": 6,
+      "lora_params": 3840
+    },
+    "collision": {
+      "injection_delta": 0.0,
+      "reset_error": 0.0,
+      "patched_modules": 6,
+      "lora_params": 3840
+    }
+  }
+}

@@ -13,7 +13,7 @@ from udos.ood import DistributionDriftDetector  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.5.3"
+    assert __version__ == "5.5.4"
 
 
 def _service(tmp_path, monkeypatch):

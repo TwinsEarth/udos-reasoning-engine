@@ -70,6 +70,9 @@ class ReasoningResult:
     # v5.5.3 双引擎可观测性 (opt-in observe=True): 来源/路由置信/场景门贡献/
     # 盲-感知逐步轨迹差; 默认 None, 不改变旧契约与默认计算量。
     gate_observation: Optional[Dict[str, Any]] = None
+    # v5.5.4 LoRA 前向通道状态: 基座是否正带着场景 LoRA 补丁、补丁模块数。
+    lora_injection_active: bool = False
+    lora_patched_modules: int = 0
 
     def convergence(self) -> float:
         return float(self.certainty_trajectory[1, -1])
@@ -86,6 +89,8 @@ class ReasoningResult:
             "predictor_conditioned": self.predictor_conditioned,
             "gpm_bridge_active": self.gpm_bridge_active,
             "gpm_bridge_norm": round(self.gpm_bridge_norm, 6),
+            "lora_injection_active": self.lora_injection_active,
+            "lora_patched_modules": self.lora_patched_modules,
         }
         if self.scene_params is not None:
             out["scene_params"] = self.scene_params
@@ -127,7 +132,10 @@ class UDOSReasoningEngine(nn.Module):
         self.base_model = base_model
 
         if gpm_config is None:
-            gpm_config = GPMConfig()
+            # 引擎自建的演示 GPM 走 live 档 (scaler_B=1), 使 GPM->LoRA->基座
+            # 前向闭环可观察到真实注入差; 训练稳定的零扰动档由调用方显式传
+            # # init_scaler_b_zero=True (GPMConfig 默认), 二者互不影响。
+            gpm_config = GPMConfig(init_scaler_b_zero=False)
         if gpm_config.dims is None:
             gpm_config.dims = infer_dims_from_model(
                 base_model, gpm_config.target_modules)
@@ -143,6 +151,10 @@ class UDOSReasoningEngine(nn.Module):
         self.ctm_encoder = PhysicsSceneEncoder(ctm_config.d_input)
 
         self.scene_memory: Dict[str, LoRASet] = {}
+        # v5.5.4 LoRA 前向闭环的最近一次注入前基线/特征, 供 reset 零误差校验
+        self._last_base_baseline: Optional[torch.Tensor] = None
+        self._last_selftest_feats: Optional[torch.Tensor] = None
+        self._last_injection_delta: float = 0.0
 
     def attach_predictor(self, predictor: Any) -> None:
         """挂载训练好的 PhysicsPredictor, reason 时输出可解释下一时刻物理量。
@@ -189,12 +201,59 @@ class UDOSReasoningEngine(nn.Module):
         raw = [[*(t.position[:3]), *(t.velocity[:3])] for t in ordered]
         return torch.tensor(raw, dtype=torch.float32).unsqueeze(0)
 
+    # ---------- v5.5.4: GPM->LoRA->基座 前向闭环 (消除 LoRA 死路) ----------
+    def _scene_features(self, scene: PhysicsScene) -> "torch.Tensor":
+        """经持久化场景编码器把 PCE 场景编成基座输入特征 [1,T,feature_dim]。"""
+        enc = self.gpm._get_encoder([scene])
+        feats, _ = enc([scene])
+        return feats
+
+    @torch.no_grad()
+    def base_scene_encoding(self, scene: PhysicsScene
+                            ) -> "tuple[torch.Tensor, bool]":
+        """让(可能已被场景 LoRA 注入的)基座对场景特征真正跑一次前向。
+
+        返回 (池化场景编码 [feature_dim], 当前是否带 LoRA 补丁)。这是
+        GPM 内化 -> LoRA 注入 -> 基座"记住场景" 这条链的真实前向, 不再是
+        只注入却从不调用的死路。
+        """
+        feats = self._scene_features(scene)
+        out = self.base_model(feats)
+        return out.mean(dim=(0, 1)), self.injector.active is not None
+
+    @torch.no_grad()
+    def lora_path_self_test(self, scene: PhysicsScene) -> Dict[str, Any]:
+        """一次性自检 LoRA 前向通道: 基线 -> 注入 -> 注入差 -> 复位 -> 复位误差。
+
+        不改变引擎最终状态 (自测后补丁已移除)。live 档注入差应 >0;
+        scaler_B=0 训练档注入差≈0 但补丁确实打过, 复位误差恒≈0。
+        """
+        feats = self._scene_features(scene)
+        self.injector.reset()
+        y0 = self.base_model(feats).detach()
+        lora = self.gpm(scene)
+        self.injector.inject(lora)
+        patched = len(self.injector._patched)
+        y1 = self.base_model(feats).detach()
+        injection_delta = float((y1 - y0).norm())
+        self.injector.reset()
+        y2 = self.base_model(feats).detach()
+        reset_error = float((y2 - y0).norm())
+        return {
+            "injection_delta": injection_delta,
+            "reset_error": reset_error,
+            "patched_modules": patched,
+            "lora_params": lora.num_params(),
+            "scene_id": scene.scene_id,
+        }
+
     # ---------- 步骤 1: GPM 内化物理场景 ----------
     @torch.no_grad()
     def internalize_scene(self, scene: PhysicsScene,
                           chunks: Optional[List[PhysicsScene]] = None,
                           weights: Optional[Sequence[float]] = None) -> str:
         self.ctm_encoder.bind_scene(scene)
+        feats = self._scene_features(scene)
         if chunks:
             for c in chunks:
                 self.ctm_encoder.bind_scene(c)
@@ -202,12 +261,20 @@ class UDOSReasoningEngine(nn.Module):
             lora.scene_id = scene.scene_id
         else:
             lora = self.gpm(scene)
+        # v5.5.4: 注入前后各跑一次基座前向, 让 LoRA 真正调制场景编码并留证
+        self.injector.reset()
+        y0 = self.base_model(feats).detach()
         self.injector.inject(lora)
+        y1 = self.base_model(feats).detach()
+        self._last_base_baseline = y0
+        self._last_selftest_feats = feats
+        self._last_injection_delta = float((y1 - y0).norm())
         self.scene_memory[scene.scene_id] = lora
         return (f"场景 {scene.scene_id} 已内化: "
                 f"{lora.num_params():,} 个 LoRA 参数 "
                 f"({lora.num_bytes_fp32()/1024:.1f} KB fp32), "
-                f"覆盖模块 {lora.module_names()}")
+                f"覆盖模块 {lora.module_names()}, "
+                f"基座前向注入差 ||Δ||={self._last_injection_delta:.3e}")
 
     # ---------- 步骤 2: CTM 时序因果推演 ----------
     @torch.no_grad()
@@ -308,6 +375,8 @@ class UDOSReasoningEngine(nn.Module):
             gpm_bridge_active=bridge_active,
             gpm_bridge_norm=bridge_norm,
             gate_observation=gate_observation,
+            lora_injection_active=self.injector.active is not None,
+            lora_patched_modules=len(self.injector._patched),
         )
 
     def _build_causal_chain(self, scene: PhysicsScene,
@@ -337,10 +406,20 @@ class UDOSReasoningEngine(nn.Module):
         return chain
 
     # ---------- 步骤 3: 移除场景记忆 ----------
+    @torch.no_grad()
     def reset_scene(self, scene_id: str) -> str:
+        # v5.5.4: 复位后重跑基座前向, 与注入前基线比对, 证明补丁无损移除
+        reset_error = 0.0
+        feats = self._last_selftest_feats
+        baseline = self._last_base_baseline
         self.injector.reset()
+        if feats is not None and baseline is not None:
+            reset_error = float((self.base_model(feats) - baseline).norm())
         self.scene_memory.pop(scene_id, None)
-        return f"场景 {scene_id} 已重置 (LoRA 前向补丁无损移除)"
+        self._last_base_baseline = None
+        self._last_selftest_feats = None
+        return (f"场景 {scene_id} 已重置 (LoRA 前向补丁无损移除), "
+                f"复位误差 ||Δ||={reset_error:.3e}")
 
     def reset_all(self) -> None:
         self.injector.reset()

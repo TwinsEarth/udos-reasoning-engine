@@ -40,4 +40,4 @@ def test_latency_json_written():
 
 
 def test_version():
-    assert __version__ == "5.5.3"
+    assert __version__ == "5.5.4"

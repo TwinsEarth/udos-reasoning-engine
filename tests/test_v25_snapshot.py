@@ -32,7 +32,7 @@ def _small_model(seed: int = 0) -> PhysicsPredictor:
 
 
 def test_version_bumped():
-    assert __version__ == "5.5.3"
+    assert __version__ == "5.5.4"
 
 
 def test_export_snapshot_no_weights():
