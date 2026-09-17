@@ -34,6 +34,7 @@ from .gpm_engine import (
     infer_dims_from_model,
 )
 from .pce_format import PhysicalToken, PhysicsScene, PhysicsSceneEncoder
+from .scene_bridge import extract_scene_params
 from .dynamics import RAW_DIM
 
 
@@ -51,6 +52,11 @@ class ReasoningResult:
     scene_conditioned: bool = False          # v2: 是否注入了 GPM 场景条件
     predicted_state: Optional[Dict[str, List[float]]] = None  # v2: 可解释下一时刻 pos/vel
     future_states: Optional[List[Dict[str, List[float]]]] = None  # v2.1 多步 rollout
+    # v5.4.6: 主预测员 PhysicsPredictor 是否真正消费了场景参数 (区别于上面
+    # scene_conditioned 仅指内部演示 CTM 是否收到 GPM 嵌入)。
+    predictor_conditioned: bool = False
+    scene_params: Optional[List[float]] = None       # 4 维隐藏物理参数
+    scene_params_source: Optional[str] = None        # metadata / attributes / None
 
     def convergence(self) -> float:
         return float(self.certainty_trajectory[1, -1])
@@ -64,7 +70,11 @@ class ReasoningResult:
             "lora_params": self.lora_params,
             "causal_edges": len(self.causal_chain),
             "scene_conditioned": self.scene_conditioned,
+            "predictor_conditioned": self.predictor_conditioned,
         }
+        if self.scene_params is not None:
+            out["scene_params"] = self.scene_params
+            out["scene_params_source"] = self.scene_params_source
         if self.predicted_state is not None:
             out["predicted_next_state"] = self.predicted_state
         if self.future_states is not None:
@@ -167,12 +177,26 @@ class UDOSReasoningEngine(nn.Module):
         certs = certs[0]        # [2, ticks]
 
         # v2/v2.1 可解释输出: 训练好的预测器给出下一时刻, 并可多步自由滚动
+        # v5.4.6: 经 scene_bridge 提取 PCE 承载的隐藏场景参数, 喂给主预测员
+        # 训练过的场景门; 无场景参数时保持旧版场景盲 rollout (逐位兼容)。
         predicted_state = None
         future_states = None
+        predictor_conditioned = False
+        sp_values: Optional[List[float]] = None
+        sp_source: Optional[str] = None
         if self.predictor is not None and len(scene.tokens) >= 1:
             raw = self._tokens_raw(scene)
             H = max(1, int(horizon))
-            roll = self.predictor.rollout(raw, H)[0]  # [H,6]
+            sp = extract_scene_params(scene)
+            if sp is not None:
+                predictor_conditioned = True
+                sp_source = sp.source
+                sp_values = [round(float(v), 6) for v in
+                             sp.values.flatten().tolist()]
+                roll = self.predictor.rollout(
+                    raw, H, scene_params=sp.values)[0]  # [H,6]
+            else:
+                roll = self.predictor.rollout(raw, H)[0]  # 场景盲旧路径
             def _state(vec):
                 return {"position": [round(v, 6) for v in vec[:3]],
                         "velocity": [round(v, 6) for v in vec[3:6]]}
@@ -195,6 +219,9 @@ class UDOSReasoningEngine(nn.Module):
             scene_conditioned=conditioned,
             predicted_state=predicted_state,
             future_states=future_states,
+            predictor_conditioned=predictor_conditioned,
+            scene_params=sp_values,
+            scene_params_source=sp_source,
         )
 
     def _build_causal_chain(self, scene: PhysicsScene,

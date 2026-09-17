@@ -3,6 +3,15 @@
 本文件记录 UDOS 推演引擎的显著变更，遵循 Keep a Changelog 与语义化版本。
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 
+## v5.4.6（双引擎名副其实 2/5：主预测链接线）
+
+> 性质：新增能力（行为变更，向后兼容），**不改模型、算法、checkpoint**；主 predictor 恒 52191 参数、eval_mse 恒 0.045556。本版把 v5.4.5 的场景参数通道真正接进训练过场景门的主预测员，消除"GPM 记录场景却不影响物理轨迹"的断点。
+
+- **Changed**：`UDOSReasoningEngine.reason()` 在挂载 `PhysicsPredictor` 时，经 `extract_scene_params()` 从 PCE 场景提取 4 维隐藏参数并传入 `predictor.rollout(raw, H, scene_params=...)`；无场景参数时维持旧版场景盲 `rollout(raw, H)`，逐位兼容。GPM 内部演示 CTM 支路保持原样。
+- **Added**：`ReasoningResult` 新增 `predictor_conditioned`（主预测员是否真正消费场景参数，区别于仅指内部演示 CTM 的 `scene_conditioned`）、`scene_params`、`scene_params_source`；`summary()` 与 HTTP `POST /reason` 顶层透出。
+- **实测增益（真实 HTTP 端到端，非单元构造）**：启动加载 `predictor_v4.3.9.pt` 的服务，对同一 spring 窗口（ω=1.2，4 步 rollout）POST `/reason`，场景盲位置 MSE 3.673 → 带正确隐藏角频率 0.535，约 **6.87 倍**提升；`predictor_conditioned` 由 false 变 true、`scene_params_source=metadata`。独立测试集（seed=7）平均增益为单步约 13.7 倍、4 步约 16.8 倍（见 v5.4.5 条目背景）。
+- **Tests**：`tests/test_v546_predictor_scene_link.py` 5 项契约（主链 future 与带场景直接 rollout 数值一致、带场景显著更准、无场景逐位兼容、结果字段透出、attributes 与 metadata 通道等价）；先取得 5 项 RED 再实现到 GREEN；`test_service`/`test_conditioning`/`test_v21_multistep` 等回归全绿。
+
 ## v5.4.5（双引擎名副其实 1/5：场景参数通道）
 
 > 性质：新增能力（数据通道），**不改模型、算法、checkpoint**；主 predictor 恒 52191 参数、eval_mse 恒 0.045556。背景：读码定位到双引擎断点——`reason()` 调训练过场景门的 `PhysicsPredictor.rollout()` 时未传任何场景参数，独立测试集实测同窗口单步场景盲 MSE 0.551 vs 带场景 0.040（约 13.7 倍）、4 步推演 1.406 vs 0.084（约 16.8 倍），GPM 场景记忆从未进入主预测员。本版先建规范承载通道，主链接线在 v5.4.6。

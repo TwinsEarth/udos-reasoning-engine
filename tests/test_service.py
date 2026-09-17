@@ -54,7 +54,7 @@ def test_health(live_server):
     code, body = _get(live_server, "/health")
     assert code == 200 and body["status"] == "ok"
     from udos import __version__
-    assert body["version"] == __version__ == "5.4.5"
+    assert body["version"] == __version__ == "5.4.6"
     assert body["internalized_scenes"] == []
     assert body["predictor_trained"] is False
 

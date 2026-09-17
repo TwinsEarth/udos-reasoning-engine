@@ -374,6 +374,7 @@ class UDOSService:
             "summary": r.summary(),
             "ticks_used": r.ticks_used,
             "scene_conditioned": r.scene_conditioned,
+            "predictor_conditioned": r.predictor_conditioned,
             "horizon": horizon,
             "final_certainty": r.convergence(),
             "certainty_trajectory": [round(x, 6) for x in

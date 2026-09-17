@@ -34,7 +34,7 @@ def _small_model(seed: int = 0) -> PhysicsPredictor:
 
 
 def test_version_bumped():
-    assert __version__ == "5.4.5"
+    assert __version__ == "5.4.6"
 
 
 def test_equal_length_batch_matches_individual():

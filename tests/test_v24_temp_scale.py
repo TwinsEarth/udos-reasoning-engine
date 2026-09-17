@@ -18,7 +18,7 @@ from udos.training import PhysicsPredictor  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.4.5"
+    assert __version__ == "5.4.6"
 
 
 def test_temperature_one_is_identity():

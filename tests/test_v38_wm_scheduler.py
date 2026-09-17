@@ -22,7 +22,7 @@ CKPT = str(ROOT / "checkpoints" / "predictor_v3.8.0.pt")
 
 
 def test_version():
-    assert __version__ == "5.4.5"
+    assert __version__ == "5.4.6"
 
 
 def _scene():

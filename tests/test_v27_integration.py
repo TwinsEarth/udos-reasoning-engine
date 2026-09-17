@@ -37,7 +37,7 @@ def data():
 
 
 def test_version():
-    assert __version__ == "5.4.5"
+    assert __version__ == "5.4.6"
 
 
 def test_default_path_unchanged(predictor, data):

@@ -36,7 +36,7 @@ def batch():
 
 
 def test_version():
-    assert __version__ == "5.4.5"
+    assert __version__ == "5.4.6"
 
 
 def test_hybrid_plus_counterfactual(predictor, batch):

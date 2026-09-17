@@ -28,7 +28,7 @@ def predictor():
 
 
 def test_version():
-    assert __version__ == "5.4.5"
+    assert __version__ == "5.4.6"
 
 
 def test_rgb_head_shape_finite():
