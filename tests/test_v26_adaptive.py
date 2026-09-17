@@ -33,7 +33,7 @@ def model():
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"
 
 
 def test_adaptive_disabled_equivalence(model):

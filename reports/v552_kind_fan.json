@@ -1,0 +1,86 @@
+{
+  "version": "5.5.2",
+  "nominal_coverage": 0.8,
+  "n_per_kind": 96,
+  "n_samples": 48,
+  "calib_seed": 314,
+  "heldout_seed": 2026,
+  "confusion_matrix_held": {
+    "uniform": {
+      "uniform": 1.0,
+      "accel": 0.0,
+      "spring": 0.0,
+      "collision": 0.0
+    },
+    "accel": {
+      "uniform": 0.1458,
+      "accel": 0.8542,
+      "spring": 0.0,
+      "collision": 0.0
+    },
+    "spring": {
+      "uniform": 0.0,
+      "accel": 0.0,
+      "spring": 1.0,
+      "collision": 0.0
+    },
+    "collision": {
+      "uniform": 0.2708,
+      "accel": 0.0,
+      "spring": 0.0,
+      "collision": 0.7292
+    }
+  },
+  "routed_classical_ab_rollout4": {
+    "uniform": {
+      "blind": 0.7288,
+      "explicit": 0.0709,
+      "routed": 0.0709,
+      "recovery": 1.0
+    },
+    "accel": {
+      "blind": 3.5326,
+      "explicit": 0.0626,
+      "routed": 0.0932,
+      "recovery": 0.9912
+    },
+    "spring": {
+      "blind": 0.7222,
+      "explicit": 0.1303,
+      "routed": 0.1295,
+      "recovery": 1.0013
+    },
+    "collision": {
+      "blind": 0.6382,
+      "explicit": 0.0389,
+      "routed": 0.0888,
+      "recovery": 0.9166
+    }
+  },
+  "fan_coverage": {
+    "raw_pooled": 0.667,
+    "calibrated_pooled": 0.8006,
+    "per_kind": {
+      "uniform": {
+        "raw": 0.7845,
+        "calibrated": 0.8162,
+        "inflation": 0.9951
+      },
+      "accel": {
+        "raw": 0.447,
+        "calibrated": 0.7799,
+        "inflation": 8.2495
+      },
+      "spring": {
+        "raw": 0.6983,
+        "calibrated": 0.813,
+        "inflation": 1.5015
+      },
+      "collision": {
+        "raw": 0.7382,
+        "calibrated": 0.7932,
+        "inflation": 0.8446
+      }
+    }
+  }
+}

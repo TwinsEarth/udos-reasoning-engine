@@ -21,7 +21,7 @@ CKPT = str(ROOT / "checkpoints" / "predictor_v3.8.0.pt")
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"
 
 
 def test_comprehensive_json():

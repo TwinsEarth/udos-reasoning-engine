@@ -20,7 +20,7 @@ JSON = ROOT / "benchmarks" / "results" / "neural_latency_v3.7.0.json"
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"
 
 
 @pytest.fixture(scope="module")

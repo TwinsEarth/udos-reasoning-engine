@@ -140,4 +140,4 @@ def test_comprehensive_report_json(pred, ds):
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"

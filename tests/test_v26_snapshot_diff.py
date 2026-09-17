@@ -23,7 +23,7 @@ CKPT_B = "checkpoints/predictor_v2.6.0.pt"
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"
 
 
 def test_diff_same_snapshot():

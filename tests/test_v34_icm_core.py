@@ -211,4 +211,4 @@ def test_k0_ignores_memory(model, data):
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"

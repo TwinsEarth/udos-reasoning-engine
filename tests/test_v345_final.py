@@ -40,4 +40,4 @@ def test_save_load_bitwise_consistent():
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"

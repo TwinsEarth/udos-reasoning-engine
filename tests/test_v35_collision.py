@@ -7,7 +7,7 @@ from udos.collision import CollisionDetector, NearestNeighbor
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"
 
 
 def test_ball_ball_contact():

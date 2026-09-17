@@ -26,7 +26,7 @@ from udos.server import UDOSService  # noqa: E402
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"
 
 
 def test_codebook_size_one():

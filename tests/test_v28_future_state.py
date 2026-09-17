@@ -37,7 +37,7 @@ def window_batch():
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"
 
 
 def test_trajectory_shape_finite(predictor, window_batch):

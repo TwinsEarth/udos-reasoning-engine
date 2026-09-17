@@ -56,4 +56,4 @@ def test_augmenter_reproducible():
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"

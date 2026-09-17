@@ -132,4 +132,4 @@ def test_long_horizon_h0_guard(pred, ds):
 
 
 def test_version():
-    assert __version__ == "5.5.1"
+    assert __version__ == "5.5.2"

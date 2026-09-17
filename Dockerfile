@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /app
 
 # 版本单一来源: 与 udos/__init__.py / pyproject.toml 同步
-LABEL org.opencontainers.image.version="5.5.1"
+LABEL org.opencontainers.image.version="5.5.2"
 
 # 先装 CPU 版 torch (体积更小), 再装其余依赖
 COPY requirements.txt .
