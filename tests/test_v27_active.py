@@ -40,7 +40,7 @@ def pool(predictor):
 
 
 def test_version():
-    assert __version__ == "5.4.7"
+    assert __version__ == "5.4.8"
 
 
 def test_uncertainty_ranking_monotonicity(predictor, pool):

@@ -68,7 +68,7 @@ def _post(base, path, obj):
 
 
 def test_version():
-    assert __version__ == "5.4.7"
+    assert __version__ == "5.4.8"
 
 
 def test_loop_multitask_composition_no_conflict(predictor):

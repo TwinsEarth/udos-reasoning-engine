@@ -38,7 +38,7 @@ def ref_and_drift():
 
 
 def test_version():
-    assert __version__ == "5.4.7"
+    assert __version__ == "5.4.8"
 
 
 def _snapshot_weights(model):

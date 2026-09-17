@@ -30,7 +30,7 @@ def _predictor():
 
 
 def test_version():
-    assert __version__ == "5.4.7"
+    assert __version__ == "5.4.8"
 
 
 def test_lesson_spec_immutable():

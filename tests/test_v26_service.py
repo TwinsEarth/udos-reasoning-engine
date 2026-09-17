@@ -51,7 +51,7 @@ def _window():
 
 
 def test_version():
-    assert __version__ == "5.4.7"
+    assert __version__ == "5.4.8"
 
 
 def test_counterfactual_endpoint(loaded_server):

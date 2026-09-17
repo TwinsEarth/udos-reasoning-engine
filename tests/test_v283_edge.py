@@ -35,7 +35,7 @@ def window_batch():
 
 
 def test_version():
-    assert __version__ == "5.4.7"
+    assert __version__ == "5.4.8"
 
 
 # 1. 空 window / 非有限 window

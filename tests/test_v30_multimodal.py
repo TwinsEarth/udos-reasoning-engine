@@ -45,7 +45,7 @@ def _build(predictor, **kw):
 
 
 def test_version():
-    assert __version__ == "5.4.7"
+    assert __version__ == "5.4.8"
 
 
 def test_three_modality_shapes_finite(predictor, window_batch):

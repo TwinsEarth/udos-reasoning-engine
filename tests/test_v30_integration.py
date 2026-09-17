@@ -72,7 +72,7 @@ def _get(base, path):
 
 
 def test_version():
-    assert __version__ == "5.4.7"
+    assert __version__ == "5.4.8"
 
 
 def test_full_composition_no_conflict(predictor):

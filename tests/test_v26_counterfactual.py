@@ -31,7 +31,7 @@ def spring_batch():
 
 
 def test_version():
-    assert __version__ == "5.4.7"
+    assert __version__ == "5.4.8"
 
 
 def test_zero_intervention_equals_baseline(engine, spring_batch):

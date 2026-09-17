@@ -38,7 +38,7 @@ def window_batch():
 
 
 def test_version():
-    assert __version__ == "5.4.7"
+    assert __version__ == "5.4.8"
 
 
 def test_empty_candidate_no_valid_action(predictor, window_batch):
