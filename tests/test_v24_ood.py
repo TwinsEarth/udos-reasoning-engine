@@ -20,7 +20,7 @@ from udos.training import PhysicsPredictor  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.4.4"
+    assert __version__ == "5.4.5"
 
 
 # ---------- 检测器基础机制 ----------

@@ -69,7 +69,7 @@ def _post(base, path, obj):
 
 
 def test_version():
-    assert __version__ == "5.4.4" or __version__.startswith("2.9")
+    assert __version__ == "5.4.5" or __version__.startswith("2.9")
 
 
 def test_full_composition_no_conflict(predictor):

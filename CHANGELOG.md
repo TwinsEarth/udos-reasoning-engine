@@ -3,6 +3,14 @@
 本文件记录 UDOS 推演引擎的显著变更，遵循 Keep a Changelog 与语义化版本。
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 
+## v5.4.5（双引擎名副其实 1/5：场景参数通道）
+
+> 性质：新增能力（数据通道），**不改模型、算法、checkpoint**；主 predictor 恒 52191 参数、eval_mse 恒 0.045556。背景：读码定位到双引擎断点——`reason()` 调训练过场景门的 `PhysicsPredictor.rollout()` 时未传任何场景参数，独立测试集实测同窗口单步场景盲 MSE 0.551 vs 带场景 0.040（约 13.7 倍）、4 步推演 1.406 vs 0.084（约 16.8 倍），GPM 场景记忆从未进入主预测员。本版先建规范承载通道，主链接线在 v5.4.6。
+
+- **Added**：`udos/scene_bridge.py` 的 `extract_scene_params()`/`SceneParams`，从 `PhysicsScene` 的 `metadata["scene_params"]`（dict 按槽名，或长度 4 的 list 按固定槽位顺序）或 `PhysicalToken.attributes` 提取 4 维隐藏物理参数 `(v0, accel_a, spring_omega, other_v2)`；优先级 metadata > attributes > 默认 0.0；无任何场景信息返回 `None`（场景盲旧路径逐位兼容）；NaN/inf、错误长度、不可解析值显式 `ValueError`（与 `predict_next` 有限值纪律一致）。
+- **Tests**：`tests/test_v545_scene_bridge.py` 13 项契约（dict/list 槽位顺序、attributes 回退、metadata 优先级、缺失返回 None、NaN/inf/错长拒绝、未知键忽略、确定性、PCE 序列化往返、float32/全有限）。
+- **Tooling**：`scripts/bump_version.py` 增强为支持单参数（自动读当前版本），补齐 web 看板落点，收尾校验 `__version__` 与 tests 无残留旧断言；保护 finesim/CHANGELOG/benchmarks 等历史标注不被替换。
+
 ## v5.4.4（开源修订：打包硬伤 + 版本/看板一致性 + 能力边界精确化）
 
 > 性质：打包/文档/默认配置补丁。**不改模型、算法、checkpoint**；主 predictor 恒 52191 参数、eval_mse 恒 0.045556，全量 1570 passed + 2 skipped（共收集 1572）、0 failed。起因是外部对 v5.4.3 的只读代码评审，逐条经源码复核属实后修复（评审中"README 首页仍为 4.5.3"一条经核不成立）。

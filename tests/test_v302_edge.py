@@ -25,7 +25,7 @@ CKPT = str(ROOT / "checkpoints" / "predictor_v3.0.0.pt")
 
 
 def test_version():
-    assert __version__ == "5.4.4"
+    assert __version__ == "5.4.5"
 
 
 def test_multimodal_h_zero_rejected():

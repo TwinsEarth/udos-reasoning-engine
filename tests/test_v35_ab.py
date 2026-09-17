@@ -9,7 +9,7 @@ AB = ROOT / "benchmarks" / "results" / "spatial_ab_v3.5.0.json"
 
 
 def test_version():
-    assert __version__ == "5.4.4"
+    assert __version__ == "5.4.5"
 
 
 def test_ab_json_written():

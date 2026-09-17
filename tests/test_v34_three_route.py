@@ -29,4 +29,4 @@ def test_context_route_monotone_or_saturate():
 
 
 def test_version():
-    assert __version__ == "5.4.4"
+    assert __version__ == "5.4.5"

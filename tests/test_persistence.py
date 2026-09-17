@@ -26,7 +26,7 @@ def test_predictor_save_load_elementwise_equal(tmp_path):
 
     assert torch.allclose(before, after, atol=1e-7)
     assert meta["kind"] == "PhysicsPredictor"
-    assert meta["udos_version"] == __version__ == "5.4.4"
+    assert meta["udos_version"] == __version__ == "5.4.5"
     assert meta["metrics"] == {"eval_mse": 0.04}
     assert meta["raw_dim"] == 6
 

@@ -43,7 +43,7 @@ def data():
 
 
 def test_version():
-    assert __version__ == "5.4.4"
+    assert __version__ == "5.4.5"
 
 
 def test_prune_sparsity_and_restore(predictor, data):

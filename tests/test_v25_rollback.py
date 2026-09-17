@@ -18,7 +18,7 @@ from udos.server import ServiceNotReady  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.4.4"
+    assert __version__ == "5.4.5"
 
 
 def test_rollback_no_history_409(tmp_path, monkeypatch):

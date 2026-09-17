@@ -18,7 +18,7 @@ from udos.persistence import load_predictor  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.4.4"
+    assert __version__ == "5.4.5"
 
 
 # 旧 checkpoint 清单 (checkpoints/ 下应存在)

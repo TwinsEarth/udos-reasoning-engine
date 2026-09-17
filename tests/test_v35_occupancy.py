@@ -7,7 +7,7 @@ from udos.occupancy import OccupancyGrid, DistanceField
 
 
 def test_version():
-    assert __version__ == "5.4.4"
+    assert __version__ == "5.4.5"
 
 
 def test_occupy_ball():
