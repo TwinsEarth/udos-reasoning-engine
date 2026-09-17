@@ -1,0 +1,95 @@
+{
+  "model": "predictor_v4.3.9.pt",
+  "heldout_seed": 2026,
+  "train_seed": 42,
+  "n_samples": 2560,
+  "window": 6,
+  "horizon": 4,
+  "dt": 0.5,
+  "torch_version": "2.14.0+cpu",
+  "num_threads": 2,
+  "learnable_params": 52191,
+  "buffers": 48,
+  "mse": {
+    "overall_blind": {
+      "single_step": 0.556739,
+      "rollout_4": 1.359453
+    },
+    "overall_scene": {
+      "single_step": 0.040199,
+      "rollout_4": 0.078374
+    },
+    "gain_x": {
+      "single_step": 13.85,
+      "rollout_4": 17.35
+    },
+    "blind_uniform": {
+      "single_step": 0.339021,
+      "rollout_4": 0.71428
+    },
+    "scene_uniform": {
+      "single_step": 0.031651,
+      "rollout_4": 0.070869
+    },
+    "blind_accel": {
+      "single_step": 1.098189,
+      "rollout_4": 3.335543
+    },
+    "scene_accel": {
+      "single_step": 0.018182,
+      "rollout_4": 0.059907
+    },
+    "blind_spring": {
+      "single_step": 0.404708,
+      "rollout_4": 0.740536
+    },
+    "scene_spring": {
+      "single_step": 0.079956,
+      "rollout_4": 0.140378
+    },
+    "blind_collision": {
+      "single_step": 0.385038,
+      "rollout_4": 0.647452
+    },
+    "scene_collision": {
+      "single_step": 0.031006,
+      "rollout_4": 0.042344
+    }
+  },
+  "coverage": {
+    "alpha_0.2_nominal_0.80": {
+      "marginal_overall": 0.8988,
+      "per_step": [
+        0.9015,
+        0.8994,
+        0.8969,
+        0.8972
+      ],
+      "nominal": 0.8
+    },
+    "alpha_0.1_nominal_0.90": {
+      "marginal_overall": 0.8988,
+      "per_step": [
+        0.9015,
+        0.8994,
+        0.8969,
+        0.8972
+      ],
+      "nominal": 0.9
+    },
+    "alpha_0.05_nominal_0.95": {
+      "marginal_overall": 0.8988,
+      "per_step": [
+        0.9015,
+        0.8994,
+        0.8969,
+        0.8972
+      ],
+      "nominal": 0.95
+    }
+  },
+  "latency_ms": {
+    "predict_next_batch1_median": 3.2474,
+    "rollout4_batch1_median": 12.4986
+  }
+}
