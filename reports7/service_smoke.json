@@ -1,0 +1,28 @@
+{
+  "smoke_ok": true,
+  "health": {
+    "status": "ok",
+    "version": "7.0.1",
+    "model_loaded": false,
+    "checkpoint": "worldmodel_v7.0.1.pt",
+    "evidence_grade": "verified",
+    "api": "v7"
+  },
+  "predict_status": 200,
+  "predict_first": [
+    0.6052606105804443,
+    2.33327317237854,
+    0.10445433855056763,
+    0.17410752177238464,
+    0.8633986115455627,
+    0.0907275527715683
+  ],
+  "interval_widths": {
+    "0.2": 0.2236328274011612,
+    "0.1": 0.46117982268333435,
+    "0.05": 0.8309674263000488
+  },
+  "widths_ordered": true,
+  "metrics_status": 200,
+  "gating_all_pass": true
+}

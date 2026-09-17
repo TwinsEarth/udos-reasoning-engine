@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "udos-reasoning-engine"
-version = "5.5.5"
-description = "UDOS dual-engine reasoning core: CTM (SakanaAI continuous-thought-machines) + GPM (SakanaAI doc-to-lora)"
+version = "7.0.1"
+description = "UDOS unified world-model engine v7 (single residual recurrent predictor + calibrated uncertainty); legacy udos/ 5.5.5 frozen"
 requires-python = ">=3.10"
 dependencies = ["torch>=2.0", "numpy>=1.24", "huggingface_hub>=0.20"]
 
@@ -13,7 +13,7 @@ dependencies = ["torch>=2.0", "numpy>=1.24", "huggingface_hub>=0.20"]
 include = ["udos*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "tests7"]
 addopts = "-q"
 markers = [
     "slow: 训练类较慢用例",

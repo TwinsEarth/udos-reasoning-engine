@@ -1,0 +1,178 @@
+{
+  "version": "7.0.1",
+  "evidence_grade": "verified",
+  "torch_version": "2.14.0+cpu",
+  "device": "cpu",
+  "threads": 2,
+  "params": 966830,
+  "checkpoint_config": {
+    "window": 6,
+    "hidden": 256,
+    "n_layers": 2,
+    "scene_dim": 32
+  },
+  "dataset": {
+    "train": {
+      "windows": 1280,
+      "trajectories": 256
+    },
+    "val": {
+      "windows": 640,
+      "trajectories": 128
+    },
+    "test": {
+      "windows": 640,
+      "trajectories": 128
+    },
+    "calib": {
+      "windows": 640,
+      "trajectories": 128
+    }
+  },
+  "test_metrics": {
+    "oracle": {
+      "oracle_overall": 0.02743604965507984,
+      "oracle_uniform": 0.008594728074967861,
+      "oracle_accel": 0.08105780929327011,
+      "oracle_spring": 0.017619041725993156,
+      "oracle_collision": 0.0024726158007979393,
+      "oracle_pos_x": 0.034995343536138535,
+      "oracle_vel_x": 0.01865571364760399,
+      "oracle_pos_y": 0.037213824689388275,
+      "oracle_vel_y": 0.011661427095532417,
+      "oracle_pos_z": 0.051401250064373016,
+      "oracle_vel_z": 0.010688742622733116
+    },
+    "blind": {
+      "blind_overall": 0.04590785503387451,
+      "blind_uniform": 0.010634106583893299,
+      "blind_accel": 0.10533729940652847,
+      "blind_spring": 0.06370481848716736,
+      "blind_collision": 0.003955203108489513,
+      "blind_pos_x": 0.05259010195732117,
+      "blind_vel_x": 0.0331592932343483,
+      "blind_pos_y": 0.05580947548151016,
+      "blind_vel_y": 0.03574695438146591,
+      "blind_pos_z": 0.06854742020368576,
+      "blind_vel_z": 0.029593879356980324
+    }
+  },
+  "coverage": {
+    "oracle_alpha_0.2": {
+      "nominal": 0.8,
+      "marginal": 0.8029,
+      "per_step": [
+        0.8081,
+        0.8042,
+        0.8029,
+        0.7966
+      ],
+      "bandwidth_marginal": 0.0953,
+      "pass": true
+    },
+    "oracle_alpha_0.1": {
+      "nominal": 0.9,
+      "marginal": 0.9079,
+      "per_step": [
+        0.9044,
+        0.9089,
+        0.9076,
+        0.9107
+      ],
+      "bandwidth_marginal": 0.1955,
+      "pass": true
+    },
+    "oracle_alpha_0.05": {
+      "nominal": 0.95,
+      "marginal": 0.9676,
+      "per_step": [
+        0.969,
+        0.9714,
+        0.9667,
+        0.9633
+      ],
+      "bandwidth_marginal": 0.3677,
+      "pass": true
+    },
+    "blind_alpha_0.2": {
+      "nominal": 0.8,
+      "marginal": 0.775,
+      "per_step": [
+        0.7815,
+        0.7768,
+        0.7708,
+        0.7708
+      ],
+      "bandwidth_marginal": 0.1168,
+      "pass": true
+    },
+    "blind_alpha_0.1": {
+      "nominal": 0.9,
+      "marginal": 0.8939,
+      "per_step": [
+        0.8943,
+        0.8943,
+        0.8911,
+        0.8958
+      ],
+      "bandwidth_marginal": 0.2442,
+      "pass": true
+    },
+    "blind_alpha_0.05": {
+      "nominal": 0.95,
+      "marginal": 0.9541,
+      "per_step": [
+        0.9578,
+        0.9563,
+        0.951,
+        0.9513
+      ],
+      "bandwidth_marginal": 0.4383,
+      "pass": true
+    }
+  },
+  "param_fan": {
+    "nominal": 0.8,
+    "empirical_coverage": 0.8275,
+    "pass": true
+  },
+  "latency_ms": {
+    "predict_next_batch1_median": 1.5762,
+    "rollout4_batch1_median": 3.9843
+  },
+  "gating": {
+    "all_pass": true,
+    "checked": 7,
+    "note": "覆盖率容差 ±0.05（扇形 ±0.10），CPU 固定 seed"
+  },
+  "estimator_param_error": {
+    "v0": {
+      "mae": 0.6645,
+      "mae_mean_predictor": 0.9683,
+      "identifiability_skill": 0.314,
+      "mean_observability": 0.764,
+      "n": 480
+    },
+    "accel_a": {
+      "mae": 0.9359,
+      "mae_mean_predictor": 0.6138,
+      "identifiability_skill": -0.525,
+      "mean_observability": 0.786,
+      "n": 160
+    },
+    "spring_omega": {
+      "mae": 0.1534,
+      "mae_mean_predictor": 0.2563,
+      "identifiability_skill": 0.402,
+      "mean_observability": 0.903,
+      "n": 160
+    },
+    "other_v2": {
+      "mae": 0.0505,
+      "mae_mean_predictor": 0.2396,
+      "identifiability_skill": 0.789,
+      "mean_observability": 0.897,
+      "n": 160
+    }
+  }
+}
