@@ -1,0 +1,53 @@
+{
+  "version": "2.2.1",
+  "n_params": 52191,
+  "train_seconds": 87.8,
+  "epochs_run": 60,
+  "stopped_early": false,
+  "best_epoch": 57,
+  "scheduled_sampling": {
+    "enabled": false,
+    "ss_max": 0.0,
+    "ss_start": 0,
+    "ss_warmup": 10
+  },
+  "untrained_single_mse": 4.631686,
+  "naive_mse": 0.1799,
+  "trained_single_mse": 0.044571,
+  "reduction_vs_untrained_x": 103.92,
+  "reduction_vs_naive_x": 4.04,
+  "condition_gain_x": 14.102,
+  "rollout_mse_curve": [
+    0.044571,
+    0.053743,
+    0.078629,
+    0.110978
+  ],
+  "rollout_growth_x": 2.49,
+  "confidence_stratification": {
+    "bins": [
+      {
+        "bin": 0,
+        "n": 64,
+        "mean_confidence": 0.9282,
+        "mse": 0.019014
+      },
+      {
+        "bin": 1,
+        "n": 64,
+        "mean_confidence": 0.9841,
+        "mse": 0.080456
+      },
+      {
+        "bin": 2,
+        "n": 64,
+        "mean_confidence": 0.9953,
+        "mse": 0.034244
+      }
+    ],
+    "high_over_low_mse_ratio": 1.801,
+    "monotonic_decreasing": false
+  },
+  "checkpoint": "checkpoints/predictor_v2.2.1.pt",
+  "reload_consistent": true
+}

@@ -1,0 +1,182 @@
+{
+  "version": "3.0.3",
+  "n_params": 52191,
+  "train_seconds": 108.1,
+  "epochs_run": 60,
+  "stopped_early": false,
+  "best_epoch": 57,
+  "step_weight_scheme": "front",
+  "hybrid_weight": 0.0,
+  "hybrid_attached": false,
+  "final_loss": 0.059488,
+  "train_loss_curve": [
+    8.045865,
+    5.538972,
+    3.421105,
+    2.394767,
+    0.894755,
+    0.646679,
+    0.554459,
+    0.445853,
+    0.565461,
+    0.355672,
+    0.505776,
+    0.397056,
+    0.368108,
+    0.232935,
+    0.240415,
+    0.2091,
+    0.185278,
+    0.198149,
+    0.165327,
+    0.218551,
+    0.244833,
+    0.12676,
+    0.147746,
+    0.154096,
+    0.180706,
+    0.223379,
+    0.108841,
+    0.118869,
+    0.152197,
+    0.196797,
+    0.172893,
+    0.097109,
+    0.176912,
+    0.168443,
+    0.193156,
+    0.095426,
+    0.088074,
+    0.085384,
+    0.091883,
+    0.119117,
+    0.13461,
+    0.159691,
+    0.193671,
+    0.08798,
+    0.108868,
+    0.081014,
+    0.069915,
+    0.048117,
+    0.044184,
+    0.041138,
+    0.06704,
+    0.054491,
+    0.076502,
+    0.088248,
+    0.07749,
+    0.052591,
+    0.05354,
+    0.06573,
+    0.073261,
+    0.059488
+  ],
+  "eval_mse": 0.045556,
+  "naive_mse": 0.163415,
+  "untrained_single_mse": 4.415056,
+  "ece": 0.056546,
+  "coverage": 0.8888,
+  "interval_width": 0.54115,
+  "params_count": 52191,
+  "condition_gain_x": 15.393,
+  "rollout_mse_curve": [
+    0.045556,
+    0.058896,
+    0.087502,
+    0.127804
+  ],
+  "rollout_growth_x": 2.805,
+  "batch_inference_max_diff": 1.97e-06,
+  "calibration": {
+    "raw_ece": 0.385466,
+    "calibrated_ece": 0.056546,
+    "ece_reduction_x": 6.817,
+    "ranking_informative": true,
+    "num_segments": 4
+  },
+  "interval": {
+    "coverage_overall": 0.8888,
+    "coverage_by_step": [
+      0.8929,
+      0.8924,
+      0.8887,
+      0.8813
+    ],
+    "width_by_step": [
+      0.4103,
+      0.4755,
+      0.5839,
+      0.6949
+    ]
+  },
+  "ood": {
+    "threshold": 5.527528,
+    "id_score_mean": 2.640199,
+    "id_score_max": 8.200737,
+    "ood_score_mean": 13.097953,
+    "ood_score_max": 41.719368,
+    "ood_hit_rate": 0.8104,
+    "id_false_alarm_rate": 0.0646
+  },
+  "features_v27": {
+    "policy_best_index": 0,
+    "active_score_mean": 0.250835,
+    "hierarchical_bit_identical_to_flat": true
+  },
+  "features_v28": {
+    "loop_bit_identical_to_predict_next": true,
+    "loop_steps": [
+      "observe",
+      "understand",
+      "predict_action",
+      "future_state",
+      "feedback"
+    ]
+  },
+  "features_v29": {
+    "src_dof": 6,
+    "tgt_dof": 4,
+    "within_target_limits": true
+  },
+  "features_v30_multimodal": {
+    "shapes": {
+      "rgb": [
+        1,
+        4,
+        8
+      ],
+      "depth": [
+        1,
+        4,
+        4
+      ],
+      "mask": [
+        1,
+        4,
+        4
+      ]
+    },
+    "all_finite": true
+  },
+  "features_v30_eval5d": {
+    "is_internal_benchmark": true,
+    "not_physbrain_leaderboard": true,
+    "scores": {
+      "visual_spatial_perception": 96.61,
+      "multiview_spatial_understanding": 49.34,
+      "embodied_cognition_planning": 100.0,
+      "spatial_affordance": 100.0,
+      "visual_trajectory_reasoning": 93.37
+    },
+    "composite": 87.86
+  },
+  "new_features_offline_ab": {
+    "multitask": "external opt-in, default off",
+    "retargeting": "external opt-in, within target limits",
+    "affordance": "external opt-in",
+    "future_multimodal": "no state-MSE gain, opt-in default off",
+    "eval5d": "UDOS internal benchmark, not PhysBrain"
+  },
+  "checkpoint": "checkpoints/predictor_v3.0.3.pt",
+  "reload_consistent": true
+}

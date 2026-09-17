@@ -1,0 +1,43 @@
+{
+  "version": "3.2.0.dev4",
+  "n_per_kind": 12,
+  "epochs": 12,
+  "raw": {
+    "eval_mse": 0.49847,
+    "noise_robust_mse": 0.500575,
+    "ood_mse": 17.800047
+  },
+  "augmented_full": {
+    "eval_mse": 1.845146,
+    "noise_robust_mse": 1.842865,
+    "ood_mse": 3.39707
+  },
+  "ablations": {
+    "view": {
+      "eval_mse": 1.823276,
+      "noise_robust_mse": 1.81569,
+      "ood_mse": 4.16929
+    },
+    "perturb": {
+      "eval_mse": 1.014111,
+      "noise_robust_mse": 1.020797,
+      "ood_mse": 8.988338
+    },
+    "noise": {
+      "eval_mse": 0.410093,
+      "noise_robust_mse": 0.414395,
+      "ood_mse": 12.283692
+    },
+    "time_scale": {
+      "eval_mse": 1.699083,
+      "noise_robust_mse": 1.722021,
+      "ood_mse": 9.307311
+    }
+  },
+  "augment_mse_gain": -1.346676,
+  "augment_noise_gain": -1.34229,
+  "augment_ood_gain": 14.402977,
+  "opt_in_default_off": true,
+  "recommendation": "no consistent gain vs raw => keep opt-in, rejected as formal-data default",
+  "analogy_not_reproduction": true
+}

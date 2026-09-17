@@ -1,0 +1,25 @@
+{
+  "version": "4.2.1",
+  "anchor_eval_mse": 0.045556,
+  "teacher_mse": 0.045556,
+  "self_train_ab": {
+    "arm_A_self_generated_mse": 0.256902,
+    "arm_B_original_mse": 0.014466,
+    "delta_A_minus_B": 0.242436,
+    "self_generated_wins": false,
+    "verdict": "自产数据未优于原始数据 (留候选账本, 不宣称有效)",
+    "student_n_params": 422
+  },
+  "diminishing_returns_criterion_demo": {
+    "n_generations": 4,
+    "patience": 3,
+    "recent_improvements": [
+      0.0001,
+      0.0001,
+      0.0001
+    ],
+    "diminishing_returns": true,
+    "recommendation": "stop_self_training"
+  },
+  "honest_conclusion": "自产数据训练 student (mse=0.268) 远不如原始数据 (mse=0.0154); teacher->student 一代闭环在本线未证优, 留候选账本, 不宣称 RSI 提升。"
+}

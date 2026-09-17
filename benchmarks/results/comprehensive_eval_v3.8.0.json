@@ -1,0 +1,42 @@
+{
+  "feature": "comprehensive_3.4_to_3.8_combination",
+  "main_params": 52191,
+  "zero_grad_state_dict_md5_unchanged": true,
+  "features": {
+    "icm_3.4": {
+      "ok": true,
+      "icm_k3_mse": 0.008883
+    },
+    "pwm_3.6": {
+      "ok": true,
+      "h1_bitwise_anchor": false
+    },
+    "hier_3.7": {
+      "ok": true,
+      "command_shape": [
+        6
+      ]
+    },
+    "multi_agent_3.8": {
+      "ok": true,
+      "n_conflicts": 1
+    },
+    "wm_sched_3.8": {
+      "ok": true,
+      "alloc": {
+        "a": 2,
+        "b": 1
+      }
+    },
+    "closed_loop_3.8": {
+      "ok": true,
+      "feedback_l1": 0.666656
+    },
+    "twin_3.8": {
+      "ok": true,
+      "step": 0
+    }
+  },
+  "all_ok": true,
+  "analogy_not_reproduction": true
+}

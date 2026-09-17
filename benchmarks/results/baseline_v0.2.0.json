@@ -1,0 +1,58 @@
+{
+  "runtime": {
+    "torch": "2.14.0+cpu",
+    "threads": 2,
+    "peak_rss_mb": 288.0
+  },
+  "ctm_small_forward": {
+    "min_ms": 7.051,
+    "median_ms": 7.138,
+    "mean_ms": 7.334,
+    "max_ms": 8.667,
+    "samples": 10,
+    "params": 216192
+  },
+  "ctm_medium_forward": {
+    "min_ms": 17.13,
+    "median_ms": 17.816,
+    "mean_ms": 18.218,
+    "max_ms": 22.151,
+    "samples": 10,
+    "params": 691424
+  },
+  "gpm_small_internalize": {
+    "min_ms": 2.604,
+    "median_ms": 2.671,
+    "mean_ms": 2.722,
+    "max_ms": 2.861,
+    "samples": 10,
+    "hyper_params": 179312,
+    "lora_params": 7680,
+    "lora_kb_fp32": 30.0
+  },
+  "gpm_medium_internalize": {
+    "min_ms": 3.598,
+    "median_ms": 3.719,
+    "mean_ms": 3.716,
+    "max_ms": 3.828,
+    "samples": 10,
+    "hyper_params": 712000,
+    "lora_params": 61440,
+    "lora_kb_fp32": 240.0
+  },
+  "e2e_small": {
+    "min_ms": 7.934,
+    "median_ms": 7.991,
+    "mean_ms": 8.007,
+    "max_ms": 8.094,
+    "samples": 10
+  },
+  "upstream_ctm_forward": {
+    "min_ms": 8.915,
+    "median_ms": 9.113,
+    "mean_ms": 9.173,
+    "max_ms": 10.107,
+    "samples": 10,
+    "params": 134146
+  }
+}

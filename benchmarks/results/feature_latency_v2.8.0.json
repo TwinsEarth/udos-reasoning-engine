@@ -1,0 +1,19 @@
+{
+  "version": "2.8.2",
+  "n_repeats": 50,
+  "predict_next": {
+    "p50_ms": 2.9511,
+    "p95_ms": 3.3383,
+    "mean_ms": 3.0321
+  },
+  "physical_loop_step": {
+    "p50_ms": 27.3976,
+    "p95_ms": 30.942,
+    "mean_ms": 27.9777
+  },
+  "multitask_three_heads": {
+    "p50_ms": 0.159,
+    "p95_ms": 0.1849,
+    "mean_ms": 0.1634
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "feature": "multi_agent_conflict_resolution_ab",
+  "sweep_n_agents": [
+    2,
+    4,
+    8
+  ],
+  "t_steps": 20,
+  "routing": "priority yield + proportional slowdown (non-learning)",
+  "zero_gradient": true,
+  "learned": false,
+  "analogy_not_reproduction": true,
+  "results": {
+    "n2": {
+      "no_coordinator": {
+        "collision_events": 1.0,
+        "arrival_rate": 1.0,
+        "per_call_ms": 0.1594
+      },
+      "with_coordinator": {
+        "collision_events": 0.0,
+        "arrival_rate": 0.0,
+        "per_call_ms": 0.1598
+      },
+      "collision_reduction_pct": 100.0
+    },
+    "n4": {
+      "no_coordinator": {
+        "collision_events": 6.0,
+        "arrival_rate": 1.0,
+        "per_call_ms": 0.2953
+      },
+      "with_coordinator": {
+        "collision_events": 0.0,
+        "arrival_rate": 0.0,
+        "per_call_ms": 0.3618
+      },
+      "collision_reduction_pct": 100.0
+    },
+    "n8": {
+      "no_coordinator": {
+        "collision_events": 28.0,
+        "arrival_rate": 1.0,
+        "per_call_ms": 0.7258
+      },
+      "with_coordinator": {
+        "collision_events": 0.0,
+        "arrival_rate": 0.0,
+        "per_call_ms": 0.9455
+      },
+      "collision_reduction_pct": 100.0
+    }
+  },
+  "note": "协调器降低对穿场景碰撞事件数; 到达率/延迟为合成可测; 收益不稳处保持 opt-in"
+}

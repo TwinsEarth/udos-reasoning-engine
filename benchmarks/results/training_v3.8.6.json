@@ -1,0 +1,117 @@
+{
+  "version": "3.8.6",
+  "n_params": 52191,
+  "train_seconds": 102.9,
+  "epochs_run": 60,
+  "stopped_early": false,
+  "best_epoch": 57,
+  "final_loss": 0.059488,
+  "eval_mse": 0.045556,
+  "prev_line_mse": 0.045556,
+  "naive_mse": 0.163415,
+  "ece": 0.056546,
+  "coverage": 0.8888,
+  "icm_offline_ab": {
+    "icm_k0": 0.044995,
+    "icm_k1": 0.023368,
+    "icm_k3": 0.015456,
+    "icm_k5": 0.014433,
+    "naive_k0": 0.093142,
+    "naive_k1": 2.298195,
+    "naive_k3": 4.186838,
+    "zero_grad_state_dict_md5_unchanged": true
+  },
+  "pwm_sanity": {
+    "wm_params": 2310,
+    "latent_dim": 32,
+    "fitted": true,
+    "fit_first_loss": 3.816894,
+    "fit_last_loss": 0.407359,
+    "h1_bitwise_anchor": true,
+    "imagine_vs_real_step_mse": [
+      0.0,
+      0.125842,
+      0.234488,
+      0.361745
+    ],
+    "is_pure_readonly_no_main_param": true,
+    "zero_grad_state_dict_md5_unchanged": true
+  },
+  "neural_control_sanity": {
+    "command_shape": [
+      6
+    ],
+    "cortex_target_bitwise_with_predict_next": true,
+    "deterministic": true,
+    "zero_grad_state_dict_md5_unchanged": true,
+    "priority_order": {
+      "spinal": 0,
+      "cerebellum": 1,
+      "cortex": 2
+    },
+    "cortex_every": 10,
+    "is_pure_readonly_no_trainable_ctrl_params": true,
+    "analogy_not_reproduction": true
+  },
+  "multi_agent_design": {
+    "path": "synthetic parametric multi-agent scene + non-learning geometric conflict resolver (read-only)",
+    "zero_gradient": true,
+    "opt_in": true,
+    "no_trainable_agent_params": true,
+    "analogy_not_reproduction": true,
+    "main_params_untouched": true
+  },
+  "multi_agent_sanity": {
+    "n_agents": 3,
+    "n_conflicts_detected": 1,
+    "winner_keeps_speed": true,
+    "loser_slowed": true,
+    "far_agent_unaffected": true,
+    "deterministic": true,
+    "single_agent_degenerate_identity": true,
+    "zero_grad_state_dict_md5_unchanged": true,
+    "learned": false,
+    "analogy_not_reproduction": true,
+    "main_params_untouched": true
+  },
+  "closed_loop_sanity": {
+    "command_shape": [
+      6
+    ],
+    "feedback_finite": true,
+    "window_updated": true,
+    "zero_grad_state_dict_md5_unchanged": true,
+    "learned": false,
+    "analogy_not_reproduction": true
+  },
+  "backcompat_checkpoints": 25,
+  "backcompat_list": [
+    "predictor_v2.1.0.pt",
+    "predictor_v2.2.1.pt",
+    "predictor_v2.3.1.pt",
+    "predictor_v2.4.0.pt",
+    "predictor_v2.5.0.pt",
+    "predictor_v2.5.2.pt",
+    "predictor_v2.6.0.pt",
+    "predictor_v2.6.2.pt",
+    "predictor_v2.7.0.pt",
+    "predictor_v2.7.3.pt",
+    "predictor_v2.8.0.pt",
+    "predictor_v2.9.0.pt",
+    "predictor_v3.0.0.pt",
+    "predictor_v3.0.3.pt",
+    "predictor_v3.1.0.pt",
+    "predictor_v3.2.0.pt",
+    "predictor_v3.3.0.pt",
+    "predictor_v3.3.3.pt",
+    "predictor_v3.4.0.pt",
+    "predictor_v3.4.5.pt",
+    "predictor_v3.5.0.pt",
+    "predictor_v3.6.0.pt",
+    "predictor_v3.7.0.pt",
+    "predictor_v3.8.0.pt",
+    "predictor_v3.8.6.pt"
+  ],
+  "checkpoint": "checkpoints/predictor_v3.8.6.pt",
+  "reload_consistent": true
+}

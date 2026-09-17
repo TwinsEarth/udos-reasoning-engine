@@ -1,0 +1,8 @@
+{
+  "feature": "icm_comprehensive_eval",
+  "analogy_not_reproduction": true,
+  "icm_k0_mse": 0.066372,
+  "icm_k3_mse": 0.025069,
+  "icm_improvement": 0.041303,
+  "backcompat_checkpoints": 19
+}

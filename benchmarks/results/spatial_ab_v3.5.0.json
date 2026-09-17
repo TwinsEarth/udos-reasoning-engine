@@ -1,0 +1,38 @@
+{
+  "version": "3.5.0.dev6",
+  "n_objects": 40,
+  "route_A_spatial_range_search_ms": 0.0761,
+  "route_B_affordance_score_ms": 0.1439,
+  "semantic_iou_A_vs_B": 0.3333,
+  "sfm_near_count": 3,
+  "affordance_reachable_count": 1,
+  "occupancy_resolution_sweep": {
+    "8": {
+      "occupied_voxels": 2,
+      "total_voxels": 512,
+      "occupy_ms": 99.487
+    },
+    "16": {
+      "occupied_voxels": 29,
+      "total_voxels": 4096,
+      "occupy_ms": 798.833
+    },
+    "32": {
+      "occupied_voxels": 223,
+      "total_voxels": 32768,
+      "occupy_ms": 6383.882
+    }
+  },
+  "decision": "opt-in default off",
+  "rationale": "SFM range_search 语义=中心距<=R; affordance=softmax 可达性打分, 二者语义不同 (IoU 非 1.0), 不互相替代; SFM 作为独立 opt-in 查询能力, 默认不接管 affordance 路径, 保持旧输出逐位等价。",
+  "rejected_candidates": [
+    {
+      "candidate": "用 SFM range_search 替换 affordance_score",
+      "reason": "语义不同 (精确距离 vs 归一化可达性打分), 替换会改变既有服务输出"
+    },
+    {
+      "candidate": "占据网格分辨率默认 32",
+      "reason": "32^3 占用与 SDF 成本约为 8^3 的 64 倍, 合成代理场景 16 已足够"
+    }
+  ]
+}

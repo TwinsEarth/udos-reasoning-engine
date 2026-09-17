@@ -1,0 +1,22 @@
+{
+  "version": "2.9.1",
+  "analogy_not_reproduction": true,
+  "retarget_ab": {
+    "eval_mse_retarget": 1.681988,
+    "eval_mse_truncate": 3.978517,
+    "retarget_better": true,
+    "conclusion": "synthetic_proxy_only"
+  },
+  "affordance_ab": {
+    "n_trials": 200,
+    "n_parts": 4,
+    "guided_success": 1.0,
+    "unguided_success": 0.28,
+    "guided_better": true
+  },
+  "opt_in_default": true,
+  "rejected_candidates": [
+    "retarget/affordance/spatial_relation 进旧 predict_next 默认路径",
+    "affordance 成功率宣称真机抓取指标"
+  ]
+}

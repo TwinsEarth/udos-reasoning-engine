@@ -1,0 +1,31 @@
+{
+  "version": "4.5.6",
+  "env": "cpu-only",
+  "unit": "ms/op",
+  "build_registry_ms": 0.24,
+  "probe_uncached_ms": 0.0024,
+  "probe_cached_ms": 0.001,
+  "list_performance_ms": 0.0824,
+  "list_full_autoprobe_ms": 0.075,
+  "convert_action_chunk_ms": 0.00451,
+  "apply_profile_ms": 0.0019,
+  "summary_full": {
+    "profile": "full",
+    "total_registered": 79,
+    "visible_in_profile": 79,
+    "by_status": {
+      "available": 57,
+      "absent": 22
+    },
+    "by_level": {
+      "L1": 56,
+      "L3": 21,
+      "L2": 2
+    },
+    "by_kind": {
+      "model": 26,
+      "dataset": 26,
+      "action": 27
+    }
+  }
+}

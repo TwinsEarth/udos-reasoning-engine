@@ -1,0 +1,13 @@
+{
+  "version": "3.9.2",
+  "main_params": 52191,
+  "latency_ms": {
+    "baseline_predict_next_ms": 3.513,
+    "er_head_ms": 0.168,
+    "change_mask_sparsity_ms": 0.025,
+    "rvq_encode_ms": 0.047,
+    "flow_decode_ms": 0.126
+  },
+  "all_external_zero_grad": true,
+  "analogy_not_reproduction": true
+}

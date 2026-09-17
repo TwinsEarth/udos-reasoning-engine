@@ -1,0 +1,62 @@
+{
+  "config": {
+    "n_per_kind": 36,
+    "epochs": 45,
+    "horizon": 4,
+    "seeds": [
+      42,
+      7
+    ],
+    "note": "paired A/B; SS opt-in, gain not robust at this scale"
+  },
+  "results": {
+    "seed42": {
+      "teacher_forcing": {
+        "single_step_mse": 0.133527,
+        "rollout_mse_curve": [
+          0.133527,
+          0.168109,
+          0.220904,
+          0.300131
+        ],
+        "late_steps_mean": 0.26051749999999996,
+        "rollout_growth_x": 2.248
+      },
+      "ss_0.30_s15_w25": {
+        "single_step_mse": 0.089217,
+        "rollout_mse_curve": [
+          0.089217,
+          0.099556,
+          0.124248,
+          0.17286
+        ],
+        "late_steps_mean": 0.14855400000000002,
+        "rollout_growth_x": 1.938
+      }
+    },
+    "seed7": {
+      "teacher_forcing": {
+        "single_step_mse": 0.093919,
+        "rollout_mse_curve": [
+          0.093919,
+          0.120037,
+          0.161672,
+          0.235865
+        ],
+        "late_steps_mean": 0.19876850000000001,
+        "rollout_growth_x": 2.511
+      },
+      "ss_0.30_s15_w25": {
+        "single_step_mse": 0.10474,
+        "rollout_mse_curve": [
+          0.10474,
+          0.147862,
+          0.244028,
+          0.390981
+        ],
+        "late_steps_mean": 0.3175045,
+        "rollout_growth_x": 3.733
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+UDOS Reasoning Engine
+Copyright 2026 UDOS Authors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+---------------------------------------------------------------------------
+Third-party components bundled in this repository
+---------------------------------------------------------------------------
+
+1. Apache ECharts (file: web/echarts.min.js)
+   Copyright (c) Apache Software Foundation and other contributors.
+   Licensed under the Apache License, Version 2.0.
+   Source: https://github.com/apache/echarts
+
+---------------------------------------------------------------------------
+Attribution and inspiration (NO upstream code or weights are bundled)
+---------------------------------------------------------------------------
+
+The CTM and GPM (Doc-to-LoRA) mechanism-aligned modules are inspired by the
+following works from Sakana AI:
+  - Continuous Thought Machines (CTM), Apache License 2.0
+    https://github.com/SakanaAI/continuous-thought-machines
+  - Doc-to-LoRA, Apache License 2.0
+    https://github.com/SakanaAI/doc-to-lora
+
+This repository does NOT redistribute their source code or model weights.
+The optional adapter udos/adapters/sakana_ctm_adapter.py only fetches
+upstream artifacts at runtime via huggingface_hub when you explicitly enable
+it; the rest of the engine is a lightweight, CPU-runnable mechanism
+alignment ("analogy, not reproduction").
+
+The open-source resource catalog (udos/connectors/_catalog_data.py,
+udos/connectors/registry_build.py, docs/opensource_catalog.*,
+docs/third_party/*.md) contains only metadata, architecture notes and links
+to third-party robot foundation models, datasets and simulators. No
+third-party source code or pretrained weights are redistributed here. Each
+such project and dataset remains governed by its own license, which is
+recorded in the catalog entries; consult the upstream projects before any
+commercial or model-weight use.
+
+The model checkpoints under checkpoints/ are produced by this project's own
+synthetic-dynamics training pipeline (a ~52k-parameter PhysicsPredictor).
+They contain no third-party or upstream pretrained weights.
+
+Fine-grained biophysical modules (udos/finesim, udos/dendrite) are CPU
+reference implementations of published equations and mechanisms; they do
+not run NEURON/CoreNEURON and do not reproduce the papers' effect sizes.
+Citations are listed in the module docstrings and in docs/.

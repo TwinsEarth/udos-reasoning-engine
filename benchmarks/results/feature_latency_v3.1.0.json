@@ -1,0 +1,24 @@
+{
+  "version": "3.1.2",
+  "n_repeats": 50,
+  "predict_next": {
+    "p50_ms": 2.988,
+    "p95_ms": 3.6352,
+    "mean_ms": 3.1261
+  },
+  "action_tokenize": {
+    "p50_ms": 0.1636,
+    "p95_ms": 0.1793,
+    "mean_ms": 0.1661
+  },
+  "action_detokenize": {
+    "p50_ms": 0.0155,
+    "p95_ms": 0.0179,
+    "mean_ms": 0.0167
+  },
+  "token_next_token": {
+    "p50_ms": 0.0152,
+    "p95_ms": 0.0228,
+    "mean_ms": 0.016
+  }
+}

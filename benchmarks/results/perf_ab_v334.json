@@ -1,0 +1,809 @@
+{
+  "meta": {
+    "stage": "v3.3.4 hardening perf",
+    "cpu_threads": 2,
+    "torch": "2.14.0+cpu",
+    "checkpoint_md5": "f993bcbdd476473c28dd4604bbbe11d6",
+    "rule": "同合同交替A/B; 仅ACCEPT改默认; median>=5%且p95不退化且语义逐位等价"
+  },
+  "candidates": [
+    {
+      "id": "C1",
+      "name": "physical_loop 复用 understand.target_state",
+      "verdict": "ACCEPT",
+      "baseline_ms": {
+        "median": 54.836,
+        "p95": 57.57,
+        "mean": 54.778
+      },
+      "candidate_ms": {
+        "median": 51.535,
+        "p95": 54.3,
+        "mean": 51.186
+      },
+      "delta_wall_ms": {
+        "median": 3.292,
+        "p95": 6.438,
+        "p10": 0.961,
+        "mean": 3.593
+      },
+      "median_improvement_pct": 6.02,
+      "mean_improvement_pct": 6.56,
+      "semantic_bitwise_equal": true,
+      "max_abs_diff": 0.0,
+      "mutant_caught": true,
+      "pairs_faster": 39,
+      "pairs_slower": 1,
+      "n_pairs": 40,
+      "raw_pairs": [
+        {
+          "pair": 0,
+          "baseline_wall": 0.051899,
+          "cand_wall": 0.050916,
+          "baseline_cpu": 0.101172,
+          "cand_cpu": 0.101064,
+          "delta_wall": 0.000983,
+          "delta_cpu": 0.000109
+        },
+        {
+          "pair": 1,
+          "baseline_wall": 0.056137,
+          "cand_wall": 0.051477,
+          "baseline_cpu": 0.110391,
+          "cand_cpu": 0.102145,
+          "delta_wall": 0.00466,
+          "delta_cpu": 0.008247
+        },
+        {
+          "pair": 2,
+          "baseline_wall": 0.055104,
+          "cand_wall": 0.05093,
+          "baseline_cpu": 0.107152,
+          "cand_cpu": 0.099769,
+          "delta_wall": 0.004174,
+          "delta_cpu": 0.007383
+        },
+        {
+          "pair": 3,
+          "baseline_wall": 0.052233,
+          "cand_wall": 0.046764,
+          "baseline_cpu": 0.102238,
+          "cand_cpu": 0.093088,
+          "delta_wall": 0.00547,
+          "delta_cpu": 0.00915
+        },
+        {
+          "pair": 4,
+          "baseline_wall": 0.055003,
+          "cand_wall": 0.046481,
+          "baseline_cpu": 0.107861,
+          "cand_cpu": 0.09252,
+          "delta_wall": 0.008522,
+          "delta_cpu": 0.015341
+        },
+        {
+          "pair": 5,
+          "baseline_wall": 0.051859,
+          "cand_wall": 0.046482,
+          "baseline_cpu": 0.100839,
+          "cand_cpu": 0.091848,
+          "delta_wall": 0.005377,
+          "delta_cpu": 0.00899
+        },
+        {
+          "pair": 6,
+          "baseline_wall": 0.051171,
+          "cand_wall": 0.049196,
+          "baseline_cpu": 0.101007,
+          "cand_cpu": 0.097407,
+          "delta_wall": 0.001975,
+          "delta_cpu": 0.0036
+        },
+        {
+          "pair": 7,
+          "baseline_wall": 0.052598,
+          "cand_wall": 0.047051,
+          "baseline_cpu": 0.102976,
+          "cand_cpu": 0.093468,
+          "delta_wall": 0.005547,
+          "delta_cpu": 0.009507
+        },
+        {
+          "pair": 8,
+          "baseline_wall": 0.057569,
+          "cand_wall": 0.054941,
+          "baseline_cpu": 0.113458,
+          "cand_cpu": 0.107358,
+          "delta_wall": 0.002628,
+          "delta_cpu": 0.0061
+        },
+        {
+          "pair": 9,
+          "baseline_wall": 0.05538,
+          "cand_wall": 0.052383,
+          "baseline_cpu": 0.109558,
+          "cand_cpu": 0.102453,
+          "delta_wall": 0.002997,
+          "delta_cpu": 0.007105
+        },
+        {
+          "pair": 10,
+          "baseline_wall": 0.0562,
+          "cand_wall": 0.053318,
+          "baseline_cpu": 0.112287,
+          "cand_cpu": 0.103799,
+          "delta_wall": 0.002882,
+          "delta_cpu": 0.008488
+        },
+        {
+          "pair": 11,
+          "baseline_wall": 0.055725,
+          "cand_wall": 0.054289,
+          "baseline_cpu": 0.110914,
+          "cand_cpu": 0.105738,
+          "delta_wall": 0.001437,
+          "delta_cpu": 0.005176
+        },
+        {
+          "pair": 12,
+          "baseline_wall": 0.056337,
+          "cand_wall": 0.049991,
+          "baseline_cpu": 0.111513,
+          "cand_cpu": 0.097993,
+          "delta_wall": 0.006346,
+          "delta_cpu": 0.01352
+        },
+        {
+          "pair": 13,
+          "baseline_wall": 0.054229,
+          "cand_wall": 0.051164,
+          "baseline_cpu": 0.108446,
+          "cand_cpu": 0.099687,
+          "delta_wall": 0.003065,
+          "delta_cpu": 0.008759
+        },
+        {
+          "pair": 14,
+          "baseline_wall": 0.054602,
+          "cand_wall": 0.051971,
+          "baseline_cpu": 0.107826,
+          "cand_cpu": 0.101645,
+          "delta_wall": 0.002632,
+          "delta_cpu": 0.006181
+        },
+        {
+          "pair": 15,
+          "baseline_wall": 0.054643,
+          "cand_wall": 0.050416,
+          "baseline_cpu": 0.107047,
+          "cand_cpu": 0.099662,
+          "delta_wall": 0.004226,
+          "delta_cpu": 0.007385
+        },
+        {
+          "pair": 16,
+          "baseline_wall": 0.05755,
+          "cand_wall": 0.051593,
+          "baseline_cpu": 0.113623,
+          "cand_cpu": 0.102811,
+          "delta_wall": 0.005957,
+          "delta_cpu": 0.010812
+        },
+        {
+          "pair": 17,
+          "baseline_wall": 0.055382,
+          "cand_wall": 0.051265,
+          "baseline_cpu": 0.107796,
+          "cand_cpu": 0.101535,
+          "delta_wall": 0.004117,
+          "delta_cpu": 0.006261
+        },
+        {
+          "pair": 18,
+          "baseline_wall": 0.057512,
+          "cand_wall": 0.05203,
+          "baseline_cpu": 0.113474,
+          "cand_cpu": 0.103278,
+          "delta_wall": 0.005482,
+          "delta_cpu": 0.010196
+        },
+        {
+          "pair": 19,
+          "baseline_wall": 0.0574,
+          "cand_wall": 0.051063,
+          "baseline_cpu": 0.111808,
+          "cand_cpu": 0.101259,
+          "delta_wall": 0.006337,
+          "delta_cpu": 0.01055
+        },
+        {
+          "pair": 20,
+          "baseline_wall": 0.054545,
+          "cand_wall": 0.053779,
+          "baseline_cpu": 0.108064,
+          "cand_cpu": 0.1055,
+          "delta_wall": 0.000766,
+          "delta_cpu": 0.002564
+        },
+        {
+          "pair": 21,
+          "baseline_wall": 0.057184,
+          "cand_wall": 0.054505,
+          "baseline_cpu": 0.112092,
+          "cand_cpu": 0.105949,
+          "delta_wall": 0.002679,
+          "delta_cpu": 0.006143
+        },
+        {
+          "pair": 22,
+          "baseline_wall": 0.049862,
+          "cand_wall": 0.047992,
+          "baseline_cpu": 0.098906,
+          "cand_cpu": 0.094467,
+          "delta_wall": 0.00187,
+          "delta_cpu": 0.00444
+        },
+        {
+          "pair": 23,
+          "baseline_wall": 0.054248,
+          "cand_wall": 0.050913,
+          "baseline_cpu": 0.107961,
+          "cand_cpu": 0.100348,
+          "delta_wall": 0.003335,
+          "delta_cpu": 0.007613
+        },
+        {
+          "pair": 24,
+          "baseline_wall": 0.054322,
+          "cand_wall": 0.05222,
+          "baseline_cpu": 0.107421,
+          "cand_cpu": 0.101973,
+          "delta_wall": 0.002102,
+          "delta_cpu": 0.005448
+        },
+        {
+          "pair": 25,
+          "baseline_wall": 0.054669,
+          "cand_wall": 0.048871,
+          "baseline_cpu": 0.108867,
+          "cand_cpu": 0.095475,
+          "delta_wall": 0.005798,
+          "delta_cpu": 0.013392
+        },
+        {
+          "pair": 26,
+          "baseline_wall": 0.049967,
+          "cand_wall": 0.051097,
+          "baseline_cpu": 0.099253,
+          "cand_cpu": 0.099941,
+          "delta_wall": -0.00113,
+          "delta_cpu": -0.000688
+        },
+        {
+          "pair": 27,
+          "baseline_wall": 0.055982,
+          "cand_wall": 0.051843,
+          "baseline_cpu": 0.11119,
+          "cand_cpu": 0.102174,
+          "delta_wall": 0.004139,
+          "delta_cpu": 0.009016
+        },
+        {
+          "pair": 28,
+          "baseline_wall": 0.05393,
+          "cand_wall": 0.052098,
+          "baseline_cpu": 0.106862,
+          "cand_cpu": 0.101862,
+          "delta_wall": 0.001832,
+          "delta_cpu": 0.005
+        },
+        {
+          "pair": 29,
+          "baseline_wall": 0.054017,
+          "cand_wall": 0.051611,
+          "baseline_cpu": 0.107168,
+          "cand_cpu": 0.100979,
+          "delta_wall": 0.002407,
+          "delta_cpu": 0.006188
+        },
+        {
+          "pair": 30,
+          "baseline_wall": 0.053859,
+          "cand_wall": 0.05165,
+          "baseline_cpu": 0.107598,
+          "cand_cpu": 0.101528,
+          "delta_wall": 0.002209,
+          "delta_cpu": 0.006071
+        },
+        {
+          "pair": 31,
+          "baseline_wall": 0.057034,
+          "cand_wall": 0.05276,
+          "baseline_cpu": 0.111445,
+          "cand_cpu": 0.104876,
+          "delta_wall": 0.004274,
+          "delta_cpu": 0.006569
+        },
+        {
+          "pair": 32,
+          "baseline_wall": 0.058033,
+          "cand_wall": 0.052763,
+          "baseline_cpu": 0.113809,
+          "cand_cpu": 0.103872,
+          "delta_wall": 0.00527,
+          "delta_cpu": 0.009936
+        },
+        {
+          "pair": 33,
+          "baseline_wall": 0.057582,
+          "cand_wall": 0.049397,
+          "baseline_cpu": 0.113451,
+          "cand_cpu": 0.097191,
+          "delta_wall": 0.008185,
+          "delta_cpu": 0.01626
+        },
+        {
+          "pair": 34,
+          "baseline_wall": 0.051896,
+          "cand_wall": 0.051465,
+          "baseline_cpu": 0.101755,
+          "cand_cpu": 0.102655,
+          "delta_wall": 0.000431,
+          "delta_cpu": -0.0009
+        },
+        {
+          "pair": 35,
+          "baseline_wall": 0.053306,
+          "cand_wall": 0.049278,
+          "baseline_cpu": 0.103828,
+          "cand_cpu": 0.097595,
+          "delta_wall": 0.004028,
+          "delta_cpu": 0.006233
+        },
+        {
+          "pair": 36,
+          "baseline_wall": 0.057387,
+          "cand_wall": 0.051826,
+          "baseline_cpu": 0.113602,
+          "cand_cpu": 0.103072,
+          "delta_wall": 0.005561,
+          "delta_cpu": 0.01053
+        },
+        {
+          "pair": 37,
+          "baseline_wall": 0.053297,
+          "cand_wall": 0.052952,
+          "baseline_cpu": 0.104116,
+          "cand_cpu": 0.104889,
+          "delta_wall": 0.000345,
+          "delta_cpu": -0.000773
+        },
+        {
+          "pair": 38,
+          "baseline_wall": 0.056,
+          "cand_wall": 0.052749,
+          "baseline_cpu": 0.110228,
+          "cand_cpu": 0.103161,
+          "delta_wall": 0.00325,
+          "delta_cpu": 0.007067
+        },
+        {
+          "pair": 39,
+          "baseline_wall": 0.055484,
+          "cand_wall": 0.053945,
+          "baseline_cpu": 0.109617,
+          "cand_cpu": 0.105454,
+          "delta_wall": 0.00154,
+          "delta_cpu": 0.004163
+        }
+      ]
+    },
+    {
+      "id": "C2",
+      "name": "BatchPredictor 默认 max_shard 32->64",
+      "verdict": "ACCEPT",
+      "workload": "bs=64, W=6",
+      "baseline_ms": {
+        "median": 10.23,
+        "p95": 11.164,
+        "mean": 10.407
+      },
+      "candidate_ms": {
+        "median": 6.062,
+        "p95": 6.425,
+        "mean": 6.115
+      },
+      "delta_wall_ms": {
+        "median": 4.216,
+        "p95": 5.142,
+        "mean": 4.292
+      },
+      "median_improvement_pct": 40.74,
+      "mean_improvement_pct": 41.24,
+      "semantic_bitwise_equal": true,
+      "max_abs_diff": 0.0,
+      "mutant_caught": true,
+      "control_bs32_baseline_ms": 7.313,
+      "control_bs32_cand_ms": 7.367,
+      "pairs_faster": 40,
+      "pairs_slower": 0,
+      "n_pairs": 40,
+      "raw_pairs": [
+        {
+          "pair": 0,
+          "bw": 0.010129,
+          "cw": 0.00597,
+          "bc": 0.02,
+          "cc": 0.011891,
+          "dw": 0.004159,
+          "dc": 0.008109
+        },
+        {
+          "pair": 1,
+          "bw": 0.010327,
+          "cw": 0.006067,
+          "bc": 0.020198,
+          "cc": 0.012993,
+          "dw": 0.00426,
+          "dc": 0.007205
+        },
+        {
+          "pair": 2,
+          "bw": 0.011307,
+          "cw": 0.006046,
+          "bc": 0.020227,
+          "cc": 0.011954,
+          "dw": 0.005261,
+          "dc": 0.008273
+        },
+        {
+          "pair": 3,
+          "bw": 0.010692,
+          "cw": 0.006088,
+          "bc": 0.0213,
+          "cc": 0.011992,
+          "dw": 0.004604,
+          "dc": 0.009308
+        },
+        {
+          "pair": 4,
+          "bw": 0.010203,
+          "cw": 0.006496,
+          "bc": 0.020074,
+          "cc": 0.01195,
+          "dw": 0.003707,
+          "dc": 0.008124
+        },
+        {
+          "pair": 5,
+          "bw": 0.010593,
+          "cw": 0.005993,
+          "bc": 0.021814,
+          "cc": 0.011557,
+          "dw": 0.004599,
+          "dc": 0.010257
+        },
+        {
+          "pair": 6,
+          "bw": 0.010125,
+          "cw": 0.006156,
+          "bc": 0.019999,
+          "cc": 0.012069,
+          "dw": 0.003969,
+          "dc": 0.00793
+        },
+        {
+          "pair": 7,
+          "bw": 0.010185,
+          "cw": 0.006138,
+          "bc": 0.02105,
+          "cc": 0.012067,
+          "dw": 0.004046,
+          "dc": 0.008983
+        },
+        {
+          "pair": 8,
+          "bw": 0.0112,
+          "cw": 0.005974,
+          "bc": 0.020617,
+          "cc": 0.011593,
+          "dw": 0.005227,
+          "dc": 0.009024
+        },
+        {
+          "pair": 9,
+          "bw": 0.01046,
+          "cw": 0.006183,
+          "bc": 0.020702,
+          "cc": 0.012565,
+          "dw": 0.004278,
+          "dc": 0.008136
+        },
+        {
+          "pair": 10,
+          "bw": 0.010233,
+          "cw": 0.005957,
+          "bc": 0.02004,
+          "cc": 0.011899,
+          "dw": 0.004276,
+          "dc": 0.008141
+        },
+        {
+          "pair": 11,
+          "bw": 0.010592,
+          "cw": 0.006091,
+          "bc": 0.020434,
+          "cc": 0.011932,
+          "dw": 0.004501,
+          "dc": 0.008502
+        },
+        {
+          "pair": 12,
+          "bw": 0.01022,
+          "cw": 0.006011,
+          "bc": 0.020094,
+          "cc": 0.011925,
+          "dw": 0.004208,
+          "dc": 0.00817
+        },
+        {
+          "pair": 13,
+          "bw": 0.010205,
+          "cw": 0.00624,
+          "bc": 0.020076,
+          "cc": 0.01203,
+          "dw": 0.003965,
+          "dc": 0.008046
+        },
+        {
+          "pair": 14,
+          "bw": 0.011162,
+          "cw": 0.006104,
+          "bc": 0.020374,
+          "cc": 0.012976,
+          "dw": 0.005058,
+          "dc": 0.007398
+        },
+        {
+          "pair": 15,
+          "bw": 0.010214,
+          "cw": 0.00607,
+          "bc": 0.020085,
+          "cc": 0.011887,
+          "dw": 0.004144,
+          "dc": 0.008199
+        },
+        {
+          "pair": 16,
+          "bw": 0.010244,
+          "cw": 0.007516,
+          "bc": 0.020114,
+          "cc": 0.013965,
+          "dw": 0.002727,
+          "dc": 0.006148
+        },
+        {
+          "pair": 17,
+          "bw": 0.010563,
+          "cw": 0.005959,
+          "bc": 0.020847,
+          "cc": 0.011469,
+          "dw": 0.004604,
+          "dc": 0.009378
+        },
+        {
+          "pair": 18,
+          "bw": 0.010207,
+          "cw": 0.006026,
+          "bc": 0.020049,
+          "cc": 0.011939,
+          "dw": 0.004181,
+          "dc": 0.00811
+        },
+        {
+          "pair": 19,
+          "bw": 0.010181,
+          "cw": 0.005958,
+          "bc": 0.021042,
+          "cc": 0.01189,
+          "dw": 0.004223,
+          "dc": 0.009152
+        },
+        {
+          "pair": 20,
+          "bw": 0.010351,
+          "cw": 0.006215,
+          "bc": 0.02,
+          "cc": 0.012123,
+          "dw": 0.004136,
+          "dc": 0.007877
+        },
+        {
+          "pair": 21,
+          "bw": 0.010219,
+          "cw": 0.006057,
+          "bc": 0.020064,
+          "cc": 0.01188,
+          "dw": 0.004161,
+          "dc": 0.008184
+        },
+        {
+          "pair": 22,
+          "bw": 0.010156,
+          "cw": 0.006421,
+          "bc": 0.021024,
+          "cc": 0.011885,
+          "dw": 0.003735,
+          "dc": 0.009139
+        },
+        {
+          "pair": 23,
+          "bw": 0.010783,
+          "cw": 0.006134,
+          "bc": 0.021648,
+          "cc": 0.012045,
+          "dw": 0.004649,
+          "dc": 0.009604
+        },
+        {
+          "pair": 24,
+          "bw": 0.010237,
+          "cw": 0.006044,
+          "bc": 0.0201,
+          "cc": 0.011957,
+          "dw": 0.004194,
+          "dc": 0.008143
+        },
+        {
+          "pair": 25,
+          "bw": 0.010146,
+          "cw": 0.006198,
+          "bc": 0.020019,
+          "cc": 0.01305,
+          "dw": 0.003948,
+          "dc": 0.006969
+        },
+        {
+          "pair": 26,
+          "bw": 0.011145,
+          "cw": 0.006041,
+          "bc": 0.020288,
+          "cc": 0.011966,
+          "dw": 0.005104,
+          "dc": 0.008322
+        },
+        {
+          "pair": 27,
+          "bw": 0.010194,
+          "cw": 0.006121,
+          "bc": 0.02007,
+          "cc": 0.011948,
+          "dw": 0.004073,
+          "dc": 0.008122
+        },
+        {
+          "pair": 28,
+          "bw": 0.010166,
+          "cw": 0.005929,
+          "bc": 0.02004,
+          "cc": 0.011866,
+          "dw": 0.004238,
+          "dc": 0.008174
+        },
+        {
+          "pair": 29,
+          "bw": 0.010541,
+          "cw": 0.006105,
+          "bc": 0.021406,
+          "cc": 0.012015,
+          "dw": 0.004436,
+          "dc": 0.009391
+        },
+        {
+          "pair": 30,
+          "bw": 0.010166,
+          "cw": 0.005986,
+          "bc": 0.020041,
+          "cc": 0.011923,
+          "dw": 0.00418,
+          "dc": 0.008119
+        },
+        {
+          "pair": 31,
+          "bw": 0.010197,
+          "cw": 0.005921,
+          "bc": 0.020119,
+          "cc": 0.011219,
+          "dw": 0.004276,
+          "dc": 0.0089
+        },
+        {
+          "pair": 32,
+          "bw": 0.011161,
+          "cw": 0.006024,
+          "bc": 0.020255,
+          "cc": 0.011934,
+          "dw": 0.005137,
+          "dc": 0.008322
+        },
+        {
+          "pair": 33,
+          "bw": 0.010226,
+          "cw": 0.006151,
+          "bc": 0.021081,
+          "cc": 0.011966,
+          "dw": 0.004075,
+          "dc": 0.009115
+        },
+        {
+          "pair": 34,
+          "bw": 0.010159,
+          "cw": 0.006021,
+          "bc": 0.02009,
+          "cc": 0.011585,
+          "dw": 0.004138,
+          "dc": 0.008505
+        },
+        {
+          "pair": 35,
+          "bw": 0.010516,
+          "cw": 0.006093,
+          "bc": 0.02137,
+          "cc": 0.012005,
+          "dw": 0.004423,
+          "dc": 0.009365
+        },
+        {
+          "pair": 36,
+          "bw": 0.010333,
+          "cw": 0.005968,
+          "bc": 0.020177,
+          "cc": 0.011807,
+          "dw": 0.004365,
+          "dc": 0.00837
+        },
+        {
+          "pair": 37,
+          "bw": 0.01008,
+          "cw": 0.005979,
+          "bc": 0.019962,
+          "cc": 0.011904,
+          "dw": 0.004101,
+          "dc": 0.008058
+        },
+        {
+          "pair": 38,
+          "bw": 0.010301,
+          "cw": 0.005967,
+          "bc": 0.01994,
+          "cc": 0.011877,
+          "dw": 0.004334,
+          "dc": 0.008063
+        },
+        {
+          "pair": 39,
+          "bw": 0.010158,
+          "cw": 0.006196,
+          "bc": 0.020034,
+          "cc": 0.013026,
+          "dw": 0.003962,
+          "dc": 0.007008
+        }
+      ]
+    }
+  ],
+  "rejected": [
+    {
+      "id": "C3a",
+      "name": "HTTP /predict JSON/tensor 序列化",
+      "verdict": "REJECT",
+      "reason": "4.84ms e2e vs 3.12ms 推理的 ~1.7ms 开销来自 torch.tensor(nested_list) 解析 + .tolist() + 标准库 HTTP 框架(BaseHTTPRequestHandler/ThreadingHTTPServer), 非 JSON 库本身; 优化需改框架或改 API 输出契约(嵌套list->bytes), 无安全单 delta, 预估收益<5%。"
+    },
+    {
+      "id": "C3b",
+      "name": "GPM/CTM 前向冗余张量拷贝",
+      "verdict": "REJECT",
+      "reason": "predict_next 已 @torch.no_grad(); forward 逐 tick 解码 T=8 行经 tiny MLP(out=32->6) 在 B=1 仅微秒级, 非热点(单次3.12ms中CTM内部时间轴占主体, 属训练权重模型不可动); 无可省冗余。"
+    }
+  ]
+}

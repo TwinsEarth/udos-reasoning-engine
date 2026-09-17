@@ -1,0 +1,36 @@
+{
+  "n_task_kinds": 4,
+  "matrix": [
+    {
+      "task_kind": "accel",
+      "n_samples": 160,
+      "spatial_rel_norm": 0.6834,
+      "target_point_norm": 0.6693,
+      "traj_proxy_norm": 0.9462
+    },
+    {
+      "task_kind": "collision",
+      "n_samples": 160,
+      "spatial_rel_norm": 1.0133,
+      "target_point_norm": 0.6587,
+      "traj_proxy_norm": 0.789
+    },
+    {
+      "task_kind": "spring",
+      "n_samples": 160,
+      "spatial_rel_norm": 0.7565,
+      "target_point_norm": 0.8438,
+      "traj_proxy_norm": 0.8714
+    },
+    {
+      "task_kind": "uniform",
+      "n_samples": 160,
+      "spatial_rel_norm": 0.642,
+      "target_point_norm": 0.7253,
+      "traj_proxy_norm": 0.9202
+    }
+  ],
+  "overall_single_step_mse": 0.049359,
+  "main_params_untouched": true,
+  "analogy_not_reproduction": true
+}

@@ -1,0 +1,113 @@
+{
+  "experiment": "v2.4.11 conformal multi-level coverage (80/90/95)",
+  "alphas": [
+    0.2,
+    0.1,
+    0.05
+  ],
+  "metric": "independent test set coverage & width",
+  "epochs": 12,
+  "n_per_kind": 16,
+  "horizon": 4,
+  "seeds": [
+    42,
+    7,
+    123
+  ],
+  "per_seed": [
+    {
+      "seed": 42,
+      "runs": [
+        {
+          "alpha": 0.2,
+          "level": "80%",
+          "coverage": 0.8216,
+          "mean_width": 1.758808
+        },
+        {
+          "alpha": 0.1,
+          "level": "90%",
+          "coverage": 0.9076,
+          "mean_width": 2.776664
+        },
+        {
+          "alpha": 0.05,
+          "level": "95%",
+          "coverage": 0.9635,
+          "mean_width": 3.641068
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "runs": [
+        {
+          "alpha": 0.2,
+          "level": "80%",
+          "coverage": 0.8594,
+          "mean_width": 1.204534
+        },
+        {
+          "alpha": 0.1,
+          "level": "90%",
+          "coverage": 0.9414,
+          "mean_width": 1.688975
+        },
+        {
+          "alpha": 0.05,
+          "level": "95%",
+          "coverage": 0.9714,
+          "mean_width": 2.122786
+        }
+      ]
+    },
+    {
+      "seed": 123,
+      "runs": [
+        {
+          "alpha": 0.2,
+          "level": "80%",
+          "coverage": 0.8587,
+          "mean_width": 1.258302
+        },
+        {
+          "alpha": 0.1,
+          "level": "90%",
+          "coverage": 0.9277,
+          "mean_width": 1.724842
+        },
+        {
+          "alpha": 0.05,
+          "level": "95%",
+          "coverage": 0.9616,
+          "mean_width": 2.205779
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "80%": {
+      "alpha": 0.2,
+      "coverage": 0.8466,
+      "nominal_coverage": 0.8,
+      "coverage_minus_nominal": 0.0466,
+      "mean_width": 1.407215
+    },
+    "90%": {
+      "alpha": 0.1,
+      "coverage": 0.9256,
+      "nominal_coverage": 0.9,
+      "coverage_minus_nominal": 0.0256,
+      "mean_width": 2.063494
+    },
+    "95%": {
+      "alpha": 0.05,
+      "coverage": 0.9655,
+      "nominal_coverage": 0.95,
+      "coverage_minus_nominal": 0.0155,
+      "mean_width": 2.656544
+    },
+    "width_ordering_80<90<95": true
+  },
+  "elapsed_sec": 25.6
+}

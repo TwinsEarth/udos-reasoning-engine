@@ -1,0 +1,28 @@
+{
+  "version": "4.3.9",
+  "n_params": 52191,
+  "inherits_frozen_main_from": "predictor_v4.1.0.pt",
+  "eval_mse": 0.045556,
+  "anchor_eval_mse": 0.045556,
+  "eval_mse_matches_anchor": true,
+  "backcompat_checkpoints": 33,
+  "backcompat_all_loadable": true,
+  "line_439": {
+    "config_default_cost": 8.0,
+    "config_best_cost": 3.5,
+    "config_improved": true,
+    "ab_A_wins": true,
+    "ab_cost_saving_pct": 56.25,
+    "loop_n_archive": 72,
+    "multigen_cost_curve": [
+      3.5,
+      3.5
+    ],
+    "multigen_honest_verdict": "efficiency_improving",
+    "global_stop_action": "stop_self_evolution",
+    "long_horizon_verified": true
+  },
+  "honest_conclusion": "v4.3 基础设施自优化在固定负载上仅采纳'输出保真且更省'的配置(config_improved=True, ab_A_wins=True, 降本 56.25%); 多代成本曲线诚实记录为 efficiency_improving; 全局推荐动作=stop_self_evolution; 主预测器零改动, eval_mse 锚点不变, 不宣称飞轮必然提升。",
+  "checkpoint": "checkpoints/predictor_v4.3.9.pt",
+  "reload_consistent": true
+}

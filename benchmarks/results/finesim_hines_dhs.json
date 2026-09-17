@@ -1,0 +1,6 @@
+{
+  "hines_serial_steps": 5,
+  "dhs_parallel_layers": 4,
+  "numerical_consistent": true,
+  "self_timed_note": "本机 CPU 仅报步数/层数; 16线程/10x/100-1000x/5万神经元 [UNVERIFIED]"
+}

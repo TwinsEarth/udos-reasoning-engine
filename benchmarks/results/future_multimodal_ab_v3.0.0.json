@@ -1,0 +1,33 @@
+{
+  "version": "5.4.3",
+  "checkpoint": "predictor_v3.0.0.pt",
+  "n_repeats": 50,
+  "single_modal": {
+    "kind": "FutureStateHead",
+    "params": 924,
+    "state_mse_vs_future": 5.741564,
+    "latency_p50_ms": 0.0179
+  },
+  "multimodal": {
+    "kind": "FutureMultimodalHead",
+    "params": 2112,
+    "modalities": [
+      "depth",
+      "mask",
+      "rgb"
+    ],
+    "state_mse_vs_future": "n/a (多模态头不输出状态, 仅代理向量)",
+    "latency_p50_ms": 0.0446
+  },
+  "alignment_loss": {
+    "mode": "opt-in auxiliary, 推理不计算",
+    "loss_value_on_proxy": 1.619633,
+    "changes_inference_output": false
+  },
+  "param_overhead_ratio": 2.286,
+  "conclusion": "多模态头不输出未来状态 => 无状态预测 MSE 增益, 仅增加参数与延迟; 一致性损失 opt-in 不改变推理输出。=> 默认 opt-in 关。",
+  "rejected_candidates": [
+    "默认开启多模态未来头 (无状态精度增益, 增加开销)",
+    "将一致性损失挂入正式训练主损失 (训练口径 hybrid_weight=0 不变)"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "version": "3.2.2",
+  "hardware": "cpu_2_threads",
+  "n_iters": 30,
+  "predict_ms": 3.19,
+  "rollout_ms": 12.281,
+  "augment_ms": 0.05,
+  "icl_ms": 3.259,
+  "analogy_not_reproduction": true
+}

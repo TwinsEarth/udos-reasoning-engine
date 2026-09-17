@@ -1,0 +1,114 @@
+{
+  "experiment": "v2.4.9 noise robustness A/B (train_sigma x test_sigma)",
+  "grid": {
+    "train_sigma": [
+      0.0,
+      0.05,
+      0.1
+    ],
+    "test_sigma": [
+      0.0,
+      0.1
+    ]
+  },
+  "metric": "single-step MSE on test window",
+  "epochs": 12,
+  "n_per_kind": 16,
+  "horizon": 4,
+  "seeds": [
+    42,
+    7,
+    123
+  ],
+  "per_seed": [
+    {
+      "seed": 42,
+      "runs": [
+        {
+          "train_sigma": 0.0,
+          "mse_test0.0": 0.738439,
+          "mse_test0.1": 0.745228,
+          "robustness_gap": 0.006789
+        },
+        {
+          "train_sigma": 0.05,
+          "mse_test0.0": 0.881723,
+          "mse_test0.1": 0.88506,
+          "robustness_gap": 0.003337
+        },
+        {
+          "train_sigma": 0.1,
+          "mse_test0.0": 0.766117,
+          "mse_test0.1": 0.771854,
+          "robustness_gap": 0.005737
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "runs": [
+        {
+          "train_sigma": 0.0,
+          "mse_test0.0": 0.223348,
+          "mse_test0.1": 0.227834,
+          "robustness_gap": 0.004486
+        },
+        {
+          "train_sigma": 0.05,
+          "mse_test0.0": 0.365821,
+          "mse_test0.1": 0.369472,
+          "robustness_gap": 0.003651
+        },
+        {
+          "train_sigma": 0.1,
+          "mse_test0.0": 0.282833,
+          "mse_test0.1": 0.284725,
+          "robustness_gap": 0.001892
+        }
+      ]
+    },
+    {
+      "seed": 123,
+      "runs": [
+        {
+          "train_sigma": 0.0,
+          "mse_test0.0": 0.245089,
+          "mse_test0.1": 0.247137,
+          "robustness_gap": 0.002048
+        },
+        {
+          "train_sigma": 0.05,
+          "mse_test0.0": 0.603094,
+          "mse_test0.1": 0.601931,
+          "robustness_gap": -0.001163
+        },
+        {
+          "train_sigma": 0.1,
+          "mse_test0.0": 0.988996,
+          "mse_test0.1": 0.971588,
+          "robustness_gap": -0.017408
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "0.0": {
+      "mse_test0.0": 0.402292,
+      "mse_test0.1": 0.406733,
+      "robustness_gap": 0.004441
+    },
+    "0.05": {
+      "mse_test0.0": 0.616879,
+      "mse_test0.1": 0.618821,
+      "robustness_gap": 0.001942,
+      "smaller_gap_vs_sigma0_seeds": "3/3"
+    },
+    "0.1": {
+      "mse_test0.0": 0.679315,
+      "mse_test0.1": 0.676056,
+      "robustness_gap": -0.00326,
+      "smaller_gap_vs_sigma0_seeds": "3/3"
+    }
+  },
+  "elapsed_sec": 62.2
+}

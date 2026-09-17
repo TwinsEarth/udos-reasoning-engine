@@ -1,0 +1,159 @@
+{
+  "experiment": "v2.3 F2 horizon step-weight ablation",
+  "single_delta": "step_weight_scheme only; shared init state/data/order",
+  "epochs": 45,
+  "n_per_kind": 32,
+  "horizon": 4,
+  "seeds": [
+    42,
+    7,
+    123
+  ],
+  "per_seed": [
+    {
+      "seed": 42,
+      "runs": [
+        {
+          "scheme": "front",
+          "single_step_mse": 0.105004,
+          "rollout_curve": [
+            0.105004,
+            0.130013,
+            0.182706,
+            0.274506
+          ],
+          "tail_mse": 0.228606,
+          "growth_x": 2.614
+        },
+        {
+          "scheme": "uniform",
+          "single_step_mse": 0.101276,
+          "rollout_curve": [
+            0.101276,
+            0.122066,
+            0.157685,
+            0.240271
+          ],
+          "tail_mse": 0.198978,
+          "growth_x": 2.372
+        },
+        {
+          "scheme": "back",
+          "single_step_mse": 0.10234,
+          "rollout_curve": [
+            0.10234,
+            0.113838,
+            0.145679,
+            0.215845
+          ],
+          "tail_mse": 0.180762,
+          "growth_x": 2.109
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "runs": [
+        {
+          "scheme": "front",
+          "single_step_mse": 0.095018,
+          "rollout_curve": [
+            0.095018,
+            0.126474,
+            0.194389,
+            0.38744
+          ],
+          "tail_mse": 0.290915,
+          "growth_x": 4.078
+        },
+        {
+          "scheme": "uniform",
+          "single_step_mse": 0.061721,
+          "rollout_curve": [
+            0.061721,
+            0.070353,
+            0.097248,
+            0.171416
+          ],
+          "tail_mse": 0.134332,
+          "growth_x": 2.777
+        },
+        {
+          "scheme": "back",
+          "single_step_mse": 0.131667,
+          "rollout_curve": [
+            0.131667,
+            0.193509,
+            0.301125,
+            0.488481
+          ],
+          "tail_mse": 0.394803,
+          "growth_x": 3.71
+        }
+      ]
+    },
+    {
+      "seed": 123,
+      "runs": [
+        {
+          "scheme": "front",
+          "single_step_mse": 0.271312,
+          "rollout_curve": [
+            0.271312,
+            0.464649,
+            0.851551,
+            1.539416
+          ],
+          "tail_mse": 1.195483,
+          "growth_x": 5.674
+        },
+        {
+          "scheme": "uniform",
+          "single_step_mse": 0.103596,
+          "rollout_curve": [
+            0.103596,
+            0.135158,
+            0.226608,
+            0.47092
+          ],
+          "tail_mse": 0.348764,
+          "growth_x": 4.546
+        },
+        {
+          "scheme": "back",
+          "single_step_mse": 0.128907,
+          "rollout_curve": [
+            0.128907,
+            0.194267,
+            0.35368,
+            0.694472
+          ],
+          "tail_mse": 0.524076,
+          "growth_x": 5.387
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "front": {
+      "single_step_mse": 0.15711133333333335,
+      "tail_mse": 0.571668,
+      "growth_x": 4.122
+    },
+    "uniform": {
+      "single_step_mse": 0.08886433333333332,
+      "tail_mse": 0.22735800000000003,
+      "growth_x": 3.231666666666667,
+      "tail_delta_vs_front_pct": -60.23,
+      "tail_better_seeds": "3/3"
+    },
+    "back": {
+      "single_step_mse": 0.12097133333333333,
+      "tail_mse": 0.366547,
+      "growth_x": 3.735333333333333,
+      "tail_delta_vs_front_pct": -35.88,
+      "tail_better_seeds": "2/3"
+    }
+  },
+  "elapsed_sec": 493.9
+}

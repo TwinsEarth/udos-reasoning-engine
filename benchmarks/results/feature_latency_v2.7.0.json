@@ -1,0 +1,50 @@
+{
+  "version": "2.7.0.dev6",
+  "checkpoint": "checkpoints/predictor_v2.7.0.pt",
+  "device": "cpu",
+  "batch_size": 32,
+  "features": {
+    "predict_next_baseline": {
+      "mean_ms": 77.097,
+      "p50_ms": 94.7622,
+      "min_ms": 38.1118,
+      "max_ms": 105.6462,
+      "repeats": 10
+    },
+    "policy_mpc_3actions": {
+      "mean_ms": 40.3663,
+      "p50_ms": 40.163,
+      "min_ms": 39.4296,
+      "max_ms": 41.9909,
+      "repeats": 10
+    },
+    "active_score_pool": {
+      "mean_ms": 100.7188,
+      "p50_ms": 101.6212,
+      "min_ms": 92.8086,
+      "max_ms": 105.0734,
+      "repeats": 10
+    },
+    "online_observe_detect": {
+      "mean_ms": 0.043,
+      "p50_ms": 0.042,
+      "min_ms": 0.0412,
+      "max_ms": 0.0501,
+      "repeats": 10
+    },
+    "hierarchical_rollout_h8": {
+      "mean_ms": 25.3478,
+      "p50_ms": 25.0649,
+      "min_ms": 24.9198,
+      "max_ms": 26.4734,
+      "repeats": 10
+    },
+    "lite_int8_predict": {
+      "mean_ms": 104.581,
+      "p50_ms": 106.0496,
+      "min_ms": 100.17,
+      "max_ms": 109.5114,
+      "repeats": 10
+    }
+  }
+}

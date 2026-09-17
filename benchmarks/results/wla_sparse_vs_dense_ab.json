@@ -1,0 +1,20 @@
+{
+  "dense_step_mse": [
+    0.0,
+    0.155284,
+    0.425247,
+    0.889292
+  ],
+  "sparse_step_mse": [
+    0.03425,
+    0.059192,
+    0.112033,
+    0.211268
+  ],
+  "sparse_changed_ratio": 0.2135,
+  "dense_cost_units": 9.24,
+  "sparse_cost_units": 0.854,
+  "sparse_cheaper": true,
+  "note": "稀疏方法未变化维恒等复制(近零算力); 精度代价见 sparse_step_mse vs dense_step_mse",
+  "analogy_not_reproduction": true
+}

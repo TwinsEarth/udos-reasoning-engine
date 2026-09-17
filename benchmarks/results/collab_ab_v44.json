@@ -1,0 +1,51 @@
+{
+  "version": "4.4.0.dev6",
+  "n_tasks_per_topology": 20,
+  "note": "CPU 合成机制类比, 非真实多机器人; 延迟为进程内确定性测量",
+  "summary": {
+    "star": {
+      "n_tasks": 20,
+      "completion_rate": 1.0,
+      "trace_complete_rate": 1.0,
+      "avg_dup_work": 1.0,
+      "avg_convergence_hops": 2.0,
+      "avg_latency_ms": 0.0189,
+      "total_messages": 80
+    },
+    "chain": {
+      "n_tasks": 20,
+      "completion_rate": 1.0,
+      "trace_complete_rate": 1.0,
+      "avg_dup_work": 0.0,
+      "avg_convergence_hops": 2.0,
+      "avg_latency_ms": 0.0229,
+      "total_messages": 60
+    },
+    "mesh": {
+      "n_tasks": 20,
+      "completion_rate": 1.0,
+      "trace_complete_rate": 1.0,
+      "avg_dup_work": 0.0,
+      "avg_convergence_hops": 3.0,
+      "avg_latency_ms": 0.0262,
+      "total_messages": 120,
+      "conflict_unaligned_total": 0,
+      "avg_gov_overhead": 8.0
+    }
+  },
+  "verdict_ledger": [
+    {
+      "claim": "star 最可控(trace 完整率>=mesh)",
+      "verdict": "SUPPORTED"
+    },
+    {
+      "claim": "swarm 治理成本高(消息量>=star)",
+      "verdict": "SUPPORTED"
+    },
+    {
+      "claim": "拓扑比数量重要(不同拓扑指标不同)",
+      "verdict": "SUPPORTED"
+    }
+  ],
+  "topology_selector_default": "star"
+}

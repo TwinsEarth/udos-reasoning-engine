@@ -1,0 +1,60 @@
+{
+  "experiment": "v2.3 F2 step-weight cross-pipeline sensitivity",
+  "single_delta": "step_weight_scheme only, shared init within pipeline",
+  "pipeline_A_no_earlystop_multiseed": {
+    "setting": "no-early-stop / 45ep / train=1000+seed / test=2000+seed / n=32",
+    "summary": {
+      "front": {
+        "single_step_mse": 0.15711133333333335,
+        "tail_mse": 0.571668,
+        "growth_x": 4.122
+      },
+      "uniform": {
+        "single_step_mse": 0.08886433333333332,
+        "tail_mse": 0.22735800000000003,
+        "growth_x": 3.231666666666667,
+        "tail_delta_vs_front_pct": -60.23,
+        "tail_better_seeds": "3/3"
+      },
+      "back": {
+        "single_step_mse": 0.12097133333333333,
+        "tail_mse": 0.366547,
+        "growth_x": 3.735333333333333,
+        "tail_delta_vs_front_pct": -35.88,
+        "tail_better_seeds": "2/3"
+      }
+    },
+    "uniform_tail_better_seeds": "3/3"
+  },
+  "pipeline_B_build_earlystop": {
+    "setting": "early-stop patience=12 / 60ep / train=seed42 split / indep-test=seed2718 / n_per_kind=48",
+    "front": {
+      "single_step_mse": 0.058729,
+      "tail_mse": 0.12144,
+      "growth_x": 2.336,
+      "curve": [
+        0.058729,
+        0.074053,
+        0.105688,
+        0.137192
+      ]
+    },
+    "uniform": {
+      "single_step_mse": 0.082012,
+      "tail_mse": 0.162702,
+      "growth_x": 2.227,
+      "curve": [
+        0.082012,
+        0.104309,
+        0.142787,
+        0.182618
+      ]
+    },
+    "uniform_vs_front_single_pct": 39.64,
+    "uniform_vs_front_tail_pct": 33.98,
+    "uniform_better_in_pipeline_B": false
+  },
+  "uniform_advantage_consistent_across_pipelines": false,
+  "decision": "uniform 优势仅在口径A成立、口径B被front反超 -> 口径敏感、不稳健; 默认保持 front(=2.2.1), uniform/back opt-in",
+  "elapsed_sec": 201.8
+}

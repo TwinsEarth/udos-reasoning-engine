@@ -1,0 +1,87 @@
+{
+  "udos_version": "2.1.0",
+  "generated_at": "2026-09-12 12:05:34",
+  "runtime": {
+    "python": "3.12.11",
+    "torch": "2.14.0+cpu",
+    "device": "cpu",
+    "train_seconds": 56.75,
+    "total_seconds": 57.18
+  },
+  "config": {
+    "n_per_kind": 32,
+    "n_steps": 14,
+    "window": 6,
+    "horizon": 4,
+    "dt": 0.5,
+    "epochs": 45,
+    "lr": 0.003,
+    "predictor_params": 52191,
+    "n_train": 512,
+    "n_test": 128
+  },
+  "before_training": {
+    "n_samples": 128,
+    "horizon": 4,
+    "single_step_mse": 5.471034,
+    "ablation": {
+      "conditioned_mse": 5.471034,
+      "unconditioned_mse": 5.471034,
+      "condition_gain_x": 1.0
+    },
+    "per_kind_mse": {
+      "uniform": 3.239852,
+      "accel": 15.173609,
+      "spring": 0.33563,
+      "collision": 0.864416
+    },
+    "rollout_mse_curve": [
+      5.471034,
+      7.768538,
+      10.808452,
+      14.75116
+    ],
+    "kinematic_residual": {
+      "overall": 2.045391,
+      "per_kind": {
+        "uniform": 1.896291,
+        "accel": 4.142443,
+        "spring": 0.523238,
+        "collision": 1.15872
+      }
+    }
+  },
+  "after_training": {
+    "n_samples": 128,
+    "horizon": 4,
+    "single_step_mse": 0.081885,
+    "ablation": {
+      "conditioned_mse": 0.081885,
+      "unconditioned_mse": 0.813115,
+      "condition_gain_x": 9.93
+    },
+    "per_kind_mse": {
+      "uniform": 0.064896,
+      "accel": 0.058729,
+      "spring": 0.191332,
+      "collision": 0.024187
+    },
+    "rollout_mse_curve": [
+      0.081885,
+      0.104453,
+      0.15658,
+      0.293341
+    ],
+    "kinematic_residual": {
+      "overall": 0.189324,
+      "per_kind": {
+        "uniform": 0.122287,
+        "accel": 0.225464,
+        "spring": 0.244523,
+        "collision": 0.15149
+      }
+    }
+  },
+  "final_train_loss": 0.107561,
+  "scene_gate_final": -0.2899
+}

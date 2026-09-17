@@ -1,0 +1,39 @@
+{
+  "baseline_small_window": {
+    "n_tokens": 3000,
+    "vocab": 200,
+    "seed": 7,
+    "window": 8,
+    "hit_rate": 0.405,
+    "recompute_units": 1785,
+    "ttft_proxy_ms": 904.65,
+    "compression_ratio": 0.997,
+    "compression_method": "zlib",
+    "lossless_roundtrip": true,
+    "qat": {
+      "qat": "ENV_BLOCKED",
+      "message": "\u65e0 QAT \u786c\u4ef6; \u4ec5\u8f6f\u4ef6 zlib/zstd \u8def\u5f84, \u4e0d\u8fd4\u56de\u4f2a\u9020\u52a0\u901f"
+    },
+    "disclaimer": "analogy, not reproduction; \u6570\u5b57\u4e3a\u672c\u5f15\u64ce\u5408\u6210 trace \u81ea\u6d4b, \u975e\u5382\u5546\u6570\u5b57"
+  },
+  "candidate_layered_window": {
+    "n_tokens": 3000,
+    "vocab": 200,
+    "seed": 7,
+    "window": 128,
+    "hit_rate": 0.8987,
+    "recompute_units": 304,
+    "ttft_proxy_ms": 178.96,
+    "compression_ratio": 0.997,
+    "compression_method": "zlib",
+    "lossless_roundtrip": true,
+    "qat": {
+      "qat": "ENV_BLOCKED",
+      "message": "\u65e0 QAT \u786c\u4ef6; \u4ec5\u8f6f\u4ef6 zlib/zstd \u8def\u5f84, \u4e0d\u8fd4\u56de\u4f2a\u9020\u52a0\u901f"
+    },
+    "disclaimer": "analogy, not reproduction; \u6570\u5b57\u4e3a\u672c\u5f15\u64ce\u5408\u6210 trace \u81ea\u6d4b, \u975e\u5382\u5546\u6570\u5b57"
+  },
+  "hit_rate_delta": 0.4937,
+  "recompute_delta": -1481,
+  "verdict": "ACCEPT"
+}

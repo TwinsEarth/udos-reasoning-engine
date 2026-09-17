@@ -1,0 +1,30 @@
+{
+  "version": "4.3.0",
+  "n_params": 52191,
+  "inherits_frozen_main_from": "predictor_v4.1.0.pt",
+  "eval_mse": 0.045556,
+  "anchor_eval_mse": 0.045556,
+  "eval_mse_matches_anchor": true,
+  "backcompat_checkpoints": 32,
+  "line_430": {
+    "default_cost": 8.0,
+    "search_n_candidates": 36,
+    "search_n_acceptable": 36,
+    "search_best_cost": 3.5,
+    "search_improved": true,
+    "search_selected": {
+      "max_shard": 64,
+      "cache_enabled": true,
+      "cache_maxsize": 128,
+      "cortex_hz": 1.0,
+      "codebook_size": 4,
+      "ensemble_weights": null
+    },
+    "loop_n_archive": 72,
+    "ab_A_wins": true,
+    "ab_cost_saving_pct": 56.25
+  },
+  "honest_conclusion": "配置自优化在固定基准负载上, 仅采纳'输出保真(<=atol)且成本严格更低'的配置; search_improved=True, ab_A_wins=True; 主预测器零改动, eval_mse 锚点不变。",
+  "checkpoint": "checkpoints/predictor_v4.3.0.pt",
+  "reload_consistent": true
+}

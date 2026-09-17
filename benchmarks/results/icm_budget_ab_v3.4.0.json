@@ -1,0 +1,31 @@
+{
+  "feature": "icm_context_budget",
+  "analogy_not_reproduction": true,
+  "note": "budget=演示数上限; 越大收益边际递减、延迟上升",
+  "budgets": [
+    {
+      "budget": 4,
+      "k_eff": 4,
+      "mse": 0.020397,
+      "latency_ms_per_query": 3.8718
+    },
+    {
+      "budget": 8,
+      "k_eff": 8,
+      "mse": 0.019161,
+      "latency_ms_per_query": 3.702
+    },
+    {
+      "budget": 16,
+      "k_eff": 8,
+      "mse": 0.019161,
+      "latency_ms_per_query": 3.7102
+    },
+    {
+      "budget": 32,
+      "k_eff": 8,
+      "mse": 0.019161,
+      "latency_ms_per_query": 3.6884
+    }
+  ]
+}

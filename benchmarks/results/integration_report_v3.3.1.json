@@ -1,0 +1,46 @@
+{
+  "version": "5.4.3",
+  "five_dim": {
+    "visual_spatial_perception": 97.12,
+    "multiview_spatial_understanding": 49.34,
+    "embodied_cognition_planning": 100.0,
+    "spatial_affordance": 100.0,
+    "visual_trajectory_reasoning": 94.57
+  },
+  "robustness": {
+    "noise": {
+      "clean_mse": 0.033487,
+      "grid": {
+        "test_sigma=0.0": 0.033487,
+        "test_sigma=0.05": 0.036699,
+        "test_sigma=0.15": 0.058956
+      }
+    },
+    "ood": {
+      "hit_rate": 0.7625,
+      "false_alarm_rate": 0.05,
+      "threshold": 5.5275
+    },
+    "extrapolation": {
+      "scale": 2.0,
+      "extrap_mse": 0.94252,
+      "degradation_x": 28.146
+    },
+    "fgsm_proxy": {
+      "eps": 0.05,
+      "clean_mse": 0.051996,
+      "adv_mse": 0.127605,
+      "degradation_x": 2.454
+    },
+    "sub_scores": {
+      "noise": 75.16,
+      "ood": 71.25,
+      "extrapolation": 0.0,
+      "fgsm": 23.36
+    },
+    "robustness_score": 48.6,
+    "analogy_not_reproduction": true
+  },
+  "all_features_composable": true,
+  "analogy_not_reproduction": true
+}

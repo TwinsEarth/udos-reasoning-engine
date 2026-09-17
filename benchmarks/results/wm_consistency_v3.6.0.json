@@ -1,0 +1,39 @@
+{
+  "version": "3.6.0.dev4",
+  "checkpoint": "predictor_v3.6.0.pt",
+  "n_eval": 320,
+  "horizon": 4,
+  "wm_params": 2310,
+  "main_params": 52191,
+  "per_step_mse_imagine_vs_real": [
+    0.0,
+    0.762879,
+    1.504298,
+    2.537063
+  ],
+  "final_step_mse": 2.537063,
+  "real_rollout_conservation": {
+    "momentum_violation": 0.359697,
+    "energy_violation": 0.826823
+  },
+  "imagine_rollout_conservation": {
+    "momentum_violation": 0.494458,
+    "energy_violation": 0.961032
+  },
+  "latency_real_rollout_ms": 19.4633,
+  "latency_imagine_ms": 5.5642,
+  "imagine_faster": true,
+  "decision": "opt-in; do NOT replace predictor.rollout by default",
+  "rationale": "第 0 步逐位锚定真实 rollout; H>1 步为潜在外挂转移解码, 误差累积为合成类比现象。维持 opt-in, 默认输出仍走主 predictor。",
+  "rejected_candidates": [
+    {
+      "candidate": "默认把 imagine_rollout 设为主 rollout 路径",
+      "reason": "第 0 步虽逐位锚定, 但 H>1 步为外挂潜在转移解码, 末步 MSE=2.537063 (>>0), 误差随 horizon 累积; 逐位等价锚点会被破坏, 违反兼容铁律。"
+    },
+    {
+      "candidate": "把外挂世界模型参数并入主 state_dict",
+      "reason": "会使主 predictor 偏离 52191 参数, 污染 22 代 checkpoint 兼容; 外挂小 MLP 应独立 (参照 hybrid 先例)。"
+    }
+  ],
+  "analogy_not_reproduction": true
+}

@@ -1,0 +1,18 @@
+{
+  "backbone": "frozen_predictor_latent",
+  "flow_decoder_params": 940,
+  "n_steps": 3,
+  "fit": {
+    "fit_first_loss": 7.852141,
+    "fit_last_loss": 0.866667,
+    "n_params": 940,
+    "frozen_backbone_zero_grad": true
+  },
+  "flow_mse": 0.264496,
+  "regress_mse": 0.168662,
+  "flow_better": false,
+  "note": "flow 为少步去噪类比; 在合成小数据上收益不稳时默认 opt-in 并留候选账本",
+  "frozen_backbone_zero_grad": true,
+  "analogy_not_reproduction": true,
+  "not_reproduce_6b_mmdit": true
+}

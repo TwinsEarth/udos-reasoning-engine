@@ -1,0 +1,16 @@
+{
+  "feature": "pwm_world_model_latency",
+  "version": "3.6.2",
+  "cpu_threads": 2,
+  "wm_params": 2310,
+  "main_params": 52191,
+  "latency_ms": {
+    "wm_encode_latent_ms": 0.0501,
+    "wm_transit_step_ms": 0.084,
+    "wm_imagine_h4_ms": 4.4034,
+    "wm_imagine_uncertain_ms": 28.5109,
+    "wm_contact_predict_ms": 0.2994,
+    "wm_conservation_check_ms": 0.2714,
+    "baseline_predictor_rollout_h4_ms": 19.7303
+  }
+}

@@ -1,0 +1,26 @@
+UDOS v2.4.15 覆盖率报告 (pytest --cov=udos)
+全量: 171 passed; 目标新模块门控 >=80%
+ood(含Streaming)93% ensemble97% guard93% calibration(含temp_scale)98% persistence98%
+
+
+Name                                  Stmts   Miss  Cover
+---------------------------------------------------------
+udos/__init__.py                         14      0   100%
+udos/adapters/__init__.py                 2      0   100%
+udos/adapters/sakana_ctm_adapter.py      49      7    86%
+udos/calibration.py                     246      4    98%
+udos/ctm_engine.py                      152      6    96%
+udos/debug.py                            58     58     0%
+udos/dynamics.py                        148      1    99%
+udos/ensemble.py                         76      2    97%
+udos/evaluation.py                       83      4    95%
+udos/gpm_engine.py                      251      3    99%
+udos/guard.py                            44      3    93%
+udos/ood.py                             150     11    93%
+udos/pce_format.py                      108      6    94%
+udos/persistence.py                      86      2    98%
+udos/reasoning.py                       123      7    94%
+udos/server.py                          355     43    88%
+udos/training.py                        302     10    97%
+---------------------------------------------------------
+TOTAL                                  2247    167    93%

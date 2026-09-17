@@ -1,0 +1,116 @@
+{
+  "version": "3.7.0.dev6",
+  "feature": "hierarchical_neural_control_latency",
+  "analogy_not_reproduction": true,
+  "main_params": 52191,
+  "wall_seconds": 0.38,
+  "latency_budget_contract": {
+    "cortex_budget_ms": 40.0,
+    "cerebellum_budget_ms": 5.0,
+    "spinal_budget_ms": 0.5
+  },
+  "within_budget_p50": {
+    "cortex_p50_within_budget": true,
+    "cerebellum_p50_within_budget": true,
+    "spinal_p50_within_budget": true
+  },
+  "frequency_sweep_cortex_every": [
+    {
+      "cortex_every": 1,
+      "cortex_hz_planned_per_step": 1.0,
+      "cortex_plan_count": 60,
+      "cortex": {
+        "n": 60,
+        "mean_ms": 3.2611,
+        "p50_ms": 3.1905,
+        "max_ms": 5.2636
+      },
+      "cerebellum": {
+        "n": 60,
+        "mean_ms": 0.0483,
+        "p50_ms": 0.0433,
+        "max_ms": 0.181
+      },
+      "spinal": {
+        "n": 60,
+        "mean_ms": 0.0049,
+        "p50_ms": 0.0046,
+        "max_ms": 0.0085
+      }
+    },
+    {
+      "cortex_every": 2,
+      "cortex_hz_planned_per_step": 0.5,
+      "cortex_plan_count": 30,
+      "cortex": {
+        "n": 30,
+        "mean_ms": 3.2386,
+        "p50_ms": 3.2018,
+        "max_ms": 4.1913
+      },
+      "cerebellum": {
+        "n": 60,
+        "mean_ms": 0.039,
+        "p50_ms": 0.0413,
+        "max_ms": 0.0531
+      },
+      "spinal": {
+        "n": 60,
+        "mean_ms": 0.0043,
+        "p50_ms": 0.0042,
+        "max_ms": 0.0134
+      }
+    },
+    {
+      "cortex_every": 5,
+      "cortex_hz_planned_per_step": 0.2,
+      "cortex_plan_count": 12,
+      "cortex": {
+        "n": 12,
+        "mean_ms": 3.2581,
+        "p50_ms": 3.2405,
+        "max_ms": 3.4012
+      },
+      "cerebellum": {
+        "n": 60,
+        "mean_ms": 0.0361,
+        "p50_ms": 0.0344,
+        "max_ms": 0.0567
+      },
+      "spinal": {
+        "n": 60,
+        "mean_ms": 0.0034,
+        "p50_ms": 0.0031,
+        "max_ms": 0.0059
+      }
+    },
+    {
+      "cortex_every": 10,
+      "cortex_hz_planned_per_step": 0.1,
+      "cortex_plan_count": 6,
+      "cortex": {
+        "n": 6,
+        "mean_ms": 3.2727,
+        "p50_ms": 3.252,
+        "max_ms": 3.392
+      },
+      "cerebellum": {
+        "n": 60,
+        "mean_ms": 0.0338,
+        "p50_ms": 0.032,
+        "max_ms": 0.0554
+      },
+      "spinal": {
+        "n": 60,
+        "mean_ms": 0.0032,
+        "p50_ms": 0.0029,
+        "max_ms": 0.0099
+      }
+    }
+  ],
+  "priority": {
+    "spinal": 0,
+    "cerebellum": 1,
+    "cortex": 2
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "version": "4.5.0.dev4",
+  "cpu_threads": 2,
+  "repeats": 5,
+  "n_windows": 24,
+  "baseline_predictor_mse": 0.045556,
+  "per_tier": {
+    "none": {
+      "K": 1,
+      "sigma": 0.0,
+      "externalized": false,
+      "chain_level": "none",
+      "internal_ticks_per_call": 8,
+      "explicit_tokens": 0,
+      "median_latency_ms": 4.018
+    },
+    "low": {
+      "K": 2,
+      "sigma": 0.02,
+      "externalized": false,
+      "chain_level": "none",
+      "internal_ticks_per_call": 16,
+      "explicit_tokens": 0,
+      "median_latency_ms": 7.162
+    },
+    "high": {
+      "K": 4,
+      "sigma": 0.05,
+      "externalized": true,
+      "chain_level": "partial",
+      "internal_ticks_per_call": 32,
+      "explicit_tokens": 2,
+      "median_latency_ms": 13.203
+    },
+    "max": {
+      "K": 8,
+      "sigma": 0.08,
+      "externalized": true,
+      "chain_level": "full",
+      "internal_ticks_per_call": 64,
+      "explicit_tokens": 11,
+      "median_latency_ms": 25.41
+    }
+  },
+  "rollout_mse_by_tier": {
+    "none": 1.664042,
+    "low": 1.664042,
+    "high": 1.664042,
+    "max": 1.664042
+  },
+  "rollout_mse_spread": 0.0,
+  "adaptive_routing_by_bucket": {
+    "easy": {
+      "difficulty": 0.026,
+      "effort": "none",
+      "externalize": false,
+      "assigned_internal_ticks": 8,
+      "rationale": "合成难度=0.026 落在 effort=none 区间; 隐式直出, 不产可读步"
+    },
+    "mid": {
+      "difficulty": 0.22,
+      "effort": "none",
+      "externalize": false,
+      "assigned_internal_ticks": 8,
+      "rationale": "合成难度=0.22 落在 effort=none 区间; 隐式直出, 不产可读步"
+    },
+    "hard": {
+      "difficulty": 0.56,
+      "effort": "high",
+      "externalize": true,
+      "assigned_internal_ticks": 32,
+      "rationale": "合成难度=0.56 落在 effort=high 区间; 升级为显式可读链"
+    }
+  },
+  "compute_all_none": 8,
+  "compute_all_max": 64,
+  "compute_adaptive_avg": 16.0,
+  "ledger": {
+    "implicit_improves_accuracy": "REJECT: 隐式探索未改善物理 MSE (主预测器外挂不动), 逐档 MSE 恒定; 隐式档位只增加可观测性/延迟/token, 不提升精度",
+    "implicit_saves_latency": "REJECT: low/high/max 延迟>=none (K 次前向), 隐式不省延迟",
+    "max_traceability_vs_cost": "max 给完整可读链, 但 internal_ticks/explicit_tokens 最高, 可追溯收益是否抵成本按场景权衡"
+  }
+}

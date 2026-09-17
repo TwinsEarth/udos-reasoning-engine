@@ -1,0 +1,36 @@
+{
+  "feature": "wm_imagination_budget_ab",
+  "n_agents": 5,
+  "main_params_untouched": true,
+  "learned": false,
+  "analogy_not_reproduction": true,
+  "ab": {
+    "low_budget": {
+      "budget": 5,
+      "used_budget": 5,
+      "n_fell_back": 5,
+      "n_imagined": 0,
+      "allocation": {
+        "a0": 1,
+        "a1": 1,
+        "a2": 1,
+        "a3": 1,
+        "a4": 1
+      }
+    },
+    "high_budget": {
+      "budget": 15,
+      "used_budget": 15,
+      "n_fell_back": 1,
+      "n_imagined": 4,
+      "allocation": {
+        "a0": 4,
+        "a1": 4,
+        "a2": 4,
+        "a3": 2,
+        "a4": 1
+      }
+    }
+  },
+  "conclusion": "低预算全回退真实(horizon=1逐位锚定); 高预算按优先级分配额外想象步, 总消耗<=预算上限"
+}

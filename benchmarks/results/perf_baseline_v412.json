@@ -1,0 +1,38 @@
+{
+  "version": "4.1.2",
+  "checkpoint": "/sandboxdata/workspace/file/udos-engine/checkpoints/predictor_v4.1.0.pt",
+  "n_params": 52191,
+  "main_params_untouched": true,
+  "latency_ms": {
+    "curriculum_generate": {
+      "mean_ms": 2.299,
+      "p50_ms": 2.285,
+      "p95_ms": 2.392,
+      "iters": 15
+    },
+    "solvability_verify": {
+      "mean_ms": 9.214,
+      "p50_ms": 9.085,
+      "p95_ms": 9.773,
+      "iters": 15
+    },
+    "pwm_pseudo_label": {
+      "mean_ms": 14.296,
+      "p50_ms": 14.122,
+      "p95_ms": 15.309,
+      "iters": 15
+    },
+    "goal_decompose": {
+      "mean_ms": 125.634,
+      "p50_ms": 124.247,
+      "p95_ms": 134.371,
+      "iters": 15
+    },
+    "stopcorrect_decide": {
+      "mean_ms": 123.396,
+      "p50_ms": 123.533,
+      "p95_ms": 126.127,
+      "iters": 15
+    }
+  }
+}

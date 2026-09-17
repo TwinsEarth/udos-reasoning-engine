@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.installed.cfg
+
+# 测试 / 类型 / lint 缓存
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# 虚拟环境
+.venv/
+venv/
+env/
+ENV/
+
+# 环境变量与密钥（绝不入库）
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.keystore
+id_rsa*
+
+# 日志 / 临时文件
+*.log
+*.tmp
+*.bak
+*.swp
+
+# 系统 / 编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# 运行期本地数据
+*.sqlite
+*.sqlite3
+*.db-journal
+data/raw/
+data/cache/

@@ -1,0 +1,43 @@
+{
+  "version": "4.3.x",
+  "anchor_eval_mse": 0.045556,
+  "dev2_config_ab": {
+    "A_wins": true,
+    "cost_saving_pct": 56.25,
+    "verdict": "搜索后配置保真且更优, 采纳"
+  },
+  "dev4_multigen_curve": {
+    "curve": [
+      {
+        "gen": 0,
+        "best_cost": 3.5,
+        "improved": true
+      },
+      {
+        "gen": 1,
+        "best_cost": 3.5,
+        "improved": true
+      },
+      {
+        "gen": 2,
+        "best_cost": 3.5,
+        "improved": true
+      }
+    ],
+    "cost_deltas": [
+      0.0,
+      0.0
+    ],
+    "honest_verdict": "efficiency_improving",
+    "note": "多代成本曲线照实记录; 网格确定性下 best 逐代稳定, 不宣称飞轮必然持续上升"
+  },
+  "dev5_global_stop_correct": {
+    "recommended_action": "stop_self_evolution",
+    "diminishing_returns": true
+  },
+  "dev6_long_horizon": {
+    "verified": true,
+    "n_subtasks": 2,
+    "n_recovered": 0
+  }
+}

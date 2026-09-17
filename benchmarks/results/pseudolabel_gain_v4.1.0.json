@@ -1,0 +1,22 @@
+{
+  "version": "4.1.0",
+  "ab": "with_vs_without_selfsupervised_loss_gate",
+  "n_probe": 144,
+  "baseline_no_selfsup": {
+    "mean_pseudo_consistency": 0.477342
+  },
+  "selfsup_gated": {
+    "mean_effective_consistency": 0.016772,
+    "mean_final_weight": 0.03393,
+    "n_downweighted_lt_0.5": 144
+  },
+  "gain_effective_consistency": -0.46057,
+  "bad_nonconserved_trajectory_final_weight": 0.0,
+  "bad_trajectory_downweighted": true,
+  "conclusion": "PWM一致性伪标签本身有区分度(均值0.48); 但叠加守恒+多视角硬门后对加速/振动轨迹过度降权(均值权重0.03, 144/144被压), 有效一致性反降=> 守恒+多视角硬门被反证, opt-in留候选账本; PWM一致性单独采纳为自监督信号。",
+  "adopted": "pwm_consistency_only",
+  "rejected_candidate": "conservation_multiview_hard_gate",
+  "eval_mse_anchor_kept": 0.045556,
+  "main_params_untouched": true,
+  "analogy_not_reproduction": true
+}

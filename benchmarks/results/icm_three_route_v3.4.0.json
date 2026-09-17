@@ -1,0 +1,66 @@
+{
+  "experiment": "icm_three_route",
+  "analogy_not_reproduction": true,
+  "note": "合成数据上三路线对照; 非 LLM scaling law 复现",
+  "data_route": [
+    {
+      "n_per_kind": 16,
+      "mse": 0.462274,
+      "latency_ms": 1.093
+    },
+    {
+      "n_per_kind": 32,
+      "mse": 0.18182,
+      "latency_ms": 0.9826
+    },
+    {
+      "n_per_kind": 48,
+      "mse": 0.161758,
+      "latency_ms": 0.9966
+    }
+  ],
+  "cot_route": [
+    {
+      "iterations": 4,
+      "mse": 0.172853,
+      "latency_ms": 0.4533
+    },
+    {
+      "iterations": 8,
+      "mse": 0.18182,
+      "latency_ms": 0.8651
+    },
+    {
+      "iterations": 16,
+      "mse": 0.157856,
+      "latency_ms": 2.2307
+    }
+  ],
+  "context_route": [
+    {
+      "k": 0,
+      "mse": 0.057276,
+      "latency_ms": 3.4086
+    },
+    {
+      "k": 1,
+      "mse": 0.028851,
+      "latency_ms": 3.6726
+    },
+    {
+      "k": 3,
+      "mse": 0.020261,
+      "latency_ms": 3.6614
+    },
+    {
+      "k": 5,
+      "mse": 0.018746,
+      "latency_ms": 3.6496
+    },
+    {
+      "k": 10,
+      "mse": 0.019121,
+      "latency_ms": 3.6796
+    }
+  ]
+}

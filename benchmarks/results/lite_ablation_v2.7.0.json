@@ -1,0 +1,29 @@
+{
+  "version": "2.7.0.dev3",
+  "note": "CPU 小模型延迟对比含噪声, 如实记录; 量化/剪枝精度损失亦如实记录。",
+  "variants": {
+    "full": {
+      "n_params": 52191,
+      "sparsity": 0.0,
+      "eval_mse": 0.057168,
+      "latency_ms": 5.046
+    },
+    "pruned_50": {
+      "n_params": 52191,
+      "sparsity": 0.5,
+      "eval_mse": 0.583723,
+      "latency_ms": 5.01
+    },
+    "quantized_int8": {
+      "n_params": 52191,
+      "sparsity": 0.0,
+      "eval_mse": 0.065856,
+      "note": "quantize_dynamic 不改参数计数, 仅算子替换 INT8"
+    },
+    "distilled_student": {
+      "n_params": 27071,
+      "sparsity": 0.0,
+      "eval_mse": 0.283679
+    }
+  }
+}

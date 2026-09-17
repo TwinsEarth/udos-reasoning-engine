@@ -1,0 +1,22 @@
+{
+  "version": "2.9.0.dev3",
+  "analogy_not_reproduction": true,
+  "src_dof": 60,
+  "tgt_dof": 4,
+  "n_samples": 2048,
+  "reference": "endpoint_aligned_map_no_clamp",
+  "retarget": {
+    "method": "endpoint_aligned_map+clamp",
+    "eval_mse_vs_ref": 1.681988,
+    "final_within_limits": true,
+    "pre_clamp_violation_rate": 0.6232
+  },
+  "truncate": {
+    "method": "naive_first_T+clamp",
+    "eval_mse_vs_ref": 3.978517,
+    "final_within_limits": true
+  },
+  "retarget_better_mse": true,
+  "mse_reduction_x": 2.37,
+  "conclusion": "synthetic_proxy_only"
+}

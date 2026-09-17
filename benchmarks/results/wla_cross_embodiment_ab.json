@@ -1,0 +1,54 @@
+{
+  "source": "arm_7dof",
+  "traj_shape": [
+    12,
+    7
+  ],
+  "transfers": {
+    "gripper_4dof": {
+      "src_dof": 7,
+      "tgt_dof": 4,
+      "out_shape": [
+        12,
+        4
+      ],
+      "within_limits": true,
+      "violation_rate_before_clamp": 0.25,
+      "energy_src": 1.0342,
+      "energy_resampled_tgt": 0.0756,
+      "zero_shot_adapt": true
+    },
+    "prime_u_60dof": {
+      "src_dof": 7,
+      "tgt_dof": 60,
+      "out_shape": [
+        12,
+        60
+      ],
+      "within_limits": true,
+      "violation_rate_before_clamp": 0.0347,
+      "energy_src": 1.0342,
+      "energy_resampled_tgt": 0.0361,
+      "zero_shot_adapt": true
+    }
+  },
+  "tri_group_cross": {
+    "groups": {
+      "eef_pose": [
+        1,
+        3
+      ],
+      "eef_joints": [
+        1,
+        2
+      ],
+      "lower_body": [
+        1,
+        2
+      ]
+    },
+    "merge_roundtrip": true
+  },
+  "analogy_not_reproduction": true,
+  "no_retrained_policy": true
+}

@@ -1,0 +1,15 @@
+{
+  "oracle_numerical_consistency": true,
+  "serial_steps": 5,
+  "dhs_layers": 4,
+  "key_path_steps_reduced": 1,
+  "voltages_match": {
+    "n1": 0.1,
+    "n2": 0.2,
+    "n3": 0.2,
+    "n4": 0.3,
+    "n5": 0.4
+  },
+  "verdict": "ACCEPT",
+  "disclaimer": "analogy; 真实 DHS GPU 加速为 DeepDendrite 口径, 非自测"
+}

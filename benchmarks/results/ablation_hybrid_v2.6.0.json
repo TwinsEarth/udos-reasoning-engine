@@ -1,0 +1,11 @@
+{
+  "version": "2.6.0",
+  "setup": "n_per_kind=16, epochs=20, hybrid_weight=0.5, quick",
+  "n_core_params_approx": 52191,
+  "n_hybrid_params": 806,
+  "kinematic_residual_pure": 0.604444,
+  "kinematic_residual_hybrid": 0.038409,
+  "residual_reduction_x": 0.9365,
+  "hybrid_helps": true,
+  "note": "同一已训练权重, 仅切换 hybrid on/off 的运动学残差对比; 小模型短训练上若收益不显著属预期, 照实记录。"
+}

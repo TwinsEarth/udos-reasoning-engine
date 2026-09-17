@@ -1,0 +1,50 @@
+{
+  "version": "3.3.0.dev4",
+  "device": "cpu_2_threads",
+  "n_eval_samples": 480,
+  "metrics": [
+    "n_params",
+    "predict_ms",
+    "eval_mse"
+  ],
+  "rows": [
+    {
+      "config": "full",
+      "n_params": 52191,
+      "predict_ms": 6.703,
+      "eval_mse": 0.047496,
+      "note": "正式件, 旧架构默认"
+    },
+    {
+      "config": "pruned_v2",
+      "n_params": 52191,
+      "predict_ms": 6.463,
+      "eval_mse": 2.937731,
+      "channel_sparsity": 0.5,
+      "weight_sparsity": 0.5,
+      "note": "通道级整行剪枝, 保留形状, 不重训"
+    },
+    {
+      "config": "student_v2",
+      "n_params": 15027,
+      "predict_ms": 4.55,
+      "eval_mse": 2.297283,
+      "d_model": 32,
+      "note": "蒸馏学生 d_model 减半"
+    },
+    {
+      "config": "moe_addon",
+      "n_params": 2244,
+      "predict_ms": 0.193,
+      "eval_mse": null,
+      "note": "路由头外挂, 额外开销"
+    }
+  ],
+  "recommended_config": "full",
+  "recommendation_rationale": "在 eval_mse 相对 full 劣化 <=5% 的候选中选参数量最小者; 若剪枝/学生精度损失明显则退回 full (opt-in)",
+  "default_unchanged": true,
+  "rejected_candidates": [
+    "pruned_v2 不重训精度通常回升有限, 不默认开启",
+    "student_v2 需额外蒸馏训练成本, 精度收益不稳 => opt-in"
+  ]
+}

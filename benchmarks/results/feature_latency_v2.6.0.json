@@ -1,0 +1,51 @@
+{
+  "version": "2.6.0+dev7",
+  "checkpoint": "checkpoints/predictor_v2.6.0.pt",
+  "device": "cpu",
+  "batch_size": 32,
+  "n_window": 6,
+  "features": {
+    "predict_next_baseline": {
+      "mean_ms": 86.5449,
+      "p50_ms": 87.4707,
+      "min_ms": 76.6524,
+      "max_ms": 93.3923,
+      "repeats": 10
+    },
+    "hybrid_correction": {
+      "mean_ms": 89.6648,
+      "p50_ms": 93.6324,
+      "min_ms": 79.0882,
+      "max_ms": 98.2726,
+      "repeats": 10
+    },
+    "counterfactual_h2": {
+      "mean_ms": 360.0601,
+      "p50_ms": 365.886,
+      "min_ms": 329.7713,
+      "max_ms": 377.4363,
+      "repeats": 10
+    },
+    "identify_grid3": {
+      "mean_ms": 27.9631,
+      "p50_ms": 28.0993,
+      "min_ms": 26.2562,
+      "max_ms": 30.4301,
+      "repeats": 10
+    },
+    "adaptive_rollout_h2": {
+      "mean_ms": 169.9352,
+      "p50_ms": 169.5652,
+      "min_ms": 155.9793,
+      "max_ms": 188.7727,
+      "repeats": 10
+    },
+    "risk_grade": {
+      "mean_ms": 84.3577,
+      "p50_ms": 85.2068,
+      "min_ms": 73.1167,
+      "max_ms": 98.653,
+      "repeats": 10
+    }
+  }
+}

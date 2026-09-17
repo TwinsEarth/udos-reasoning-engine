@@ -1,0 +1,59 @@
+{
+  "version": "5.4.3",
+  "is_internal_benchmark": true,
+  "not_physbrain_leaderboard": true,
+  "note": "UDOS 内部五维演化, 与 PhysBrain 外部数字严格分开",
+  "generations": [
+    {
+      "version": "v2.7.3",
+      "checkpoint": "predictor_v2.7.3.pt",
+      "udos_version_meta": "2.7.3",
+      "visual_spatial_perception": 96.61,
+      "multiview_spatial_understanding": 49.34,
+      "embodied_cognition_planning": 100.0,
+      "spatial_affordance": 100.0,
+      "visual_trajectory_reasoning": 93.37,
+      "composite": 87.86
+    },
+    {
+      "version": "v2.8.0",
+      "checkpoint": "predictor_v2.8.0.pt",
+      "udos_version_meta": "2.8.0",
+      "visual_spatial_perception": 96.61,
+      "multiview_spatial_understanding": 49.34,
+      "embodied_cognition_planning": 100.0,
+      "spatial_affordance": 100.0,
+      "visual_trajectory_reasoning": 93.37,
+      "composite": 87.86
+    },
+    {
+      "version": "v2.9.0",
+      "checkpoint": "predictor_v2.9.0.pt",
+      "udos_version_meta": "2.9.0",
+      "visual_spatial_perception": 96.61,
+      "multiview_spatial_understanding": 49.34,
+      "embodied_cognition_planning": 100.0,
+      "spatial_affordance": 100.0,
+      "visual_trajectory_reasoning": 93.37,
+      "composite": 87.86
+    },
+    {
+      "version": "v3.0.0",
+      "checkpoint": "predictor_v3.0.0.pt",
+      "udos_version_meta": "3.0.0",
+      "visual_spatial_perception": 96.61,
+      "multiview_spatial_understanding": 49.34,
+      "embodied_cognition_planning": 100.0,
+      "spatial_affordance": 100.0,
+      "visual_trajectory_reasoning": 93.37,
+      "composite": 87.86
+    }
+  ],
+  "composite_sequence": [
+    87.86,
+    87.86,
+    87.86,
+    87.86
+  ],
+  "monotonic_non_decreasing": true
+}

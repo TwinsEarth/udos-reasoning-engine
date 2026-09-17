@@ -1,0 +1,13 @@
+# UDOS 推演引擎核心依赖 (轻量 CPU 可跑)
+torch>=2.0
+numpy>=1.24
+
+# 仅适配器 udos/adapters/sakana_ctm_adapter.py 加载真实上游 CTM 时需要
+huggingface_hub>=0.20
+
+# 测试
+pytest>=7.0
+
+# === 若要运行 third_party/d2l 的 *原版* Doc-to-LoRA (真实 LLM 内化) ===
+# 本仓库的机制对齐版不需要; 原版重依赖请在其目录按上游说明安装:
+# transformers>=4.44, peft, einops, jaxtyping, accelerate, sentencepiece

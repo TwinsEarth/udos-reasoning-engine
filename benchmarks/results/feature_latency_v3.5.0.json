@@ -1,0 +1,18 @@
+{
+  "feature": "sfm_component_latency",
+  "version": "3.5.2",
+  "n_objects": 50,
+  "cpu_threads": 2,
+  "latency_ms": {
+    "spatial_pairwise_distances_ms": 0.102,
+    "scene_graph_relate_ms": 0.0049,
+    "occupancy_query_ms": 0.012,
+    "distance_field_at_ms": 0.0148,
+    "collision_detect_ms": 2.9347,
+    "nearest_neighbor_ms": 0.0994,
+    "spatial_range_search_ms": 0.0936,
+    "spatial_raycast_ms": 0.5018,
+    "orthographic_project_ms": 0.0062,
+    "transform_apply_ms": 0.0392
+  }
+}

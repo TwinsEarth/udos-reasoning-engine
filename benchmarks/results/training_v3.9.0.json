@@ -1,0 +1,109 @@
+{
+  "version": "3.9.0",
+  "n_params": 52191,
+  "elapsed_seconds": 8.5,
+  "inherits_frozen_main_from": "checkpoints/predictor_v3.8.6.pt",
+  "retrained": false,
+  "eval_mse": 0.045556,
+  "anchor_eval_mse": 0.045556,
+  "eval_mse_matches_anchor": true,
+  "ece": 0.056546,
+  "coverage": 0.8888,
+  "wla_sanity": {
+    "er_head_proxies": true,
+    "er_groups_orchestrated": [
+      "spatial",
+      "affordance",
+      "unified_head(MultiTaskHead)"
+    ],
+    "action_tri_group_dims": {
+      "eef_pose": 6,
+      "eef_joints": 4,
+      "lower_body": 6
+    },
+    "tri_group_split_merge_roundtrip": true,
+    "change_mask_sparsity": {
+      "changed_ratio": 0.2291666716337204,
+      "n_changed": 11,
+      "raw_dim": 6
+    },
+    "change_vq": {
+      "codebook_size": 8,
+      "dim": 6,
+      "utilization": 1.0,
+      "active_codes": 8,
+      "recon_mse": 0.8289135098457336,
+      "max_code_share": 0.2188,
+      "collapsed": false
+    },
+    "rvq_action_tokenizer": {
+      "dim": 6,
+      "n_levels": 2,
+      "codebook_size": 8,
+      "recon_mse": 0.2890722155570984,
+      "levels": [
+        {
+          "level": 0,
+          "utilization": 1.0,
+          "max_code_share": 0.17
+        },
+        {
+          "level": 1,
+          "utilization": 1.0,
+          "max_code_share": 0.175
+        }
+      ],
+      "collapsed": false
+    },
+    "alignment": {
+      "same_task_alignment": -0.065,
+      "cross_task_alignment": 0.0196,
+      "consistent": false
+    },
+    "flow_decoder": {
+      "fit_first_loss": 3.450115,
+      "fit_last_loss": 2.256406,
+      "n_params": 940,
+      "frozen_backbone_zero_grad": true
+    },
+    "flow_decode_shape": [
+      4,
+      6
+    ],
+    "zero_grad_state_dict_md5_unchanged": true,
+    "learned": false,
+    "analogy_not_reproduction": true,
+    "main_params_untouched": true
+  },
+  "backcompat_checkpoints": 26,
+  "backcompat_list": [
+    "predictor_v2.1.0.pt",
+    "predictor_v2.2.1.pt",
+    "predictor_v2.3.1.pt",
+    "predictor_v2.4.0.pt",
+    "predictor_v2.5.0.pt",
+    "predictor_v2.5.2.pt",
+    "predictor_v2.6.0.pt",
+    "predictor_v2.6.2.pt",
+    "predictor_v2.7.0.pt",
+    "predictor_v2.7.3.pt",
+    "predictor_v2.8.0.pt",
+    "predictor_v2.9.0.pt",
+    "predictor_v3.0.0.pt",
+    "predictor_v3.0.3.pt",
+    "predictor_v3.1.0.pt",
+    "predictor_v3.2.0.pt",
+    "predictor_v3.3.0.pt",
+    "predictor_v3.3.3.pt",
+    "predictor_v3.4.0.pt",
+    "predictor_v3.4.5.pt",
+    "predictor_v3.5.0.pt",
+    "predictor_v3.6.0.pt",
+    "predictor_v3.7.0.pt",
+    "predictor_v3.8.0.pt",
+    "predictor_v3.8.6.pt",
+    "predictor_v3.9.0.pt"
+  ],
+  "checkpoint": "checkpoints/predictor_v3.9.0.pt",
+  "reload_consistent": true
+}

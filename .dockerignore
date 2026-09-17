@@ -1,0 +1,13 @@
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+benchmarks/results/
+*.zip
+.git/
+third_party/ctm/.git/
+third_party/d2l/
+docs/
+tests/
+*.md

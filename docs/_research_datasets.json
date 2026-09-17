@@ -1,0 +1,678 @@
+[
+  {
+    "name": "Open X-Embodiment / RT-X",
+    "institution": "Google DeepMind + 21-34家研究机构联合",
+    "category": "真实机器人数据集",
+    "open_source": {
+      "code": "Apache 2.0",
+      "weights": "RT-1-X/RT-2-X checkpoint 可下载",
+      "data": "1M+轨迹 RLDS格式, GCS托管, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "代码 Apache 2.0; 数据按子集分发(多为 CC-BY 4.0)",
+    "scale": "1M+ 真实机器人轨迹; 22种本体; 60个子数据集; 527技能; 160,266任务; 多TB级",
+    "modalities": "RGB(多视角), 部分深度, 本体状态, 自然语言, 动作(维度随本体变化)",
+    "embodiment": "22种(单臂~双臂~四足), 含Franka/WidowX/UR5等",
+    "task_type": "通用操作, 跨本体迁移",
+    "format": "RLDS (TensorFlow Datasets), GCS存储",
+    "cpu_feasibility": "可在CPU上解析元数据/schema/样本轨迹; 全量训练需GPU; 可作格式参考",
+    "udos_integration": {
+      "module": "wla(跨本体动作分词) + PCE-Format(RLDS→PCE转换参考) + ctm_engine(多本体时序建模)",
+      "entry_point": "RLDS schema → PCE-Format 字段映射; 跨本体action space对齐作wla change-mask参考",
+      "priority": "高",
+      "reason": "最大规模多本体数据集, 是wla跨本体迁移和PCE-Format标准化的核心参考"
+    },
+    "url": "https://robotics-transformer-x.github.io/",
+    "evidence": "官方论文+项目页+GCS, 已验证可下载"
+  },
+  {
+    "name": "DROID",
+    "institution": "Stanford / Google / 18家实验室联盟",
+    "category": "真实机器人数据集",
+    "open_source": {
+      "code": "Apache 2.0",
+      "weights": "DROID diffusion policy checkpoint 可下载",
+      "data": "76K轨迹 RLDS+HDF5, GCS/HF托管, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "数据 CC-BY 4.0; 代码 Apache 2.0",
+    "scale": "76,000轨迹; 350小时; 564场景; 86任务; 125物体类别; RLDS~1.7TB / 原始~8.7TB",
+    "modalities": "3x Zed2立体RGB-D + 手腕RGB + 语言 + 7-DoF关节",
+    "embodiment": "Franka Panda 单臂(标准化硬件)",
+    "task_type": "桌面/家庭操作, 场景泛化",
+    "format": "RLDS + HDF5; 也有HF/LeRobot版本",
+    "cpu_feasibility": "HDF5/元数据可在CPU解析; 全量训练需GPU; 样本可在CPU加载",
+    "udos_integration": {
+      "module": "ctm_engine(时序动力学建模) + wla(动作分词参考) + build_parametric_dataset(真实数据验证参数化模型)",
+      "entry_point": "标准化Franka平台的高质量轨迹作ctm_engine时序预测基准; HDF5格式→PCE-Format转换参考",
+      "priority": "高",
+      "reason": "场景多样性最强的单本体数据集, 硬件标准化, 适合验证时序预测和动作分词"
+    },
+    "url": "https://droid-dataset.github.io/",
+    "evidence": "官方项目页+RSS论文, 已验证GCS可下载"
+  },
+  {
+    "name": "BridgeData V2",
+    "institution": "UC Berkeley RAIL Lab",
+    "category": "真实机器人数据集",
+    "open_source": {
+      "code": "公开",
+      "weights": "无预训练权重(数据集为主)",
+      "data": "60K轨迹 JPEG格式, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "CC-BY 4.0",
+    "scale": "60,096轨迹(50,365遥操作+9,731脚本策略); 24环境; 13技能; ~400GB",
+    "modalities": "RGB-D(Intel RealSense), 本体状态, 夹爪, 语言指令",
+    "embodiment": "WidowX 250 6-DoF低成本机械臂",
+    "task_type": "桌面操作, 跨机构泛化",
+    "format": "JPEGs + 元数据; 也有RLDS版本",
+    "cpu_feasibility": "元数据可在CPU解析; 图像加载需内存; 可作格式参考",
+    "udos_integration": {
+      "module": "ctm_engine(5Hz控制频率轨迹建模) + wla(低成本臂动作空间)",
+      "entry_point": "5Hz低频控制轨迹适合ctm_engine轻量时序建模; WidowX动作空间作wla参考",
+      "priority": "中",
+      "reason": "低成本平台代表性数据集, 频率较低适合CPU侧分析, 但单一本体"
+    },
+    "url": "https://rail-berkeley.github.io/bridgedata/",
+    "evidence": "官方项目页+PMLR论文, 已验证"
+  },
+  {
+    "name": "RH20T",
+    "institution": "清华大学等",
+    "category": "真实机器人数据集",
+    "open_source": {
+      "code": "公开",
+      "weights": "无",
+      "data": "110K序列 Google Drive/百度网盘, 实际可下(需申请)",
+      "actual_downloadable": true
+    },
+    "license": "分段: scene_0001-0005 CC-BY-SA-4.0(可商用); scene_0006-0010 CC-BY-NC-4.0(不可商用)",
+    "scale": "110,000+序列; 140+任务; 7种机械臂; 原始~40TB / 缩放版~5TB RGB ~10TB RGBD",
+    "modalities": "8-10路RGBD相机, 力/力矩(100Hz), 音频, 触觉(200Hz), 语言, 动作",
+    "embodiment": "7种不同机械臂",
+    "task_type": "接触丰富的桌面操作, 力觉/触觉",
+    "format": "自定义格式, Google Drive/Baidu",
+    "cpu_feasibility": "元数据可在CPU解析; 体量极大; 多模态力/触觉数据可轻量分析",
+    "udos_integration": {
+      "module": "wla(多本体+力触觉动作分词) + spatial(多相机标定参考)",
+      "entry_point": "力/触觉模态扩展wla动作分词维度; 多相机标定参数作spatial模块参考",
+      "priority": "中",
+      "reason": "力/触觉多模态独特, 但分段license限制商用, 体量过大"
+    },
+    "url": "https://rh20t.github.io/",
+    "evidence": "官方项目页+arXiv论文, license分段已核实"
+  },
+  {
+    "name": "RoboMIND / RoboMIND 2.0",
+    "institution": "北京人形机器人创新中心 (X-Humanoid)",
+    "category": "真实机器人数据集",
+    "open_source": {
+      "code": "公开",
+      "weights": "IL模型(DP/ACT)可下载",
+      "data": "ModelScope/HF托管, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "Apache 2.0",
+    "scale": "V1: 107K轨迹/4本体; V2.0: 310K+轨迹/6本体/739任务/129技能/~15.58TB; 含1.2万+触觉数据",
+    "modalities": "RGB-D, 本体状态, 动作, 语言, 触觉(V2), 力/力矩, 失败标签",
+    "embodiment": "Franka Panda, UR5e, AgileX Cobot Magic(双臂), 天工人形, V2新增2种",
+    "task_type": "多本体桌面操作, 含失败数据",
+    "format": "HDF5, LeRobot兼容格式",
+    "cpu_feasibility": "HDF5元数据可在CPU解析; 样本可在CPU加载; 全量需GPU",
+    "udos_integration": {
+      "module": "wla(跨本体迁移核心参考) + ctm_engine(失败恢复建模) + digital_twin(高保真仿真资产)",
+      "entry_point": "多本体(单臂/双臂/人形)动作空间对齐→wla change-mask/VQ设计; 失败标签→ctm_engine异常检测; 仿真资产→digital_twin",
+      "priority": "高",
+      "reason": "少数带失败标签的多本体数据集, 含高保真仿真资产, 直接支撑wla跨本体迁移和digital_twin"
+    },
+    "url": "https://www.modelscope.cn/datasets/X-Humanoid/RoboMIND2.0",
+    "evidence": "ModelScope页面+arXiv 2512.24653, 已验证下载量364万+"
+  },
+  {
+    "name": "AgiBot World (智元)",
+    "institution": "智元机器人 (AGIBOT)",
+    "category": "真实机器人数据集",
+    "open_source": {
+      "code": "公开",
+      "weights": "IL模型权重可下载",
+      "data": "HuggingFace托管, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "开源许可(HF数据集页确认)",
+    "scale": "1,001,552轨迹; 2,976.4小时; 217任务; 87技能; 106场景; ~43.8TB(Beta)/~8.5TB(Alpha); 100+机器人采集",
+    "modalities": "RGB(多相机), 深度, 本体状态, 动作, 语言, 视觉触觉, 6-DoF灵巧手",
+    "embodiment": "AGIBOT G1/G2 双臂人形",
+    "task_type": "双臂操作, 灵巧手, 长时序, 接触丰富",
+    "format": "HDF5, LeRobot兼容",
+    "cpu_feasibility": "元数据可在CPU解析; 体量大; Alpha子集较小可在CPU浏览",
+    "udos_integration": {
+      "module": "wla(人形双臂动作分词) + ctm_engine(长时序接触丰富任务) + world_model(世界模型训练集30K+轨迹)",
+      "entry_point": "双臂人形动作空间→wla动作分词维度设计; world_model模块已有30K+轨迹训练集参考; 灵巧手→neural_control末端",
+      "priority": "高",
+      "reason": "最大规模双臂人形真实数据集, 自带世界模型训练子集, 直接对应UDOS多模块"
+    },
+    "url": "https://agibot-world.com/",
+    "evidence": "官方站+arXiv 2503.06669, HF页面已验证"
+  },
+  {
+    "name": "Unitree Open Datasets + BitRobot-HIW-500",
+    "institution": "宇树科技 + BitRobot Foundation + HuggingFace",
+    "category": "真实机器人数据集",
+    "open_source": {
+      "code": "unitree_IL_lerobot框架开源",
+      "weights": "DP/ACT模型权重可下载",
+      "data": "HIW-500在HF实际可下; Unitree G1/Z1/UnifoLM-WBT数据集开源",
+      "actual_downloadable": true
+    },
+    "license": "开源(具体见各数据集页); HIW-500 HF上公开",
+    "scale": "HIW-500: 500+小时, 23,743轨迹, 11任务, 12东南亚家庭, ~10TB原始/~2.15TB LeRobot v3.0, 148K+子任务标注; Unitree: G1灵巧手/G1夹爪/Z1双臂/UnifoLM-WBT数据集",
+    "modalities": "全身RGB, 关节状态, 全身动作, 子任务标注",
+    "embodiment": "Unitree G1人形(全身遥操作)",
+    "task_type": "家庭移动操作, 双臂交互, 长时序家庭技能",
+    "format": "LeRobot v3.0 (Parquet + MP4) for HIW-500",
+    "cpu_feasibility": "高 - LeRobot格式(Parquet元数据+MP4视频)可在CPU解析; 小样本可在CPU跑最小demo; 无需GPU即可浏览数据结构",
+    "udos_integration": {
+      "module": "wla(全身动作分词-直接对应Unitree WLA机制) + ctm_engine(长时序家庭技能) + multi_agent(双臂协作)",
+      "entry_point": "G1全身动作维度→wla VQ/RVQ动作分词直接参考; LeRobot v3.0格式→PCE-Format映射模板; 家庭场景→closed_loop环境",
+      "priority": "高",
+      "reason": "直接使用Unitree G1本体, 与UDOS WLA机制同源; LeRobot格式CPU友好; 真实家庭场景长时序"
+    },
+    "url": "https://www.unitree.com/opensource/ , https://bitrobot-foundation.github.io/humanoids-in-the-wild-500-hours/",
+    "evidence": "Unitree官方开源页+BitRobot官网+HF, 已验证"
+  },
+  {
+    "name": "LeRobot 社区数据集 (HF lerobot)",
+    "institution": "HuggingFace",
+    "category": "真实机器人数据集(社区聚合)",
+    "open_source": {
+      "code": "Apache 2.0 (lerobot库)",
+      "weights": "部分模型权重",
+      "data": "100+社区数据集, HF托管, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "各数据集独立(多为Apache/MIT/CC-BY)",
+    "scale": "100+数据集, 数千~数万示范, 多平台(SO-100/ALOHA/Franka等)",
+    "modalities": "RGB(MP4), 本体状态(Parquet), 动作(Parquet), 部分语言",
+    "embodiment": "多种(低成本臂到人形)",
+    "task_type": "操作/移动操作/导航",
+    "format": "LeRobot v3.0 (Parquet + MP4)",
+    "cpu_feasibility": "很高 - Parquet元数据纯CPU可解析; MP4解码轻量; 小数据集可在CPU跑最小训练demo",
+    "udos_integration": {
+      "module": "PCE-Format(LeRobot→PCE转换模板) + wla(跨本体动作标准化) + build_parametric_dataset(数据接入pipeline)",
+      "entry_point": "LeRobot v3.0 schema→PCE-Format字段映射是最直接的格式转换模板; Parquet+MP4是CPU最友好的机器人数据格式",
+      "priority": "高",
+      "reason": "CPU-only UDOS最易对接的格式标准; 社区数据集丰富; Parquet在CPU上高效解析"
+    },
+    "url": "https://github.com/huggingface/lerobot",
+    "evidence": "官方GitHub+PyPI, 已验证"
+  },
+  {
+    "name": "Ego4D",
+    "institution": "Meta + 国际联盟",
+    "category": "真实机器人数据集(人类第一视角)",
+    "open_source": {
+      "code": "公开",
+      "weights": "无(数据集为主)",
+      "data": "需签license(48h审批), AWS托管, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "研究许可(非商用, 不可再分发)",
+    "scale": "3,670小时视频; 923参与者; 74地点; 9国家",
+    "modalities": "RGB(头戴), 音频, 语音描述",
+    "embodiment": "人类(第一视角)",
+    "task_type": "日常活动理解, 时序推理",
+    "format": "AWS S3下载, JSON标注",
+    "cpu_feasibility": "标注JSON可在CPU解析; 视频抽帧可在CPU; 大规模训练需GPU",
+    "udos_integration": {
+      "module": "ctm_engine(人类时序动力学先验) + world_model(第一视角物理先验) + latent_reasoner(人类活动理解)",
+      "entry_point": "人类日常活动时序模式→ctm_engine物理先验; 第一视角视频→world_model latent imagine参考",
+      "priority": "中",
+      "reason": "人类第一视角物理先验丰富, 但非机器人动作数据, 主要作先验知识来源"
+    },
+    "url": "https://ego4d-data.org/",
+    "evidence": "官方站+arXiv 2110.07058, 需license审批已确认"
+  },
+  {
+    "name": "Ego-Exo4D",
+    "institution": "Meta + 联盟",
+    "category": "真实机器人数据集(人类第一/第三视角)",
+    "open_source": {
+      "code": "公开",
+      "weights": "无",
+      "data": "需签license(~2天审批), 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "研究+商用许可(不可再分发)",
+    "scale": "1,286小时视频; 5,035 takes; 740参与者; 总~38.4TB / 默认~12.1TB",
+    "modalities": "同步第一/第三视角RGB, 音频, 3D姿态, 米制坐标系",
+    "embodiment": "人类(双视角)",
+    "task_type": "技能活动理解, 跨视角转换, 3D姿态估计",
+    "format": "CLI下载器, 自定义格式",
+    "cpu_feasibility": "标注可在CPU解析; 视频抽帧CPU可处理; 体量大",
+    "udos_integration": {
+      "module": "ctm_engine(多视角时序对齐) + spatial(米制3D坐标系标定) + world_model(技能活动先验)",
+      "entry_point": "同步ego/exo时间对齐→ctm_engine多视角融合; 米制坐标系→spatial模块参考",
+      "priority": "中",
+      "reason": "多视角同步标定数据对spatial模块有参考价值, 但非机器人动作数据"
+    },
+    "url": "https://ego-exo4d-data.org/",
+    "evidence": "官方站+arXiv 2311.18259, license审批已确认"
+  },
+  {
+    "name": "EPIC-KITCHENS",
+    "institution": "University of Bristol",
+    "category": "真实机器人数据集(人类第一视角)",
+    "open_source": {
+      "code": "公开",
+      "weights": "无",
+      "data": "公开下载, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "非商业研究许可",
+    "scale": "EPIC-100: 100小时, 45厨房, 20M帧, 89.9K动作, 4K动作类",
+    "modalities": "RGB(头戴GoPro), 音频, 自叙述, 边界框",
+    "embodiment": "人类(第一视角厨房)",
+    "task_type": "厨房活动识别/检测",
+    "format": "Data.Bris服务器下载, JSON标注",
+    "cpu_feasibility": "标注CPU可解析; 视频抽帧CPU可行",
+    "udos_integration": {
+      "module": "ctm_engine(厨房活动时序模式) + latent_reasoner(物体交互推理)",
+      "entry_point": "厨房操作动作序列→ctm_engine日常活动先验",
+      "priority": "低-中",
+      "reason": "厨房场景人类活动数据, 规模较小, 主要作常识先验"
+    },
+    "url": "https://epic-kitchens.github.io/",
+    "evidence": "官方站+arXiv 1804.02748, 已验证"
+  },
+  {
+    "name": "Something-Something v2",
+    "institution": "20BN / Qualcomm",
+    "category": "真实机器人数据集(人类物体交互视频)",
+    "open_source": {
+      "code": "N/A",
+      "weights": "无",
+      "data": "需注册下载, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "研究用途免费(非商用)",
+    "scale": "220,847短视频; 174动作类; 1,300+标注者",
+    "modalities": "RGB视频(2-6秒片段)",
+    "embodiment": "人手/物体交互",
+    "task_type": "动作识别, 物理常识",
+    "format": "MP4视频文件",
+    "cpu_feasibility": "很高 - 短视频MP4解码CPU轻松; 纯CPU可处理",
+    "udos_integration": {
+      "module": "ctm_engine(直觉物理/动作动力学) + world_model(物理常识)",
+      "entry_point": "物体交互物理直觉→ctm_engine物理先验; 短时序因果→world_model latent imagine参考",
+      "priority": "低",
+      "reason": "非机器人数据, 但动作-物体物理交互常识对world_model有参考价值; CPU友好"
+    },
+    "url": "https://developer.qualcomm.com/software/ai-datasets/something-something",
+    "evidence": "Qualcomm官方页, 已验证"
+  },
+  {
+    "name": "ALOHA / Mobile-ALOHA",
+    "institution": "Stanford",
+    "category": "真实机器人数据集+硬件平台",
+    "open_source": {
+      "code": "公开(GitHub)",
+      "weights": "ACT/Diffusion Policy训练代码",
+      "data": "Google Drive/LeRobot, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "开源(代码)",
+    "scale": "静态ALOHA: ~825 episodes(来自RT-X); Mobile ALOHA: 50示范/任务; ALOHA Unleashed: 26K episodes",
+    "modalities": "RGB(多相机), 关节状态(14-DoF双臂), 移动底座速度",
+    "embodiment": "双臂ALOHA(2x6-DoF臂+夹爪); Mobile ALOHA加移动底座",
+    "task_type": "双臂桌面操作, 移动操作",
+    "format": "HDF5, LeRobot格式",
+    "cpu_feasibility": "高 - HDF5元数据CPU可解析; LeRobot版本Parquet CPU友好; 规模小",
+    "udos_integration": {
+      "module": "wla(双臂动作分词参考) + neural_control(低层控制器参考) + ctm_engine(双臂协调)",
+      "entry_point": "14-DoF双臂动作空间→wla动作分词维度; 低成本硬件方案→neural_control分层控制参考",
+      "priority": "中",
+      "reason": "双臂操作canonical格式, 规模小但格式清晰; HDF5/LeRobot双格式CPU友好"
+    },
+    "url": "https://mobile-aloha.github.io/",
+    "evidence": "官方站+arXiv 2401.02117, 已验证"
+  },
+  {
+    "name": "LIBERO",
+    "institution": "UC Berkeley / Sony AI",
+    "category": "仿真任务库",
+    "open_source": {
+      "code": "GitHub开源",
+      "weights": "预训练checkpoint可选",
+      "data": "HDF5示范~40GB, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "MIT",
+    "scale": "130任务(5套件: Spatial/Object/Goal/100); HDF5示范~40GB",
+    "modalities": "RGB-D, 本体状态, 语言(任务描述)",
+    "embodiment": "Franka Panda 单臂(MuJoCo)",
+    "task_type": "终身学习, 知识迁移, 长时序操作",
+    "format": "HDF5示范; MuJoCo仿真环境; RLDS fork",
+    "cpu_feasibility": "中 - MuJoCo可在CPU运行(较慢); HDF5元数据CPU可解析; 最小demo可在CPU跑",
+    "udos_integration": {
+      "module": "curriculum(终身学习/知识迁移基准) + closed_loop(仿真评估参考) + selfplan(任务调度)",
+      "entry_point": "5个任务套件的终身学习设计→curriculum模块核心参考; 长时序任务序列→selfplan任务调度",
+      "priority": "高",
+      "reason": "curriculum/self_evolution模块的直接对标基准; MuJoCo CPU可跑; 任务结构化好"
+    },
+    "url": "https://github.com/Lifelong-Robot-Learning/LIBERO",
+    "evidence": "官方站+arXiv 2306.03310, 已验证"
+  },
+  {
+    "name": "CALVIN",
+    "institution": "University of Freiburg",
+    "category": "仿真任务库",
+    "open_source": {
+      "code": "GitHub开源(MIT)",
+      "weights": "基线模型",
+      "data": "ABCD split ~166GB, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "MIT",
+    "scale": "34任务; 1,000语言指令; 4环境(ABCD); ABCD split~166GB",
+    "modalities": "RGB-D(多相机), 本体状态, 语言",
+    "embodiment": "Franka Panda + 平行夹爪",
+    "task_type": "长时序语言条件操作",
+    "format": "自定义HDF5/NumPy",
+    "cpu_feasibility": "中 - PyBullet/MuJoCo CPU可跑(慢); 数据元数据CPU可解析",
+    "udos_integration": {
+      "module": "curriculum(长时序序列任务) + wm_scheduler(子任务调度) + latent_reasoner(语言条件规划)",
+      "entry_point": "ABCD跨环境泛化→curriculum模块; 语言指令序列执行→wm_scheduler调度; 长时序→latent_reasoner",
+      "priority": "高",
+      "reason": "长时序语言条件操作的标杆benchmark, 直接对标UDOS的selfplan/wm_scheduler"
+    },
+    "url": "https://github.com/mees/calvin",
+    "evidence": "官方站+arXiv 2112.03227, 已验证"
+  },
+  {
+    "name": "ManiSkill / ManiSkill3",
+    "institution": "UC Santa Cruz (Hao Su Lab)",
+    "category": "仿真任务库",
+    "open_source": {
+      "code": "GitHub开源(MIT)",
+      "weights": "基线RL模型",
+      "data": "2000+物体模型, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "代码 MIT; 数据 CC-BY 4.0",
+    "scale": "20+任务族; 2000+物体模型; 4M+示范帧(v2)",
+    "modalities": "RGB, RGBD, state-based",
+    "embodiment": "人形, 移动操作, 单臂(多种)",
+    "task_type": "桌面操作, 灵巧操作, 绘图/清洁",
+    "format": "SAPIEN仿真格式",
+    "cpu_feasibility": "低 - 并行仿真需GPU; CPU可跑单环境但极慢; 主要作架构参考",
+    "udos_integration": {
+      "module": "digital_twin(合成数据生成架构) + spatial(SAPIEN物理参考) + build_parametric_dataset(并行数据收集架构)",
+      "entry_point": "GPU并行环境架构→digital_twin设计参考; 2000+物体资产→spatial场景构建",
+      "priority": "中",
+      "reason": "GPU密集型, CPU-only UDOS无法直接跑; 但并行合成数据架构和物体资产库有参考价值"
+    },
+    "url": "https://github.com/haosulab/ManiSkill",
+    "evidence": "官方文档+arXiv 2410.00425, 已验证"
+  },
+  {
+    "name": "RoboCasa / RoboCasa365",
+    "institution": "UT Austin / NVIDIA",
+    "category": "仿真任务库",
+    "open_source": {
+      "code": "GitHub开源(MIT)",
+      "weights": "基线模型",
+      "data": "厨房资产+示范数据, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "代码 MIT; 数据 CC-BY 4.0",
+    "scale": "365任务(RoboCasa365); 2,500厨房布局; 3,200+物体; 600+小时人类示范",
+    "modalities": "RGB-D, 本体状态, 语言",
+    "embodiment": "PandaOmron 12-DoF移动操作臂(Franka+全向底座)",
+    "task_type": "厨房日常任务, 家庭操作",
+    "format": "robosuite (MuJoCo)格式",
+    "cpu_feasibility": "中 - MuJoCo可在CPU运行; 大规模环境慢; 元数据CPU可解析",
+    "udos_integration": {
+      "module": "digital_twin(家庭仿真参考) + closed_loop(评估基准) + world_model(长时序家庭任务)",
+      "entry_point": "厨房场景布局→spatial/digital_twin场景构建; 365任务→curriculum任务库; MimicGen合成数据→build_parametric_dataset",
+      "priority": "中",
+      "reason": "家庭厨房场景丰富, 但底层robosuite(MuJoCo)CPU可跑; 任务量大适合curriculum"
+    },
+    "url": "https://robocasa.ai/",
+    "evidence": "官方文档+GitHub, 已验证"
+  },
+  {
+    "name": "RoboSuite",
+    "institution": "Stanford/UT Austin/ASU (ARISE Initiative)",
+    "category": "仿真任务库",
+    "open_source": {
+      "code": "GitHub开源(MIT)",
+      "weights": "N/A",
+      "data": "N/A(框架为主)",
+      "actual_downloadable": true
+    },
+    "license": "MIT",
+    "scale": "9-13核心任务; 多种机器人模型(Franka/Sawyer/UR5e/Kinova/Baxter/IIWA)",
+    "modalities": "RGB, 本体状态, 低维物理状态",
+    "embodiment": "多种单臂/双臂",
+    "task_type": "桌面操作基准",
+    "format": "MuJoCo (MJCF)",
+    "cpu_feasibility": "高 - MuJoCo原生CPU运行; 轻量; 可在CPU跑最小demo",
+    "udos_integration": {
+      "module": "spatial/collision(MuJoCo物理参考) + neural_control(控制器抽象) + digital_twin(仿真后端参考)",
+      "entry_point": "MuJoCo物理引擎作collision/spatial计算参考; 控制器抽象→neural_control分层; MJCF模型格式→digital_twin",
+      "priority": "高",
+      "reason": "MIT许可, MuJoCo CPU可跑, 是UDOS最易直接对接的仿真后端; 控制器抽象设计参考"
+    },
+    "url": "https://robosuite.ai/",
+    "evidence": "官方站+白皮书, 已验证"
+  },
+  {
+    "name": "RLBench",
+    "institution": "University of Edinburgh",
+    "category": "仿真任务库",
+    "open_source": {
+      "code": "GitHub开源(MIT)",
+      "weights": "N/A",
+      "data": "任务场景文件, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "MIT",
+    "scale": "100+任务; 关键帧示范",
+    "modalities": "RGB-D(4视角128x128), 本体状态, 语言",
+    "embodiment": "7-DoF Franka Panda",
+    "task_type": "视觉操作, 多任务学习, 少样本学习",
+    "format": "CoppeliaSim场景文件",
+    "cpu_feasibility": "中 - CoppeliaSim可在CPU运行; 但PyRep/C++编译复杂; 版本锁定4.1",
+    "udos_integration": {
+      "module": "closed_loop(关键帧任务分解) + curriculum(100+任务) + wm_events(关键帧事件)",
+      "entry_point": "关键帧(keyframe)任务分解→wm_events事件建模参考; 100+任务→curriculum任务库",
+      "priority": "中",
+      "reason": "关键帧任务分解对wm_events有参考; 但CoppeliaSim环境配置复杂, CPU可跑但门槛高"
+    },
+    "url": "https://github.com/stepjam/RLBench",
+    "evidence": "arXiv 1909.12271 + GitHub, 已验证"
+  },
+  {
+    "name": "BEHAVIOR-1K",
+    "institution": "Stanford",
+    "category": "仿真任务库",
+    "open_source": {
+      "code": "GitHub开源",
+      "weights": "挑战基线checkpoint",
+      "data": "10K遥操作示范(HF LeRobot v3.0), 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "开源(具体见repo)",
+    "scale": "1,000家庭活动; 50场景; 10K遥操作示范(2025挑战, 50任务); 数据>30GB",
+    "modalities": "RGB, 本体状态, 语言(BDDL一阶逻辑)",
+    "embodiment": "R1Pro人形(双臂+底座+躯干, 23-DoF动作)",
+    "task_type": "家庭长时序活动(清洁/烹饪/整理)",
+    "format": "OmniGibson (Omniverse/USD); 示范LeRobot v3.0",
+    "cpu_feasibility": "低 - Omniverse需NVIDIA GPU; 无法在CPU运行; 示范数据元数据可在CPU解析",
+    "udos_integration": {
+      "module": "world_model(BDDL一阶逻辑任务形式化) + curriculum(1000长时序任务) + digital_twin(富物理家庭仿真)",
+      "entry_point": "BDDL文件→任务一阶逻辑形式化, world_model/wm_conservation参考; 1000活动→curriculum任务规模参考",
+      "priority": "中",
+      "reason": "BDDL形式化对world_model任务建模有高参考价值; 但仿真需GPU, 不可直接跑"
+    },
+    "url": "https://behavior.stanford.edu/",
+    "evidence": "官方站+GitHub StanfordVL/BEHAVIOR-1K, 已验证"
+  },
+  {
+    "name": "Isaac Lab",
+    "institution": "NVIDIA",
+    "category": "仿真任务库",
+    "open_source": {
+      "code": "GitHub开源(BSD-3)",
+      "weights": "基线模型",
+      "data": "任务环境资产, 随Isaac Sim",
+      "actual_downloadable": true
+    },
+    "license": "BSD-3-Clause(框架); Apache 2.0(mimic扩展)",
+    "scale": "多种任务环境(移动/操作); GPU并行",
+    "modalities": "RGB, state, 本体状态",
+    "embodiment": "多种(人形/四足/臂)",
+    "task_type": "强化学习, 模仿学习, 运动规划",
+    "format": "USD/PhysX (Isaac Sim)",
+    "cpu_feasibility": "很低 - 必须NVIDIA GPU + Isaac Sim; 完全无法在CPU运行",
+    "udos_integration": {
+      "module": "digital_twin(GPU并行仿真架构参考) + multi_agent(并行环境) + neural_control(RL训练pipeline)",
+      "entry_point": "GPU并行环境架构→digital_twin设计参考; 管理器模式API→neural_control分层",
+      "priority": "低",
+      "reason": "CPU-only UDOS完全无法运行; 仅作大规模并行仿真架构参考"
+    },
+    "url": "https://github.com/isaac-sim/IsaacLab",
+    "evidence": "NVIDIA官方+GitHub, 已验证"
+  },
+  {
+    "name": "Objaverse / Objaverse-XL",
+    "institution": "Allen Institute for AI (Ai2)",
+    "category": "3D/空间资产",
+    "open_source": {
+      "code": "Python API开源",
+      "weights": "N/A",
+      "data": "HuggingFace托管, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "集合 ODC-By 1.0; 单个物体各CC许可(80%+ CC-BY/CC0)",
+    "scale": "800K(v1) / 10.2M+(XL) 3D物体",
+    "modalities": "3D网格(GLB/OBJ), 渲染图像, 点云, caption",
+    "embodiment": "N/A(物体资产)",
+    "task_type": "3D物体检索/生成, 场景构建",
+    "format": "GLB/OBJ, Python API下载",
+    "cpu_feasibility": "高 - 可在CPU下载单个物体; 网格解析CPU可行; API轻量",
+    "udos_integration": {
+      "module": "spatial/scene_graph(物体资产库) + occupancy(物体几何) + digital_twin(仿真3D资产)",
+      "entry_point": "室内物体子集→scene_graph场景构建资产; 网格几何→occupancy/碰撞检测; GLB格式→digital_twin仿真资产",
+      "priority": "高",
+      "reason": "CPU可访问的最大开源3D物体库; 直接为spatial/digital_twin提供物体资产; CC许可友好"
+    },
+    "url": "https://objaverse.allenai.org/",
+    "evidence": "官方站+CVPR 2023论文, 已验证"
+  },
+  {
+    "name": "ScanNet",
+    "institution": "Stanford",
+    "category": "3D/空间资产",
+    "open_source": {
+      "code": "MIT(GitHub)",
+      "weights": "N/A",
+      "data": "需签使用协议, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "数据: 非商业研究; 代码: MIT",
+    "scale": "1,513场景; 2.5M视图",
+    "modalities": "RGB-D视频, 3D相机位姿, 表面重建, 语义分割",
+    "embodiment": "N/A(室内场景重建)",
+    "task_type": "3D场景理解, 语义分割, 配准",
+    "format": ".sens格式, PLY网格",
+    "cpu_feasibility": "中 - 网格解析CPU可行; 语义标注可CPU处理; RGB-D处理轻量",
+    "udos_integration": {
+      "module": "spatial/occupancy(室内场景几何) + scene_graph(语义场景图) + digital_twin(真实场景重建)",
+      "entry_point": "室内3D重建→occupancy场参考; 语义标注→scene_graph构建; PLY网格→digital_twin场景资产",
+      "priority": "中",
+      "reason": "室内场景3D重建对spatial模块有参考; 非商业许可限制商用"
+    },
+    "url": "http://www.scan-net.org/",
+    "evidence": "官方站+CVPR 2017论文, 需协议已确认"
+  },
+  {
+    "name": "Matterport3D",
+    "institution": "Matterport",
+    "category": "3D/空间资产",
+    "open_source": {
+      "code": "N/A",
+      "weights": "N/A",
+      "data": "需注册Matterport账号, 实际可下",
+      "actual_downloadable": true
+    },
+    "license": "非商业学术研究",
+    "scale": "90建筑(原版); ~200K RGB-D图像; HM3D扩展1,000空间",
+    "modalities": "RGB-D, 3D网格, 相机位姿, 语义标注, 平面图",
+    "embodiment": "N/A(建筑级场景)",
+    "task_type": "室内导航, 场景理解",
+    "format": "OBJ/GLB网格, JPG纹理",
+    "cpu_feasibility": "中 - 网格加载CPU可行; 可视化轻量; 建筑级体量需注意内存",
+    "udos_integration": {
+      "module": "spatial/scene_graph(建筑级空间理解) + occupancy(平面几何) + digital_twin(大规模场景资产)",
+      "entry_point": "建筑级平面图→occupancy/spatial_query参考; 完整室内场景→digital_twin大尺度环境",
+      "priority": "中",
+      "reason": "建筑级场景资产对spatial_query有参考; 非商业许可; HM3D(1000场景)规模更大"
+    },
+    "url": "https://matterport.com/partners/meta",
+    "evidence": "官方页+arXiv 1709.06158, 需注册已确认"
+  },
+  {
+    "name": "PhysBrain Ego360",
+    "institution": "DeepCybo / 中关村人工智能研究院",
+    "category": "特殊关注(人类全景第一视角)",
+    "open_source": {
+      "code": "PhysBrain项目页有代码",
+      "weights": "PhysBrain模型权重 Apache 2.0 (HF公开)",
+      "data": "Ego360数据集本身: 未找到公开下载链接",
+      "actual_downloadable": false
+    },
+    "license": "模型: Apache 2.0; Ego360数据集: 未公开",
+    "scale": "未公开(论文中作为训练数据源引用[ref 37])",
+    "modalities": "全景视频, 全身姿态, 手部运动, 任务级语音",
+    "embodiment": "人类(全景第一视角)",
+    "task_type": "日常活动, 工具使用, 人-物交互, 长时序任务",
+    "format": "未公开",
+    "cpu_feasibility": "未知 - 数据集未确认公开",
+    "udos_integration": {
+      "module": "ctm_engine(人类全景先验) + world_model(全景物理先验)",
+      "entry_point": "若开放, 全景多视角人类活动→ctm_engine/world_model物理先验",
+      "priority": "低",
+      "reason": "Ego360数据集未确认公开下载; PhysBrain模型权重开源但Ego360数据本身不可得"
+    },
+    "url": "https://zgc-embodyai.github.io/PhysBrain/ , https://deepcybo-physai.github.io/PhysBrain-1.5",
+    "evidence": "[UNVERIFIED] arXiv 2512.16793/2609.14973引用Ego360但无公开下载链接; HF有模型权重集合但Ego360数据未独立发布"
+  },
+  {
+    "name": "RoboMimic / MimicGen",
+    "institution": "Stanford / NVIDIA",
+    "category": "仿真任务库(补充)",
+    "open_source": {
+      "code": "GitHub开源",
+      "weights": "基线IL算法",
+      "data": "RoboMimic数据集(HDF5); MimicGen 50K+合成示范",
+      "actual_downloadable": true
+    },
+    "license": "RoboMimic: MIT; MimicGen代码: NVIDIA SCL; 数据: CC-BY 4.0",
+    "scale": "RoboMimic: ~1000示范/任务 x 3质量档(PH/MH/MG); MimicGen: 50K+合成示范(从~200人类示范生成)",
+    "modalities": "RGB(腕部+第三方), 本体状态, 物体位姿, 动作",
+    "embodiment": "Franka Panda, Sawyer, UR5e, 双臂Panda",
+    "task_type": "模仿学习基准, 合成数据生成",
+    "format": "HDF5, robosuite/MuJoCo",
+    "cpu_feasibility": "中 - HDF5元数据CPU可解析; MuJoCo CPU可跑; 合成数据生成流程CPU可行(慢)",
+    "udos_integration": {
+      "module": "build_parametric_dataset(合成数据生成pipeline参考) + ctm_engine(多质量档示范) + closed_loop(IL评估)",
+      "entry_point": "MimicGen从少量示范自动生成大量数据→build_parametric_dataset合成pipeline直接参考; HDF5格式→PCE转换",
+      "priority": "中",
+      "reason": "合成数据生成pipeline对build_parametric_dataset模块有直接参考; HDF5 CPU友好; MIT许可"
+    },
+    "url": "https://robomimic.github.io/ , https://mimicgen.github.io/",
+    "evidence": "官方站+GitHub, 已验证"
+  }
+]

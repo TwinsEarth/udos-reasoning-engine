@@ -1,0 +1,20 @@
+{
+  "version": "2.8.1",
+  "latent_dim": 32,
+  "horizon": 4,
+  "n_heads": 3,
+  "shared_backbone": {
+    "encode_calls": 1,
+    "latency_ms": 0.1765,
+    "backbone_params_shared": 2112
+  },
+  "independent_heads": {
+    "encode_calls": 3,
+    "latency_ms": 0.42,
+    "backbone_params_per_head": 2112
+  },
+  "latency_speedup_x": 2.379,
+  "future_head_proxy_mse_vs_rollout": 8.101765,
+  "conclusion": "共享 backbone 省 encode 次数 (1 vs 3); 头为随机初始化线性投影, future_head_proxy_mse 不代表任务精度收益。MultiTaskHead 默认 opt-in (enable=False), 收益不稳不默认开启。",
+  "rejected_candidate": "三头联合默认开启 —— 无训练头, 精度不带来源收益, 降级为 opt-in。"
+}

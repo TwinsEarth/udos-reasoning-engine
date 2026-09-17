@@ -1,0 +1,46 @@
+{
+  "benchmark": "action_piece_ab_v3.1.0",
+  "analogy_not_reproduction": true,
+  "n_actions": 480,
+  "action_dim": 6,
+  "continuous_baseline_mse": 6.119435,
+  "scan": [
+    {
+      "codebook_size": 8,
+      "quant_mse": 0.063251,
+      "rel_vs_baseline": 0.0103,
+      "latency_ms": 1.923,
+      "params": 48,
+      "utilization": 1.0
+    },
+    {
+      "codebook_size": 16,
+      "quant_mse": 0.052802,
+      "rel_vs_baseline": 0.0086,
+      "latency_ms": 1.861,
+      "params": 96,
+      "utilization": 1.0
+    },
+    {
+      "codebook_size": 32,
+      "quant_mse": 0.040954,
+      "rel_vs_baseline": 0.0067,
+      "latency_ms": 1.933,
+      "params": 192,
+      "utilization": 1.0
+    },
+    {
+      "codebook_size": 64,
+      "quant_mse": 0.028867,
+      "rel_vs_baseline": 0.0047,
+      "latency_ms": 1.926,
+      "params": 384,
+      "utilization": 1.0
+    }
+  ],
+  "best_codebook": 64,
+  "tokenized_quant_mse": 0.028867,
+  "tokenized_wins_over_continuous": true,
+  "verdict": "tokenized quantization reduces action MSE, opt-in",
+  "opt_in_default_off": true
+}

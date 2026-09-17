@@ -1,0 +1,32 @@
+{
+  "version": "4.2.9",
+  "n_params": 52191,
+  "inherits_frozen_main_from": "predictor_v4.1.0.pt",
+  "eval_mse": 0.045556,
+  "anchor_eval_mse": 0.045556,
+  "eval_mse_matches_anchor": true,
+  "backcompat_checkpoints": 31,
+  "backcompat_all_loadable": true,
+  "line_final": {
+    "triplet_quality": {
+      "n": 64.0,
+      "action_spread": 0.82601,
+      "next_state_finite": 1.0,
+      "next_state_std": 1.983297,
+      "transition_norm": 1.361878,
+      "momentum_residual": 0.79849
+    },
+    "self_play_rule_pass_rate": 0.0,
+    "execution_pass_rate": 1.0,
+    "review_keep_rate": 0.5,
+    "teacher_student_verdict": "collapsed",
+    "teacher_student_ratio": 10.2126,
+    "reflux_caution": true,
+    "degradation_verdict": "drifting",
+    "rollback_best_gen": 1,
+    "diminishing_returns": true
+  },
+  "honest_conclusion": "teacher->student 一代闭环 verdict=degraded (student_mse 0.4652 vs teacher 0.0456, ratio 10.21x); 自产数据 A/B 未优于原始数据; 全线机制为 opt-in 外挂, 不宣称 RSI 必然提升, 留候选账本。",
+  "checkpoint": "checkpoints/predictor_v4.2.9.pt",
+  "reload_consistent": true
+}
