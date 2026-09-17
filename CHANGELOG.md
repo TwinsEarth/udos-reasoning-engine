@@ -3,6 +3,28 @@
 本文件记录 UDOS 推演引擎的显著变更，遵循 Keep a Changelog 与语义化版本。
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 
+## v5.5.0（双引擎名副其实 · 大版：冻结主模型，端到端训练学习型场景头）
+
+> 性质：**新增能力 + 主链接线**。主预测员 PhysicsPredictor 全程冻结，52191 参数锚点 `predictor_v4.3.9.pt`（eval_mse 0.045556）**一个权重都不改**；只训练一个 6788 参数的独立 `SceneEstimationHead`（独立 state_dict / 独立权重文件，可挂载、摘除、回滚）。这是"GPM 场景记录员"第一次经训练后真正调制训练过的主预测员，并根治 v5.4.9 暴露的弹簧短板。
+
+- **Added**：`udos/scene_head.py`
+  - `SceneEstimationHead`：观测窗口 `[B,W,6]` → 4 维隐藏参数的两层 MLP（64 隐层，末层零初始化，起步近似场景盲）。
+  - `differentiable_rollout`：与 `PhysicsPredictor.rollout` 算子序列完全一致、但保留 autograd 的自回归滚动；冻结参数作为常数，梯度只回到头。**训练目标即真实推理 rollout MSE**，不是另一条旁路。
+  - `train_scene_head` / `save_scene_head` / `load_scene_head`：冻结主模型、AdamW 端到端训练，独立权重存取。
+- **Changed**：`UDOSReasoningEngine.attach_scene_head()` 与 `reason()` 条件优先级——显式真值参数（metadata/attributes）> 学习头估计（`scene_params_source="learned_head"`）> 场景盲旧路径。**未挂载头时逐位回退旧行为**（严格向后兼容）。
+- **产物**：`checkpoints/scene_head_v5.5.0.pt`（约 30KB，6788 参数）；`scripts/train_scene_head.py` 可复跑；`reports/v550_head_ab.json` 四方 A/B。
+- **实测四方 A/B（held-out seed=2026，主模型冻结，训练 seed=42）**：
+
+  | 指标(rollout4 MSE) | blind | explicit | classical(v5.4.8) | **learned(v5.5.0)** | learned 恢复率 |
+  |---|---|---|---|---|---|
+  | 整体 | 1.3595 | 0.0784 | 0.2418 | **0.0448** | **102.6%** |
+  | 匀速 | 0.7143 | 0.0709 | 0.0709 | **0.0149** | 108.7% |
+  | 匀加速 | 3.3355 | 0.0599 | 0.0890 | **0.0464** | 100.4% |
+  | 弹簧 | 0.7405 | 0.1404 | 0.7223（恢复 3%） | **0.0859** | **109.1%** |
+  | 碰撞 | 0.6475 | 0.0423 | 0.0848 | **0.0319** | 101.7% |
+- **诚实边界**：学习头是"**下游任务最优的场景条件器**"，不是精确物理参数估计器——弹簧 ω 的名义估计有偏（MAE≈0.57），但轨迹 MSE 最优；恢复率 >100% 表示"为冻结模型定制的有效参数"比"喂名义真值参数"更适配该模型的既有偏差，并非"比真值更懂物理"。可解释的精确反演仍以 v5.4.8 经典估计器为准（互补）。碰撞对方速度 v2 在主体窗口物理不可见，学习头同样无法凭空恢复，其增益来自可观测槽。
+- **Tests**：`tests/test_v550_scene_head.py` 8 项（零初始化、形状拒绝、可微 rollout 与推理逐位一致、梯度确实回到参数、短训练损失下降、**已发布产物弹簧恢复率≥0.80 且整体不劣于显式 1.1 倍**、reason 挂载/未挂载接线与回退、挂载/摘除）；含 545–549/reasoning/service 共 61 项回归全绿。
+
 ## v5.4.9（双引擎名副其实 5/…：盲/显式/估计三方 A/B）
 
 > 性质：新增可测评估模块 + 复现脚本 + 真实报告，**不改主模型权重/checkpoint、不改 reason 主链**；主 predictor 恒 52191 参数、eval_mse 恒 0.045556。

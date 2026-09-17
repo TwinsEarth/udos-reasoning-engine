@@ -19,7 +19,7 @@ from udos.spatial import SpatialObject
 
 
 def test_version():
-    assert __version__ == "5.4.9"
+    assert __version__ == "5.5.0"
 
 
 def _state(pos, vel):

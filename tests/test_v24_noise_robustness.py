@@ -17,7 +17,7 @@ import ablation_noise_robustness as ab  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.4.9"
+    assert __version__ == "5.5.0"
 
 
 def _tiny_model():

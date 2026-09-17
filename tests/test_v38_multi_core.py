@@ -18,7 +18,7 @@ from udos.multi_agent import (AgentCoordinator, AgentState, MultiAgentScene,
 
 
 def test_version():
-    assert __version__ == "5.4.9"
+    assert __version__ == "5.5.0"
 
 
 def test_state_layout():

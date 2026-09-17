@@ -1,5 +1,5 @@
 """
-UDOS 推演引擎 (UDOS Reasoning Engine) — v5.4.9
+UDOS 推演引擎 (UDOS Reasoning Engine) — v5.5.0
 ==============================================
 双引擎架构:
     GPM (Generative Physics engine)  —— 机制对齐 Sakana AI Doc-to-LoRA:
@@ -57,7 +57,7 @@ v2.7.x 迭代 (从预测到行动的闭环):
     - SakanaAI/continuous-thought-machines
     - SakanaAI/doc-to-lora
 
-版本: v5.4.9
+版本: v5.5.0
 """
 
 import logging as _logging
@@ -81,6 +81,10 @@ from .gpm_engine import (
     LoRASet,
 )
 from .gpm_memory_bridge import GPMSceneBridge
+from .scene_head import (
+    SceneEstimationHead, differentiable_rollout, train_scene_head,
+    save_scene_head, load_scene_head,
+)
 from .reasoning import UDOSReasoningEngine, ReasoningResult
 from .dynamics import (
     RAW_DIM,
@@ -198,7 +202,7 @@ from .resource_registry import (ResourceRegistry, ResourceConnector,
                                 normalize_trajectory)
 from .connectors import build_default_registry as build_default_resource_registry
 
-__version__ = "5.4.9"
+__version__ = "5.5.0"
 
 __all__ = [
     "PhysicalToken",
@@ -213,6 +217,11 @@ __all__ = [
     "PhysicsHypernetwork",
     "GPMConfig",
     "GPMSceneBridge",
+    "SceneEstimationHead",
+    "differentiable_rollout",
+    "train_scene_head",
+    "save_scene_head",
+    "load_scene_head",
     "LoRAInjector",
     "LoRASet",
     "UDOSReasoningEngine",

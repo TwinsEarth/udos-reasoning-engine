@@ -12,7 +12,7 @@ from udos.ood import StreamingDriftDetector, DistributionDriftDetector  # noqa: 
 
 
 def test_version_bumped():
-    assert __version__ == "5.4.9"
+    assert __version__ == "5.5.0"
 
 
 def _ref_and_data():

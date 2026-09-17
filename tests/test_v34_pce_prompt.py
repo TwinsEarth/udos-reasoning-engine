@@ -68,4 +68,4 @@ def test_empty_prompt_id_rejected():
 
 
 def test_version():
-    assert __version__ == "5.4.9"
+    assert __version__ == "5.5.0"

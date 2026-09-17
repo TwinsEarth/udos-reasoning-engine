@@ -36,6 +36,7 @@ from .gpm_engine import (
 from .pce_format import PhysicalToken, PhysicsScene, PhysicsSceneEncoder
 from .scene_bridge import extract_scene_params
 from .gpm_memory_bridge import GPMSceneBridge
+from .scene_head import SceneEstimationHead
 from .dynamics import RAW_DIM
 
 
@@ -97,10 +98,14 @@ class UDOSReasoningEngine(nn.Module):
                  lora_scaling: float = 1.0,
                  scene_conditioning: bool = True,
                  predictor: Optional[Any] = None,
-                 use_gpm_bridge: bool = True):
+                 use_gpm_bridge: bool = True,
+                 scene_head: Optional[SceneEstimationHead] = None):
         super().__init__()
         self.scene_conditioning = scene_conditioning
         self.predictor = predictor  # 可选: 训练好的 PhysicsPredictor, 提供可解释物理预测
+        # v5.5.0 学习型场景估计头 (GPM 场景记录员的训练核心): 无显式场景参数时,
+        # 由观测窗口估计 4 维隐藏参数喂主预测员。未挂载时严格保持场景盲旧行为。
+        self.scene_head = scene_head
         # v5.4.7 GPM -> 主预测员 CTM 的零初始化记忆桥 (懒构建, 独立参数)
         self.use_gpm_bridge = use_gpm_bridge
         self.gpm_scene_bridge: Optional[GPMSceneBridge] = None
@@ -137,6 +142,12 @@ class UDOSReasoningEngine(nn.Module):
         按新维度懒重建 (零初始化)。"""
         self.predictor = predictor
         self.gpm_scene_bridge = None
+
+    def attach_scene_head(self, head: SceneEstimationHead) -> None:
+        """挂载 v5.5.0 学习型场景估计头; reason 在无显式场景参数时用它估计。
+
+        头独立训练/存权重, 不改变冻结主预测员。传 None 可摘除 (回退场景盲)。"""
+        self.scene_head = head
 
     def _gpm_scene_bias(self, scene: PhysicsScene):
         """懒构建并计算 GPM 记忆桥对主预测员的加性场景偏置。
@@ -227,13 +238,23 @@ class UDOSReasoningEngine(nn.Module):
             H = max(1, int(horizon))
             scene_bias, bridge_active, bridge_norm = self._gpm_scene_bias(scene)
             sp = extract_scene_params(scene)
+            cond_params = None
             if sp is not None:
-                predictor_conditioned = True
+                # 最高优先: PCE 显式承载的真值场景参数 (metadata/attributes)
+                cond_params = sp.values
                 sp_source = sp.source
+            elif self.scene_head is not None and raw.size(1) >= self.scene_head.window:
+                # v5.5.0: 无显式参数时, 用学习型场景头从观测窗口估计
+                rw = raw[:, -self.scene_head.window:, :]
+                with torch.no_grad():
+                    cond_params = self.scene_head(rw)
+                sp_source = "learned_head"
+            if cond_params is not None:
+                predictor_conditioned = True
                 sp_values = [round(float(v), 6) for v in
-                             sp.values.flatten().tolist()]
+                             cond_params.detach().flatten().tolist()]
                 roll = self.predictor.rollout(
-                    raw, H, scene_params=sp.values,
+                    raw, H, scene_params=cond_params,
                     scene_bias=scene_bias)[0]  # [H,6]
             else:
                 roll = self.predictor.rollout(

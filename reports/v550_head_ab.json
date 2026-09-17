@@ -1,0 +1,153 @@
+{
+  "model": "predictor_v4.3.9.pt",
+  "train_seed": 42,
+  "heldout_seed": 2026,
+  "horizon": 4,
+  "frozen_predictor_params": 52191,
+  "head_trainable_params": 6788,
+  "train_final_rollout_mse": 0.05074,
+  "train_loss_history": [
+    0.401088,
+    0.16268,
+    0.098843,
+    0.085392,
+    0.075785,
+    0.072159,
+    0.069089,
+    0.066973,
+    0.065438,
+    0.064694,
+    0.063938,
+    0.063227,
+    0.06181,
+    0.061318,
+    0.060134,
+    0.059578,
+    0.058362,
+    0.057999,
+    0.057099,
+    0.056172,
+    0.055852,
+    0.055467,
+    0.055267,
+    0.054481,
+    0.05383,
+    0.053324,
+    0.053343,
+    0.053018,
+    0.053359,
+    0.052555,
+    0.051676,
+    0.05182,
+    0.051817,
+    0.051426,
+    0.050946,
+    0.050446,
+    0.051041,
+    0.050294,
+    0.049925,
+    0.05074
+  ],
+  "overall": {
+    "single_step": {
+      "blind": 0.556739,
+      "explicit": 0.040199,
+      "classical": 0.082703,
+      "learned": 0.038423,
+      "classical_recovery": 0.9177,
+      "learned_recovery": 1.0034,
+      "learned_over_blind": 0.069
+    },
+    "rollout_4": {
+      "blind": 1.359453,
+      "explicit": 0.078374,
+      "classical": 0.241751,
+      "learned": 0.044781,
+      "classical_recovery": 0.8725,
+      "learned_recovery": 1.0262,
+      "learned_over_blind": 0.0329
+    }
+  },
+  "per_kind": {
+    "uniform": {
+      "single_step": {
+        "blind": 0.339021,
+        "explicit": 0.031651,
+        "classical": 0.031651,
+        "learned": 0.011341,
+        "classical_recovery": 1.0,
+        "learned_recovery": 1.0661,
+        "learned_over_blind": 0.0335
+      },
+      "rollout_4": {
+        "blind": 0.71428,
+        "explicit": 0.070869,
+        "classical": 0.070869,
+        "learned": 0.014928,
+        "classical_recovery": 1.0,
+        "learned_recovery": 1.0869,
+        "learned_over_blind": 0.0209
+      }
+    },
+    "accel": {
+      "single_step": {
+        "blind": 1.098189,
+        "explicit": 0.018182,
+        "classical": 0.03482,
+        "learned": 0.015396,
+        "classical_recovery": 0.9846,
+        "learned_recovery": 1.0026,
+        "learned_over_blind": 0.014
+      },
+      "rollout_4": {
+        "blind": 3.335543,
+        "explicit": 0.059907,
+        "classical": 0.088991,
+        "learned": 0.0464,
+        "classical_recovery": 0.9911,
+        "learned_recovery": 1.0041,
+        "learned_over_blind": 0.0139
+      }
+    },
+    "spring": {
+      "single_step": {
+        "blind": 0.404708,
+        "explicit": 0.079956,
+        "classical": 0.206063,
+        "learned": 0.100738,
+        "classical_recovery": 0.6117,
+        "learned_recovery": 0.936,
+        "learned_over_blind": 0.2489
+      },
+      "rollout_4": {
+        "blind": 0.740536,
+        "explicit": 0.140378,
+        "classical": 0.722343,
+        "learned": 0.085911,
+        "classical_recovery": 0.0303,
+        "learned_recovery": 1.0908,
+        "learned_over_blind": 0.116
+      }
+    },
+    "collision": {
+      "single_step": {
+        "blind": 0.385038,
+        "explicit": 0.031006,
+        "classical": 0.058279,
+        "learned": 0.026215,
+        "classical_recovery": 0.923,
+        "learned_recovery": 1.0135,
+        "learned_over_blind": 0.0681
+      },
+      "rollout_4": {
+        "blind": 0.647452,
+        "explicit": 0.042344,
+        "classical": 0.084799,
+        "learned": 0.031884,
+        "classical_recovery": 0.9298,
+        "learned_recovery": 1.0173,
+        "learned_over_blind": 0.0492
+      }
+    }
+  }
+}

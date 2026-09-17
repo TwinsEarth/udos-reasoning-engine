@@ -41,7 +41,7 @@ def window_batch():
 
 
 def test_version():
-    assert __version__ == "5.4.9"
+    assert __version__ == "5.5.0"
 
 
 def test_future_head_shape_finite(predictor, window_batch):

@@ -47,7 +47,7 @@ def _build(predictor):
 
 
 def test_version():
-    assert __version__ == "5.4.9"
+    assert __version__ == "5.5.0"
 
 
 def test_spatial_head_shape_finite(predictor, window_batch):
