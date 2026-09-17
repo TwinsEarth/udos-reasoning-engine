@@ -90,4 +90,4 @@ def test_service_untrained_409():
 
 
 def test_version():
-    assert __version__ == "5.5.2"
+    assert __version__ == "5.5.3"

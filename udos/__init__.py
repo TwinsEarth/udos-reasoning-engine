@@ -1,5 +1,5 @@
 """
-UDOS 推演引擎 (UDOS Reasoning Engine) — v5.5.2
+UDOS 推演引擎 (UDOS Reasoning Engine) — v5.5.3
 ==============================================
 双引擎架构:
     GPM (Generative Physics engine)  —— 机制对齐 Sakana AI Doc-to-LoRA:
@@ -57,7 +57,7 @@ v2.7.x 迭代 (从预测到行动的闭环):
     - SakanaAI/continuous-thought-machines
     - SakanaAI/doc-to-lora
 
-版本: v5.5.2
+版本: v5.5.3
 """
 
 import logging as _logging
@@ -95,6 +95,7 @@ from .dynamics_router import (
     KindSpecificParamErrorModel, apply_kind_inflation,
     fit_kind_conformal_inflation,
 )
+from .dual_engine_observe import EngineObservation, observe_conditioning
 from .reasoning import UDOSReasoningEngine, ReasoningResult
 from .dynamics import (
     RAW_DIM,
@@ -212,7 +213,7 @@ from .resource_registry import (ResourceRegistry, ResourceConnector,
                                 normalize_trajectory)
 from .connectors import build_default_registry as build_default_resource_registry
 
-__version__ = "5.5.2"
+__version__ = "5.5.3"
 
 __all__ = [
     "PhysicalToken",
@@ -245,6 +246,8 @@ __all__ = [
     "KindSpecificParamErrorModel",
     "apply_kind_inflation",
     "fit_kind_conformal_inflation",
+    "EngineObservation",
+    "observe_conditioning",
     "LoRAInjector",
     "LoRASet",
     "UDOSReasoningEngine",

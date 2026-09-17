@@ -1,0 +1,44 @@
+{
+  "version": "5.5.3",
+  "heldout_seed": 2026,
+  "conditioning_source": "learned_head",
+  "horizon": 4,
+  "per_kind": {
+    "uniform": {
+      "n": 80,
+      "gate_contribution_mean": 1.6369,
+      "gate_final_delta_mean": 2.3276,
+      "route_accuracy": 1.0,
+      "route_confidence_mean": 1.0,
+      "blind_rollout4_mse": 0.8921,
+      "conditioned_rollout4_mse": 0.017
+    },
+    "accel": {
+      "n": 80,
+      "gate_contribution_mean": 1.5265,
+      "gate_final_delta_mean": 2.2004,
+      "route_accuracy": 0.75,
+      "route_confidence_mean": 1.0,
+      "blind_rollout4_mse": 1.3231,
+      "conditioned_rollout4_mse": 0.0209
+    },
+    "spring": {
+      "n": 80,
+      "gate_contribution_mean": 1.3229,
+      "gate_final_delta_mean": 1.8397,
+      "route_accuracy": 1.0,
+      "route_confidence_mean": 1.0,
+      "blind_rollout4_mse": 0.6915,
+      "conditioned_rollout4_mse": 0.0664
+    },
+    "collision": {
+      "n": 80,
+      "gate_contribution_mean": 1.641,
+      "gate_final_delta_mean": 2.1432,
+      "route_accuracy": 0.7125,
+      "route_confidence_mean": 1.0,
+      "blind_rollout4_mse": 0.5896,
+      "conditioned_rollout4_mse": 0.0271
+    }
+  }
+}

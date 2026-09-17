@@ -36,7 +36,7 @@ def _uniform_window(v0=1.3, dt=0.5, n=10, window=6):
 
 
 def test_version():
-    assert __version__ == "5.5.2"
+    assert __version__ == "5.5.3"
 
 
 def test_hybrid_param_count():

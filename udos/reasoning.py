@@ -38,6 +38,10 @@ from .scene_bridge import extract_scene_params
 from .gpm_memory_bridge import GPMSceneBridge
 from .scene_head import SceneEstimationHead
 from .dynamics import RAW_DIM
+from .dual_engine_observe import observe_conditioning
+
+# 可观测性路由所用的帧间隔, 与合成参数化数据集默认 dt 对齐 (仅用于类型判别)。
+_OBS_DT = 0.5
 
 
 @dataclass
@@ -63,6 +67,9 @@ class ReasoningResult:
     # (零初始化/未训练时为 0, 训练后 >0 表示 GPM 场景记忆真正调制主预测)。
     gpm_bridge_active: bool = False
     gpm_bridge_norm: float = 0.0
+    # v5.5.3 双引擎可观测性 (opt-in observe=True): 来源/路由置信/场景门贡献/
+    # 盲-感知逐步轨迹差; 默认 None, 不改变旧契约与默认计算量。
+    gate_observation: Optional[Dict[str, Any]] = None
 
     def convergence(self) -> float:
         return float(self.certainty_trajectory[1, -1])
@@ -87,6 +94,8 @@ class ReasoningResult:
             out["predicted_next_state"] = self.predicted_state
         if self.future_states is not None:
             out["future_states"] = self.future_states
+        if self.gate_observation is not None:
+            out["gate_observation"] = self.gate_observation
         return out
 
 
@@ -207,7 +216,8 @@ class UDOSReasoningEngine(nn.Module):
                query: str = "",
                scene_id: Optional[str] = None,
                track: bool = True,
-               horizon: int = 1) -> ReasoningResult:
+               horizon: int = 1,
+               observe: bool = False) -> ReasoningResult:
         sid = scene_id or scene.scene_id
         # 注意: 内化不是强制的 (允许无场景记忆的纯 CTM 推演), 但给出提示
         # 物理 Token 序列 -> CTM 输入 [1, seq, d_input]
@@ -233,6 +243,7 @@ class UDOSReasoningEngine(nn.Module):
         sp_source: Optional[str] = None
         bridge_active = False
         bridge_norm = 0.0
+        gate_observation: Optional[Dict[str, Any]] = None
         if self.predictor is not None and len(scene.tokens) >= 1:
             raw = self._tokens_raw(scene)
             H = max(1, int(horizon))
@@ -265,6 +276,16 @@ class UDOSReasoningEngine(nn.Module):
             predicted_state = _state(roll[0].tolist())
             if H > 1:
                 future_states = [_state(v.tolist()) for v in roll]
+            if observe:
+                # v5.5.3: 同输入并排盲 vs 条件轨迹, 复用已算 roll 仅补一次盲 rollout
+                obs = observe_conditioning(
+                    self.predictor, raw,
+                    conditioned_params=cond_params if predictor_conditioned
+                    else None,
+                    source=sp_source or "blind",
+                    scene_bias=scene_bias, horizon=H, dt=_OBS_DT,
+                    precomputed_conditioned=roll)
+                gate_observation = obs.as_dict()
 
         chain = self._build_causal_chain(scene, info)
         lora = self.scene_memory.get(sid)
@@ -286,6 +307,7 @@ class UDOSReasoningEngine(nn.Module):
             scene_params_source=sp_source,
             gpm_bridge_active=bridge_active,
             gpm_bridge_norm=bridge_norm,
+            gate_observation=gate_observation,
         )
 
     def _build_causal_chain(self, scene: PhysicsScene,

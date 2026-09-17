@@ -36,7 +36,7 @@ def window_batch():
 
 
 def test_version():
-    assert __version__ == "5.5.2"
+    assert __version__ == "5.5.3"
 
 
 def test_short_horizon_degenerate_identical(predictor, window_batch):

@@ -7,7 +7,7 @@ from udos.spatial import OrthographicView, multiview_consistency_error
 
 
 def test_version():
-    assert __version__ == "5.5.2"
+    assert __version__ == "5.5.3"
 
 
 def test_project_unproject_roundtrip():

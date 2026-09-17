@@ -15,7 +15,7 @@ from udos.evaluation import evaluate_predictor  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.5.2"
+    assert __version__ == "5.5.3"
 
 
 def _tiny_model():

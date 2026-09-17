@@ -3,6 +3,21 @@
 本文件记录 UDOS 推演引擎的显著变更，遵循 Keep a Changelog 与语义化版本。
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 
+## v5.5.3（双引擎可观测性：来源 / 置信 / 场景门贡献 / 盲-感知轨迹差）
+
+> 性质：只读可观测能力，不改任何模型权重与既有默认契约；主 predictor 恒 52191、场景头恒 6788。`reason(observe=False)` 默认行为与计算量逐位不变。
+
+- **Added**：`udos/dual_engine_observe.py`
+  - `observe_conditioning`：同一窗口、同一冻结预测员并排跑**盲 rollout**（无场景参数/记忆）与**感知 rollout**（本次场景条件），输出 `EngineObservation`。
+  - 来源 `source`（metadata/attributes/learned_head/classical_router/blind）；v5.5.2 路由类型与一个 [0,1] 的**判别果断度**启发量（碰撞=跳变超阈比例、弹簧=简谐/匀加速模型相对裕度、线性类=lin_r2；是分类裕度，**非概率**）。
+  - 场景门边际贡献：盲-感知轨迹的逐步位置/速度向量范数 `gate_position/velocity_delta`，及均值 `gate_contribution`、末步 `gate_final_delta`；可选挂接 v5.5.1/5.5.2 扇形给出逐步位置半宽。
+  - 支持 `precomputed_conditioned` 复用 reason 已算 rollout，观测仅补一次盲 rollout。
+- **Added**：`reason(..., observe=True)` 新增 opt-in，结果新增 `gate_observation`（JSON 友好 dict），并进入 `summary()`；默认 `observe=False` 时该字段为 None。
+- **Added**：`scripts/dual_engine_observe.py` → `reports/v553_gate_observation.json`。
+- **实测（held-out seed=2026，学习头条件，rollout4 MSE / 门贡献）**：场景门对四类均为命脉——匀速 盲 0.892→条件 0.017（门末步差均值 2.33）、加速 1.323→0.021（2.20）、弹簧 0.692→0.066（1.84）、碰撞 0.590→0.027（2.14）；路由准确率 匀速/弹簧 1.00、加速 .75、碰撞 .71（误判窗为近匀速窗，已在 5.5.2 验证下游无害）。干净合成数据上果断度饱和为 1.0（真实含噪数据才会拉开，如实记录）。
+- **诚实边界**：可观测性只度量"场景通道改变了多少预测"，不保证预测正确（正确性仍由 5.5.0/5.5.2 的 A/B 与覆盖率支撑）；路由置信是启发式裕度而非校准概率；观测固定 dt=0.5 用于类型判别。
+- **Tests**：`tests/test_v553_dual_engine_observe.py` 10 项（盲零贡献、显式弹簧门贡献大且更准、差非负与形状、果断度单位区间、复用预计算逐位一致、扇形半宽几何、输入校验、dict JSON 友好、reason 默认关闭与 opt-in 字段）；连同 552/551/550/reasoning/547 共 46 项回归全绿。
+
 ## v5.5.2（四类运动识别 + 估计路由 + 类型条件不确定性）
 
 > 性质：新增能力，不改主模型/场景头权重；主 predictor 恒 52191、场景头恒 6788 参数。确定性运动路由器把经典估计的弹簧恢复率从个位数拉到满值，并用类型条件 conformal 修正 v5.5.1 的分类型欠/过覆盖。

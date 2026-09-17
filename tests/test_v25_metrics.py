@@ -18,7 +18,7 @@ from udos.server import MetricsCollector  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.5.2"
+    assert __version__ == "5.5.3"
 
 
 def test_metrics_collector_record_and_snapshot():

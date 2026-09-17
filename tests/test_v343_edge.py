@@ -96,4 +96,4 @@ def test_episode_action_override_mismatch(model):
 
 
 def test_version():
-    assert __version__ == "5.5.2"
+    assert __version__ == "5.5.3"

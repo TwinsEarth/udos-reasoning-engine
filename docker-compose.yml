@@ -1,7 +1,7 @@
 services:
   udos-engine:
     build: .
-    image: udos-reasoning-engine:5.5.2
+    image: udos-reasoning-engine:5.5.3
     container_name: udos-engine
     ports:
       - "8000:8000"

@@ -25,7 +25,7 @@ CKPT = str(ROOT / "checkpoints" / "predictor_v3.6.0.pt")
 
 
 def test_version():
-    assert __version__ == "5.5.2"
+    assert __version__ == "5.5.3"
 
 
 def test_backcompat_22_checkpoints():

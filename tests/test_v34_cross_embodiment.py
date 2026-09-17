@@ -86,4 +86,4 @@ def test_query_shapes(model):
 
 
 def test_version():
-    assert __version__ == "5.5.2"
+    assert __version__ == "5.5.3"
