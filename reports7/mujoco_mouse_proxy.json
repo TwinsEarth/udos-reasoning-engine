@@ -1,0 +1,29 @@
+{
+  "evidence_grade": "cpu-proxy",
+  "mujoco_version": "3.13.0",
+  "note": "最小平面铰接代理，非 DeepMind virtual rodent；无 RL/神经对齐",
+  "n_steps": 400,
+  "same_initial_state": true,
+  "baseline_net_x_displacement": -0.38358,
+  "action_intervention": {
+    "phase_shift_rad": 1.5708,
+    "net_x_displacement": -0.29791,
+    "state_divergence": {
+      "max": 13.733,
+      "final": 2.209632,
+      "first_nonzero_step": 1
+    },
+    "causally_changes_future": true
+  },
+  "mass_intervention": {
+    "torso_mass_scale": 2.0,
+    "net_x_displacement": -0.41522,
+    "state_divergence": {
+      "max": 5.476591,
+      "final": 0.708767,
+      "first_nonzero_step": 1
+    },
+    "causally_changes_future": true
+  },
+  "causal_model_demonstrated": true
+}

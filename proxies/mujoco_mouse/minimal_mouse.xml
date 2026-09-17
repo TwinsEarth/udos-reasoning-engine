@@ -1,0 +1,40 @@
+<!-- 最小平面"虚拟小鼠"因果代理（cpu-proxy）。
+  非 DeepMind virtual rodent：仅躯干 + 两条铰接腿，平面(xz)内运动，用于
+  在 CPU 上验证"物理复现行为 + 干预因果"，不含 RL、不含神经活动对齐。 -->
+<mujoco model="minimal_mouse_proxy">
+  <option timestep="0.005" gravity="0 0 -9.81"/>
+  <default>
+    <joint damping="0.5"/>
+    <geom condim="3" friction="1.2 0.02 0.02"/>
+    <default class="leg">
+      <geom size="0.02" rgba="0.2 0.45 0.8 1"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <light pos="0 0 2"/>
+    <geom name="floor" type="plane" size="5 2 0.1" rgba="0.85 0.85 0.85 1"/>
+
+    <body name="torso" pos="0 0 0.12">
+      <joint name="root" type="free"/>
+      <geom name="torso_geom" type="capsule" fromto="-0.13 0 0 0.13 0 0"
+            size="0.06" mass="0.6" rgba="0.75 0.25 0.2 1"/>
+
+      <body name="leg_front" pos="0.10 0 -0.04">
+        <joint name="hip_front" type="hinge" axis="0 1 0" range="-50 50"/>
+        <geom class="leg" type="capsule" fromto="0 0 0 0.07 0 -0.10"
+              mass="0.05"/>
+      </body>
+      <body name="leg_back" pos="-0.10 0 -0.04">
+        <joint name="hip_back" type="hinge" axis="0 1 0" range="-50 50"/>
+        <geom class="leg" type="capsule" fromto="0 0 0 0.07 0 -0.10"
+              mass="0.05"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <position name="act_front" joint="hip_front" kp="8" ctrlrange="-0.8 0.8"/>
+    <position name="act_back"  joint="hip_back"  kp="8" ctrlrange="-0.8 0.8"/>
+  </actuator>
+</mujoco>

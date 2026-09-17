@@ -96,7 +96,7 @@ next [B,6]；rollout 自回归滑动 → traj [B,H,6]
 | 项 | 状态 |
 |---|---|
 | 统一推理图、三分/四分数据、真实训练、档位选择、参数辨识、conformal/扇形覆盖率、HTTP | **verified**（见 VERIFICATION.md） |
-| MuJoCo CPU pip 小规模虚拟小鼠因果模型 | **unverified**（未试装；可做，标 cpu-proxy） |
+| MuJoCo CPU pip 最小虚拟小鼠因果模型（动作/体重干预因果改变轨迹） | **cpu-proxy**（`proxies/mujoco_mouse/`，非 DeepMind virtual rodent，无 RL/神经对齐） |
 | vLLM KV-offload/压缩真实 TTFT/吞吐、NEURON/CoreNEURON 验 DHS、MuJoCo-MJX、0.5B/5B 端到端 | **unverified，需 GPU/HPC（约 ¥35,400/月档），本环境无 GPU/docker/sudo** |
 | 多 LLM 交叉打分 | **unverified，需多供应商 key**；无 key 时只能确定性规则/CPU 小模型且不等同商用 LLM |
 | PostgreSQL/并发压测/CI-CD/监控/灾备/双云部署/域名/ICP/HTTPS | schema 与脚本可本地验；**实名备案与双云真实部署需用户闸门（数周）** |

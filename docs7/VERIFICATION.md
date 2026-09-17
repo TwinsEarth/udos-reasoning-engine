@@ -81,6 +81,7 @@ health=200、predict=200（形状 [1,4,6]）、interval 三档带宽严格递增
 
 ## 10. 明确未验证（不冒充）
 
+- MuJoCo CPU 最小虚拟小鼠因果代理：**cpu-proxy 已跑通**（`proxies/mujoco_mouse/`，动作/体重干预从第 1 步因果改变轨迹，报告 `reports7/mujoco_mouse_proxy.json`）；非 DeepMind virtual rodent，无 RL/神经对齐；
 - 0.5B/5B 真实小模型端到端、vLLM KV-offload、NEURON/CoreNEURON DHS、MuJoCo-MJX：需 GPU/HPC，本环境做不了，列为 M5 闸门；
 - 多 LLM 交叉打分：需供应商 key；
 - 双云生产部署/域名/ICP/HTTPS：需实名与备案；
