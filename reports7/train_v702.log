@@ -1,0 +1,34 @@
+{'train': (1280, 256), 'val': (640, 128), 'test': (640, 128), 'calib': (640, 128)}
+ep000 train=1.2603 val_oracle=1.3024 val_blind=1.3025
+ep010 train=0.2045 val_oracle=0.1822 val_blind=0.1859
+ep020 train=0.0950 val_oracle=0.0782 val_blind=0.0850
+ep030 train=0.0509 val_oracle=0.0603 val_blind=0.0643
+ep040 train=0.0359 val_oracle=0.0434 val_blind=0.0481
+ep050 train=0.0274 val_oracle=0.0405 val_blind=0.0455
+ep060 train=0.0203 val_oracle=0.0376 val_blind=0.0424
+ep070 train=0.0184 val_oracle=0.0370 val_blind=0.0413
+ep079 train=0.0177 val_oracle=0.0371 val_blind=0.0414
+[hidden=64] params=94734 best_val=0.03918 test_oracle=0.01789 test_blind=0.02512 (48.3s)
+ep000 train=1.1688 val_oracle=1.0025 val_blind=1.0076
+ep010 train=0.1872 val_oracle=0.1793 val_blind=0.1781
+ep020 train=0.0729 val_oracle=0.0667 val_blind=0.0676
+ep030 train=0.0445 val_oracle=0.0580 val_blind=0.0561
+ep040 train=0.0314 val_oracle=0.0499 val_blind=0.0473
+ep050 train=0.0237 val_oracle=0.0464 val_blind=0.0435
+ep060 train=0.0176 val_oracle=0.0441 val_blind=0.0421
+ep070 train=0.0158 val_oracle=0.0431 val_blind=0.0406
+ep079 train=0.0153 val_oracle=0.0430 val_blind=0.0406
+[hidden=128] params=270862 best_val=0.04157 test_oracle=0.01746 test_blind=0.02135 (83.6s)
+ep000 train=1.0759 val_oracle=0.8746 val_blind=0.8665
+ep010 train=0.1470 val_oracle=0.1313 val_blind=0.1283
+ep020 train=0.0598 val_oracle=0.0476 val_blind=0.0468
+ep030 train=0.0429 val_oracle=0.0498 val_blind=0.0471
+ep040 train=0.0303 val_oracle=0.0400 val_blind=0.0372
+ep050 train=0.0225 val_oracle=0.0390 val_blind=0.0365
+ep060 train=0.0167 val_oracle=0.0370 val_blind=0.0348
+ep070 train=0.0149 val_oracle=0.0365 val_blind=0.0342
+ep079 train=0.0144 val_oracle=0.0366 val_blind=0.0342
+[hidden=256] params=967182 best_val=0.03478 test_oracle=0.02090 test_blind=0.02482 (199.1s)
+CHOSEN hidden = 256 params = 967182
+saved /home/user/Doubao/chats/38439739717650178/release-v5.4.4/udos-engine/checkpoints7/worldmodel_v7.0.2.pt
+saved /home/user/Doubao/chats/38439739717650178/release-v5.4.4/udos-engine/reports7/model_size_convergence.json

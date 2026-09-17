@@ -1,35 +1,5 @@
 {
-  "version": "7.0.2",
-  "evidence_grade": "verified",
-  "torch_version": "2.14.0+cpu",
-  "device": "cpu",
-  "threads": 2,
   "params": 967182,
-  "checkpoint_config": {
-    "window": 6,
-    "hidden": 256,
-    "n_layers": 2,
-    "scene_dim": 32,
-    "use_kinematics": true
-  },
-  "dataset": {
-    "train": {
-      "windows": 1280,
-      "trajectories": 256
-    },
-    "val": {
-      "windows": 640,
-      "trajectories": 128
-    },
-    "test": {
-      "windows": 640,
-      "trajectories": 128
-    },
-    "calib": {
-      "windows": 640,
-      "trajectories": 128
-    }
-  },
   "test_metrics": {
     "oracle": {
       "oracle_overall": 0.0209040604531765,
@@ -137,39 +107,6 @@
     "empirical_coverage": 0.8258,
     "pass": true
   },
-  "kinematic_recovery": {
-    "accel_vector": {
-      "mse_vs_truth": 0.0,
-      "mse_mean_predictor": 0.218239,
-      "skill": 1.0,
-      "mae_norm": 0.0
-    },
-    "uniform_accel_falsepos_norm": 0.0,
-    "spring_omega": {
-      "recall": 1.0,
-      "mae_on_valid": 0.0231,
-      "false_positive_rate_non_spring": 0.0
-    },
-    "collision_jump": {
-      "detection_rate": 0.7437,
-      "false_positive_rate_non_collision": 0.0
-    }
-  },
-  "improvement_vs_v701": {
-    "blind_overall_le_v701": true,
-    "blind_accel_le_0.075": true,
-    "blind_spring_le_v701": true,
-    "v701_baseline": {
-      "blind_overall": 0.0459,
-      "blind_accel": 0.1053,
-      "blind_spring": 0.0637
-    },
-    "observed": {
-      "blind_overall": 0.02482,
-      "blind_accel": 0.06926,
-      "blind_spring": 0.01933
-    }
-  },
   "latency_ms": {
     "predict_next_batch1_median": 1.8261,
     "rollout4_batch1_median": 4.1766
@@ -178,35 +115,6 @@
     "all_pass": true,
     "checked": 15,
     "note": "覆盖率容差 ±0.05（扇形 ±0.10），CPU 固定 seed"
-  },
-  "estimator_param_error": {
-    "v0": {
-      "mae": 0.6599,
-      "mae_mean_predictor": 0.9683,
-      "identifiability_skill": 0.319,
-      "mean_observability": 0.761,
-      "n": 480
-    },
-    "accel_a": {
-      "mae": 0.9307,
-      "mae_mean_predictor": 0.6138,
-      "identifiability_skill": -0.516,
-      "mean_observability": 0.787,
-      "n": 160
-    },
-    "spring_omega": {
-      "mae": 0.1481,
-      "mae_mean_predictor": 0.2563,
-      "identifiability_skill": 0.422,
-      "mean_observability": 0.91,
-      "n": 160
-    },
-    "other_v2": {
-      "mae": 0.0478,
-      "mae_mean_predictor": 0.2396,
-      "identifiability_skill": 0.8,
-      "mean_observability": 0.898,
-      "n": 160
-    }
   }
 }
+saved /home/user/Doubao/chats/38439739717650178/release-v5.4.4/udos-engine/reports7/v7_verification.json

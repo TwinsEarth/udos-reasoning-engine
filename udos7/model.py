@@ -19,12 +19,15 @@ from .scene import SceneChannel, SceneContext
 
 class WorldModelCore(nn.Module):
     def __init__(self, window: int = 6, hidden: int = 256,
-                 scene_dim: int = 32, n_layers: int = 2):
+                 scene_dim: int = 32, n_layers: int = 2,
+                 use_kinematics: bool = True):
         super().__init__()
         self.window = window
         self.hidden = hidden
+        self.use_kinematics = use_kinematics
         self.contract = StateContract()
-        self.scene = SceneChannel(window, scene_dim)
+        self.scene = SceneChannel(window, scene_dim,
+                                  use_kinematics=use_kinematics)
         self.obs_encoder = nn.Sequential(
             nn.Linear(STATE_DIM, hidden), nn.LayerNorm(hidden), nn.GELU(),
             nn.Linear(hidden, hidden), nn.LayerNorm(hidden), nn.GELU())

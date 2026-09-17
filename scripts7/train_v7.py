@@ -21,12 +21,12 @@ from udos7 import __version__
 from udos7.dynamics import three_way_splits
 from udos7.model import WorldModelCore
 from udos7.train import TrainConfig, fit
-from udos7.metrics import evaluate, estimator_param_error
+from udos7.metrics import evaluate, estimator_param_error, kinematic_recovery
 
 SIZES = [64, 128, 256]
 N_TRAIN = 64
 TOL = 0.03
-CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.1.pt"
+CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.2.pt"
 REPORT = REPO / "reports7" / "model_size_convergence.json"
 
 
@@ -49,8 +49,10 @@ def main():
         test_oracle = evaluate(model, splits["test"], H, use_explicit=True)
         test_blind = evaluate(model, splits["test"], H, use_explicit=False)
         param_err = estimator_param_error(model, splits["test"])
+        kin = kinematic_recovery(splits["test"])
         run = {
             "hidden": hidden, "n_layers": 2, "params": npar,
+            "use_kinematics": True,
             "epochs_run": len(hist.train_loss),
             "best_epoch": hist.best_epoch,
             "best_val_criterion": round(hist.best_val, 6),
@@ -62,6 +64,7 @@ def main():
             "estimator_param_error": {
                 k: {kk: round(vv, 4) for kk, vv in v.items()}
                 for k, v in param_err.items()},
+            "kinematic_recovery": kin,
             "train_sec": round(time.time() - t0, 1),
         }
         runs.append(run)
@@ -86,7 +89,7 @@ def main():
     torch.save({
         "model_state": model.state_dict(),
         "config": {"window": 6, "hidden": chosen["hidden"], "n_layers": 2,
-                   "scene_dim": 32},
+                   "scene_dim": 32, "use_kinematics": True},
         "version": __version__,
         "evidence_grade": "verified",
         "runtime": {"torch": torch.__version__, "threads": 2, "device": "cpu"},

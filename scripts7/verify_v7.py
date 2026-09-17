@@ -18,11 +18,12 @@ sys.path.insert(0, str(REPO))
 from udos7 import __version__
 from udos7.dynamics import three_way_splits
 from udos7.persistence import load_worldmodel
-from udos7.metrics import evaluate, estimator_param_error
+from udos7.metrics import (evaluate, estimator_param_error,
+                           kinematic_recovery)
 from udos7.uncertainty import (ConformalCalibrator, MonteCarloParamFan,
                                empirical_coverage)
 
-CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.1.pt"
+CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.2.pt"
 OUT = REPO / "reports7" / "v7_verification.json"
 ALPHAS = (0.2, 0.1, 0.05)
 NOMINAL = {0.2: 0.80, 0.1: 0.90, 0.05: 0.95}
@@ -43,6 +44,7 @@ def main():
         "dataset": {k: {"windows": len(v), "trajectories": v.trajectories()}
                     for k, v in splits.items()},
         "test_metrics": {}, "coverage": {}, "param_fan": {},
+        "kinematic_recovery": {}, "improvement_vs_v701": {},
         "latency_ms": {}, "gating": {},
     }
 
@@ -51,9 +53,43 @@ def main():
     report["test_metrics"]["blind"] = evaluate(model, splits["test"], H, False)
     report["estimator_param_error"] = estimator_param_error(
         model, splits["test"])
+    report["kinematic_recovery"] = kinematic_recovery(splits["test"])
+
+    # ---- v7.0.2 确定性可观测运动学通道门禁（不依赖训练）----
+    gates = []
+    kr = report["kinematic_recovery"]
+    kin_gates = {
+        "accel_vector_skill_ge_0.95": kr["accel_vector"]["skill"] >= 0.95,
+        "uniform_accel_falsepos_lt_1e-4":
+            kr["uniform_accel_falsepos_norm"] < 1e-4,
+        "spring_omega_recall_ge_0.9":
+            kr["spring_omega"]["recall"] >= 0.9,
+        "spring_omega_fp_eq_0":
+            kr["spring_omega"]["false_positive_rate_non_spring"] == 0,
+        "collision_jump_fp_eq_0":
+            kr["collision_jump"]["false_positive_rate_non_collision"] == 0,
+    }
+    gates.extend(kin_gates.values())
+
+    # ---- v7.0.2 相对 v7.0.1 的盲路径改进门禁（预注册，不放宽）----
+    # v7.0.1 基线（reports7/v7_verification.json @7.0.1）：
+    #   blind overall 0.0459、blind accel 0.1053、blind spring 0.0637
+    blind = report["test_metrics"]["blind"]
+    improvement = {
+        "blind_overall_le_v701": blind["blind_overall"] <= 0.0459,
+        "blind_accel_le_0.075": blind["blind_accel"] <= 0.075,
+        "blind_spring_le_v701": blind["blind_spring"] <= 0.0637,
+    }
+    report["improvement_vs_v701"] = {
+        **{k: bool(v) for k, v in improvement.items()},
+        "v701_baseline": {"blind_overall": 0.0459,
+                          "blind_accel": 0.1053, "blind_spring": 0.0637},
+        "observed": {"blind_overall": round(blind["blind_overall"], 5),
+                     "blind_accel": round(blind["blind_accel"], 5),
+                     "blind_spring": round(blind["blind_spring"], 5)}}
+    gates.extend(improvement.values())
 
     # ---- conformal 覆盖率（oracle 与 blind 各自校准）----
-    gates = []
     for mode, use_exp in (("oracle", True), ("blind", False)):
         cal = ConformalCalibrator(H).fit(
             model, splits["calib"], use_explicit=use_exp, alphas=ALPHAS)

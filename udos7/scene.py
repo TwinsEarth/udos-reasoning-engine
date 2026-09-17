@@ -19,7 +19,8 @@ from typing import Dict, Optional
 import torch
 import torch.nn as nn
 
-from .contracts import SCENE_DIM, STATE_DIM
+from .contracts import DT, SCENE_DIM, STATE_DIM
+from .kinematics import KIN_DIM, kinematic_features
 
 
 class SceneEstimator(nn.Module):
@@ -63,17 +64,29 @@ class SceneContext:
     source: torch.Tensor               # [B,4] 1=显式 0=估计
     params_hat: torch.Tensor           # [B,4] 估计器输出
     observability: torch.Tensor        # [B,4] 可观测置信
+    kinematics: Optional[torch.Tensor] = None  # [B,KIN_DIM] 确定性可观测运动学
 
 
 class SceneChannel(nn.Module):
-    def __init__(self, window: int, scene_dim: int = 32):
+    def __init__(self, window: int, scene_dim: int = 32,
+                 use_kinematics: bool = True, dt: float = DT):
         super().__init__()
         self.scene_dim = scene_dim
+        self.use_kinematics = use_kinematics
+        self.dt = dt
         self.param_encoder = nn.Sequential(
             nn.Linear(SCENE_DIM, scene_dim), nn.LayerNorm(scene_dim),
             nn.GELU(), nn.Linear(scene_dim, scene_dim))
         self.estimator = SceneEstimator(window)
         self.bridge = SceneBridge(window, scene_dim)
+        if use_kinematics:
+            # 确定性可观测运动学通道；末层零初始化 => 接入瞬间对预测零扰动，
+            # 训练后才承载“速度斜率/弹簧频率/碰撞跳变”等可直接观测信息。
+            self.kin_encoder = nn.Linear(KIN_DIM, scene_dim)
+            nn.init.zeros_(self.kin_encoder.weight)
+            nn.init.zeros_(self.kin_encoder.bias)
+        else:
+            self.kin_encoder = None
 
     def forward(self, window: torch.Tensor,
                 explicit: Optional[torch.Tensor] = None) -> SceneContext:
@@ -94,4 +107,8 @@ class SceneChannel(nn.Module):
             p_use = p_hat
             source = torch.zeros_like(p_hat)
         ctx = self.param_encoder(p_use) + self.bridge(window)
-        return SceneContext(ctx, p_use, source, p_hat, observ)
+        kin = None
+        if self.kin_encoder is not None:
+            kin = kinematic_features(window, self.dt)
+            ctx = ctx + self.kin_encoder(kin)
+        return SceneContext(ctx, p_use, source, p_hat, observ, kin)

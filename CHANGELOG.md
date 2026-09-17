@@ -2,6 +2,33 @@
 
 本文件记录 UDOS 推演引擎的显著变更，遵循 Keep a Changelog 与语义化版本。
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
+v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
+
+## v7.0.2（确定性可观测运动学通道 + 两个真实 bug 修复；补丁版）
+
+> 性质：在 v7.0.1 统一内核上的**根因修复补丁**，不新增第二套链路。核心是把“状态里本就可直接反演的量”从盲估计隐藏标量改为确定性计算 + 零初始化学习注入。所有数字为 CPU 固定 seed 实测（verified），同合同 A/B 见 docs7/VERIFICATION.md。
+
+- **根因（表征口径错误，非“加速度不可观测”）**：v7.0.1 让估计器输出“沿未知随机三维方向 d 的带符号标量 accel_a”，d 与 a 符号不可分离（d 翻转、(v0,a) 反号给出同一轨迹），故该标量 identifiability_skill=−0.53 是伪负结果。状态本身含三维速度，**恒定加速度=速度对时间（秒）的最小二乘斜率，三维向量可精确反演**。
+- **Added**：`udos7/kinematics.py`（KIN_DIM=10）——窗心速度、三维加速度向量 `a_lin`（速度对秒的 LS 斜率，分母用 `Σ(t−t̄)²`）、弹簧角频率 ω（位置 PCA 主轴投影成标量 q，对内点做**带截距** `q̈=b1·q+b0`，b1=−ω²；门限 `w2>0.45² & r_spring<0.25 & r_spring<r_const`）、碰撞 x 轴速度跳变（`max|Δvx|>3·median+0.35`）；无效特征置 0 且 valid=0；坏形状/NaN/inf 拒绝。
+- **Changed**：`SceneChannel` 新增末层**零初始化** `kin_encoder: Linear(10→scene_dim)`，与显式参数/估计器/场景桥在同一 ctx 求和；接入瞬间未训练仍严格恒等，训练后才承载可观测运动学。`WorldModelCore(..., use_kinematics=True)`；`persistence` 存取该标志，**加载 v7.0.1 旧 checkpoint 默认关闭运动学通道（state_dict 不错位，向后兼容）**。
+- **Fixed（真实 bug）**：①服务校准器缓存键由 `use_explicit`（bool）改为 `(use_explicit, horizon)`，修复不同视界串用同一组 `q_per_step` 带宽；②`ConformalCalibrator.fit` 在请求 horizon 短于校准视界时用 `Y[:, :horizon]` 对齐（原 pred(H) vs Y(4) 维度 RuntimeError），并显式拒绝 horizon>校准视界。
+- **Added**：`udos7/metrics.py::kinematic_recovery`（向量恢复技能/误报/召回/检出，分母按该类型样本数）；verify_v7 增 5 条运动学门禁 + 3 条相对 v7.0.1 改进门禁（共 15 项）。
+- **实测（held-out seed=2026，verified）**：
+  - 确定性恢复：accel 三维向量 skill=**1.000**（MAE≈0）、uniform 加速度误报范数 0、弹簧 ω 召回 **1.00**/有效 MAE 0.023/非弹簧误报 0、碰撞跨帧窗检出 0.74/非碰撞误报 0。
+  - 盲路径 rollout4 MSE 同合同 A/B：overall **0.0459→0.0248（−46%）**、accel **0.1053→0.0693（−34%）**、spring **0.0637→0.0193（−70%）**、uniform 0.0077→0.0073、collision 0.0040→0.0033；oracle overall 0.0274→0.0209。
+  - conformal 覆盖仍达标（oracle 0.805/0.917/0.971，blind 0.793/0.909/0.965，±0.05）；扇形包络 0.826；延迟 predict_next≈1.8ms / rollout4≈4.2ms；HTTP 冒烟 smoke_ok=true、半宽随 α 严格递增。
+  - 选中档 hidden=256，**967,182 参数**（运动学编码器仅 352 个）；三档盲 test MSE 0.0251/0.0214/0.0248，选档按 val 准则（非 test）。
+- **Tests**：新增 `tests7/test_v702_kinematics.py` 10 条；`tests7` 共 **26 全绿**；legacy `tests/` 全量回归 1656 通过/2 跳过/0 失败。
+- **诚实边界**：确定性通道只承载状态可直接反演的量；碰撞时刻、被撞体参数、未来输入仍为隐含量。CPU 0.97M 档数字不外推 GPU/大规模；0.5B/5B、vLLM KV-offload、NEURON DHS、MuJoCo-MJX 仍为需 GPU/HPC 的 M5 闸门。
+
+## v7.0.1（统一世界模型内核重写；新基线）
+
+> 性质：相对冻结 legacy v5.5.5 的**重写**，删除“未训练演示 CTM + TinyBaseModel + LoRA 注入后从不 forward”的死路，合并为单一推理图。新建干净包 `udos7/ tests7/ scripts7/ checkpoints7/ reports7/ docs7/`，与 `udos/`（v5.5.5 冻结）并存。
+
+- 单一推理图：观测逐帧编码 → 统一场景通道（显式参数＋估计器＋零初始化场景桥在同一 ctx 求和）→ 唯一 2 层 GRU → 残差解码 `next=last+Δ`（Δ 头零初始化，未训练即恒等）。
+- 真三维四类动力学（uniform/accel/spring/collision），轨迹级 train/val/test/calib 四分（种子 42/1337/2026/314），窗口只在轨迹内切，杜绝泄漏。
+- 不确定性：split conformal 按 α 真分水平（根治 legacy 三档名义覆盖全 0.8988 的 α 失效）＋参数蒙特卡洛扇形⊕残差 conformal 包络；entropy-certainty 与校准概率严格分离。
+- 选中 hidden=256，966,830 参数（held-out 收敛选档，非预设）；综合门禁 7 项 all_pass；HTTP `/api/v7/*`（标准库 ThreadingHTTPServer）；MuJoCo CPU 最小虚拟小鼠因果代理标 cpu-proxy。
 
 ## v5.5.5（双引擎增量线收尾：全量回归 / 服务实启动 / 发布一致性）
 

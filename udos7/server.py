@@ -24,7 +24,7 @@ from .persistence import load_worldmodel
 from .uncertainty import ConformalCalibrator, empirical_coverage
 
 REPO = Path(__file__).resolve().parents[1]
-DEFAULT_CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.1.pt"
+DEFAULT_CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.2.pt"
 
 
 class V7Service:
@@ -33,7 +33,8 @@ class V7Service:
         self.checkpoint = Path(checkpoint) if checkpoint else DEFAULT_CKPT
         self.model = None
         self.meta = {}
-        self._calib: Dict[bool, ConformalCalibrator] = {}
+        # 校准器缓存键必须含 horizon：不同视界的 q_per_step 形状/数值不同
+        self._calib: Dict[tuple, ConformalCalibrator] = {}
         self._splits = None
         self.n_traj = n_traj_per_kind
 
@@ -50,11 +51,11 @@ class V7Service:
         return self._splits
 
     def _calibrator(self, use_explicit: bool, horizon: int) -> ConformalCalibrator:
-        key = use_explicit
+        key = (use_explicit, horizon)
         if key not in self._calib:
             cal = ConformalCalibrator(horizon).fit(
                 self.model, self._splits_lazy()["calib"],
-                use_explicit=key)
+                use_explicit=use_explicit)
             self._calib[key] = cal
         return self._calib[key]
 

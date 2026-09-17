@@ -53,12 +53,16 @@ class ConformalCalibrator:
             use_explicit: bool, alphas: Tuple[float, ...] = (0.2, 0.1, 0.05),
             batch: int = 256) -> "ConformalCalibrator":
         model.eval()
+        if self.horizon > calib.horizon:
+            raise ValueError(
+                f"校准视界 {self.horizon} 超过校准集视界 {calib.horizon}")
         resid = []
         for s in range(0, len(calib), batch):
             x, P, Y = calib.X[s:s + batch], calib.P[s:s + batch], calib.Y[s:s + batch]
             exp = P if use_explicit else None
             pred = model.rollout(x, self.horizon, explicit=exp)
-            resid.append((pred - Y).abs())
+            # 校准视界可短于数据集视界（服务支持任意 horizon）：对齐前 self.horizon 步
+            resid.append((pred - Y[:, :self.horizon]).abs())
         R = torch.cat(resid, 0)                  # [N,H,6]
         scalar = R.reshape(-1)
         for a in alphas:
