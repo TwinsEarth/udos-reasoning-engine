@@ -37,7 +37,7 @@ def _post(base, path, obj):
 
 
 def test_version():
-    assert __version__ == "5.5.0"
+    assert __version__ == "5.5.1"
 
 
 _OBJS = [

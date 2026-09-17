@@ -14,7 +14,7 @@ from udos.training import PhysicsPredictor  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.5.0"
+    assert __version__ == "5.5.1"
 
 
 def test_nan_inf_fallback_to_zero():

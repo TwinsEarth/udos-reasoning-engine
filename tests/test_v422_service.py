@@ -21,7 +21,7 @@ CKPT = str(ROOT / "checkpoints" / "predictor_v4.1.0.pt")
 
 
 def test_version():
-    assert __version__ == "5.5.0"
+    assert __version__ == "5.5.1"
 
 
 @pytest.fixture(scope="module")
@@ -52,7 +52,7 @@ def test_triplets_ok(server):
     st, body = _post(server, "/selftrain/triplets", {"n": 12, "seed": 0})
     assert st == 200
     assert body["status"] == "ok"
-    assert body["version"] == __version__ == "5.5.0"
+    assert body["version"] == __version__ == "5.5.1"
     assert body["n"] == 12
     assert "quality" in body["quality"] or True
     q = body["quality"]

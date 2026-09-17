@@ -36,7 +36,7 @@ def window_batch():
 
 
 def test_version():
-    assert __version__ == "5.5.0"
+    assert __version__ == "5.5.1"
 
 
 def test_head_register_list_get(predictor, window_batch):

@@ -3,6 +3,20 @@
 本文件记录 UDOS 推演引擎的显著变更，遵循 Keep a Changelog 与语义化版本。
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 
+## v5.5.1（参数不确定性：蒙特卡洛轨迹扇形 + 覆盖率校准）
+
+> 性质：新增能力，不改主模型/场景头权重；主 predictor 恒 52191、场景头恒 6788 参数。把 v5.5.0 的点估计升级为带不确定性的 p10/p50/p90 轨迹扇形，并在独立 held-out 上验证覆盖率。
+
+- **Added**：`udos/scene_fan.py`
+  - `ParamErrorModel.fit`：在校准集上拟合 `P_hat−P_true` 的逐槽位 bias/std（全局、类型无关、对角高斯，std 有下限）。
+  - `monte_carlo_rollout`：对点估计去偏后采样 M 组参数，各跑一次冻结主预测员 rollout，取分位数得 `TrajectoryFan(low/median/high)`。
+  - `fit_conformal_inflation` + `calibrated_band`：在**独立校准集**（seed=314）上以中位为中心、按扇形半宽等比求 split-conformal 膨胀因子，使 pooled 经验覆盖达到名义 80%（p10..p90）。
+  - `coverage_fraction` / `per_step_coverage`：pooled 与分步覆盖率。
+- **Added**：`scripts/scene_fan_coverage.py` → `reports/v551_fan_coverage.json`。
+- **实测（held-out seed=2026，M=64，名义 80%）**：原始 MC pooled 覆盖 **0.730**（欠覆盖）；conformal 膨胀因子 **1.264** 后 pooled **0.8134**（达标），分步覆盖 0.804/0.824/0.814/0.804（跨步均匀）。分类型：匀速 0.840、弹簧 0.852、碰撞 0.951（过覆盖）、**加速 0.610（欠覆盖）**。
+- **诚实边界**：全局对角高斯不区分运动类型，pooled 达标但单类型欠/过覆盖；该缺口由 v5.5.2 运动识别 + 类型相关误差模型收紧。本扇形只传播"场景参数估计不确定性"，不含模型结构/观测噪声；conformal 保证的边际单位是（样本×步×维）pooled 覆盖。
+- **Tests**：`tests/test_v551_scene_fan.py` 7 项（误差模型形状/正性、采样去偏中心与条件 std、扇形顺序与同 seed 复现、零方差退化为点 rollout、非法分位拒绝、覆盖率助手、独立 held-out pooled 覆盖落入 0.77–0.88 且不显著低于原始 MC）；含 550/549/548/547/reasoning 共 43 项回归全绿。
+
 ## v5.5.0（双引擎名副其实 · 大版：冻结主模型，端到端训练学习型场景头）
 
 > 性质：**新增能力 + 主链接线**。主预测员 PhysicsPredictor 全程冻结，52191 参数锚点 `predictor_v4.3.9.pt`（eval_mse 0.045556）**一个权重都不改**；只训练一个 6788 参数的独立 `SceneEstimationHead`（独立 state_dict / 独立权重文件，可挂载、摘除、回滚）。这是"GPM 场景记录员"第一次经训练后真正调制训练过的主预测员，并根治 v5.4.9 暴露的弹簧短板。

@@ -1,5 +1,5 @@
 """
-UDOS 推演引擎 (UDOS Reasoning Engine) — v5.5.0
+UDOS 推演引擎 (UDOS Reasoning Engine) — v5.5.1
 ==============================================
 双引擎架构:
     GPM (Generative Physics engine)  —— 机制对齐 Sakana AI Doc-to-LoRA:
@@ -57,7 +57,7 @@ v2.7.x 迭代 (从预测到行动的闭环):
     - SakanaAI/continuous-thought-machines
     - SakanaAI/doc-to-lora
 
-版本: v5.5.0
+版本: v5.5.1
 """
 
 import logging as _logging
@@ -84,6 +84,11 @@ from .gpm_memory_bridge import GPMSceneBridge
 from .scene_head import (
     SceneEstimationHead, differentiable_rollout, train_scene_head,
     save_scene_head, load_scene_head,
+)
+from .scene_fan import (
+    ParamErrorModel, TrajectoryFan, monte_carlo_rollout,
+    coverage_fraction, per_step_coverage, fit_conformal_inflation,
+    calibrated_band,
 )
 from .reasoning import UDOSReasoningEngine, ReasoningResult
 from .dynamics import (
@@ -202,7 +207,7 @@ from .resource_registry import (ResourceRegistry, ResourceConnector,
                                 normalize_trajectory)
 from .connectors import build_default_registry as build_default_resource_registry
 
-__version__ = "5.5.0"
+__version__ = "5.5.1"
 
 __all__ = [
     "PhysicalToken",
@@ -222,6 +227,13 @@ __all__ = [
     "train_scene_head",
     "save_scene_head",
     "load_scene_head",
+    "ParamErrorModel",
+    "TrajectoryFan",
+    "monte_carlo_rollout",
+    "coverage_fraction",
+    "per_step_coverage",
+    "fit_conformal_inflation",
+    "calibrated_band",
     "LoRAInjector",
     "LoRASet",
     "UDOSReasoningEngine",

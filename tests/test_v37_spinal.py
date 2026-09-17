@@ -24,7 +24,7 @@ CKPT = ROOT / "checkpoints" / "predictor_v3.7.0.pt"
 
 
 def test_version():
-    assert __version__ == "5.5.0"
+    assert __version__ == "5.5.1"
 
 
 @pytest.fixture(scope="module")
