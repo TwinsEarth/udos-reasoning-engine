@@ -3,6 +3,15 @@
 本文件记录 UDOS 推演引擎的显著变更，遵循 Keep a Changelog 与语义化版本。
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 
+## v5.4.9（双引擎名副其实 5/…：盲/显式/估计三方 A/B）
+
+> 性质：新增可测评估模块 + 复现脚本 + 真实报告，**不改主模型权重/checkpoint、不改 reason 主链**；主 predictor 恒 52191 参数、eval_mse 恒 0.045556。
+
+- **Added**：`udos/scene_estimation_ab.py` 的 `three_way_scene_ab(predictor, dataset)`，在同一 held-out 上比较三种场景条件——`blind`（不喂场景）、`explicit`（喂真值参数 P，上界）、`estimated`（喂 v5.4.8 估计器反演、不可观测槽位置 0），报告单步/H 步 rollout 的整体与分类型 MSE、`est_over_blind` 与增益恢复率 `recovery=(blind−estimated)/(blind−explicit)`，并附估计器逐槽位可观测率。
+- **Added**：`scripts/ab_scene_estimation.py` 落 `reports/v549_scene_ab.json`（默认 held-out seed=2026，训练 seed=42，可复跑）。
+- **实测结论（seed=2026, n=2560）**：整体 recovery 单步 **91.8%**、4 步 **87.2%**（est/blind MSE 0.149/0.178，即仅凭观测窗口、无 GPM 也消掉约 82–85% 的场景盲误差）；分类型 4 步 recovery：匀速 **100%**、匀加速 **99.1%**、碰撞 **93.0%**（v2 不可观测是剩余缺口）、弹簧 **3.0%**（短窗 ω 召回 0.77 + 线性 v0 槽污染）。弹簧短板明确交给 v5.5.0 学习型估计头与 v5.5.2 类别路由解决，不粉饰。
+- **Tests**：`tests/test_v549_scene_ab.py` 7 项（结构完整、显式严格优于盲、匀速 recovery≥0.95、整体 recovery≥0.70、弹簧不造成净伤害、v2 可观测率 0/ω 召回带、确定性）；含 545–548/reasoning 共 46 项回归全绿。
+
 ## v5.4.8（双引擎名副其实 4/…：场景隐藏参数估计器）
 
 > 性质：新增独立、确定性、无需训练的经典运动学估计器，**不改主模型权重/checkpoint、不接线 reason 主链**（盲/显式/估计三方 A/B 在 v5.4.9，学习型估计头在 v5.5.0）；主 predictor 恒 52191 参数、eval_mse 恒 0.045556。

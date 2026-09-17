@@ -13,7 +13,7 @@ from udos.training import TrainConfig  # noqa: E402
 
 
 def test_version_bumped():
-    assert __version__ == "5.4.8"
+    assert __version__ == "5.4.9"
 
 
 def test_sigma_zero_returns_same_tensor():

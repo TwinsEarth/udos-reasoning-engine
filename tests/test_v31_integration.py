@@ -33,7 +33,7 @@ def predictor():
 
 
 def test_version():
-    assert __version__ == "5.4.8"
+    assert __version__ == "5.4.9"
 
 
 def test_default_path_bit_identical(predictor):

@@ -15,7 +15,7 @@ from udos.digital_twin import DigitalTwinScene
 
 
 def test_version():
-    assert __version__ == "5.4.8"
+    assert __version__ == "5.4.9"
 
 
 def test_parametric_generation():

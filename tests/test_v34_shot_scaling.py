@@ -88,4 +88,4 @@ def test_empty_example_guard(setup):
 
 
 def test_version():
-    assert __version__ == "5.4.8"
+    assert __version__ == "5.4.9"

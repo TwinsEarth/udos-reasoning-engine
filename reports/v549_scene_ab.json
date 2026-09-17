@@ -1,0 +1,102 @@
+{
+  "config": {
+    "horizon": 4,
+    "dt": 0.5,
+    "n_samples": 2560,
+    "window": 6
+  },
+  "overall": {
+    "single_step": {
+      "blind": 0.556739,
+      "explicit": 0.040199,
+      "estimated": 0.082703,
+      "est_over_blind": 0.1485,
+      "recovery": 0.9177
+    },
+    "rollout_4": {
+      "blind": 1.359453,
+      "explicit": 0.078374,
+      "estimated": 0.241751,
+      "est_over_blind": 0.1778,
+      "recovery": 0.8725
+    }
+  },
+  "per_kind": {
+    "uniform": {
+      "single_step": {
+        "blind": 0.339021,
+        "explicit": 0.031651,
+        "estimated": 0.031651,
+        "est_over_blind": 0.0934,
+        "recovery": 1.0
+      },
+      "rollout_4": {
+        "blind": 0.71428,
+        "explicit": 0.070869,
+        "estimated": 0.070869,
+        "est_over_blind": 0.0992,
+        "recovery": 1.0
+      }
+    },
+    "accel": {
+      "single_step": {
+        "blind": 1.098189,
+        "explicit": 0.018182,
+        "estimated": 0.03482,
+        "est_over_blind": 0.0317,
+        "recovery": 0.9846
+      },
+      "rollout_4": {
+        "blind": 3.335543,
+        "explicit": 0.059907,
+        "estimated": 0.088991,
+        "est_over_blind": 0.0267,
+        "recovery": 0.9911
+      }
+    },
+    "spring": {
+      "single_step": {
+        "blind": 0.404708,
+        "explicit": 0.079956,
+        "estimated": 0.206063,
+        "est_over_blind": 0.5092,
+        "recovery": 0.6117
+      },
+      "rollout_4": {
+        "blind": 0.740536,
+        "explicit": 0.140378,
+        "estimated": 0.722343,
+        "est_over_blind": 0.9754,
+        "recovery": 0.0303
+      }
+    },
+    "collision": {
+      "single_step": {
+        "blind": 0.385038,
+        "explicit": 0.031006,
+        "estimated": 0.058279,
+        "est_over_blind": 0.1514,
+        "recovery": 0.923
+      },
+      "rollout_4": {
+        "blind": 0.647452,
+        "explicit": 0.042344,
+        "estimated": 0.084799,
+        "est_over_blind": 0.131,
+        "recovery": 0.9298
+      }
+    }
+  },
+  "estimator_observability": {
+    "slot_observable_rates": {
+      "v0": 1.0,
+      "accel_a": 0.6305,
+      "spring_omega": 0.193,
+      "other_v2": 0.0
+    },
+    "spring_omega_detection_rate": 0.7719
+  },
+  "model": "predictor_v4.3.9.pt",
+  "heldout_seed": 2026,
+  "train_seed": 42
+}

@@ -52,7 +52,7 @@ def _post(base, path, obj):
 
 
 def test_version():
-    assert __version__ == "5.4.8"
+    assert __version__ == "5.4.9"
 
 
 def test_tokenize_200(loaded_server):
