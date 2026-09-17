@@ -37,7 +37,7 @@ def window_batch():
 
 
 def test_version():
-    assert __version__ == "5.4.6"
+    assert __version__ == "5.4.7"
 
 
 def test_observe_feature_shape_finite(predictor, window_batch):

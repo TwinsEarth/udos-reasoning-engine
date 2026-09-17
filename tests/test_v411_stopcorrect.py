@@ -30,7 +30,7 @@ def _predictor():
 
 
 def test_version():
-    assert __version__ == "5.4.6"
+    assert __version__ == "5.4.7"
 
 
 def _plan_input(seed=3):

@@ -31,7 +31,7 @@ def predictor():
 
 
 def test_version():
-    assert __version__ == "5.4.6"
+    assert __version__ == "5.4.7"
 
 
 def test_composite_equal_weight(predictor):

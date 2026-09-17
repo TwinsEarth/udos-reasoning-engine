@@ -80,24 +80,33 @@ class PhysicsPredictor(nn.Module):
         # v2.6.0 混合物理修正 (外挂可学模块, 默认 None => 走旧路径逐位一致)
         self.hybrid = None                  # HybridPhysicsCorrector
 
-    def _resolve_context(self, scene_context, scene_params):
-        if scene_context is None and scene_params is not None \
+    def _resolve_context(self, scene_context, scene_params, scene_bias=None):
+        ctx = scene_context
+        if ctx is None and scene_params is not None \
                 and self.scene_encoder is not None:
-            scene_context = self.scene_encoder(scene_params)
-        return scene_context
+            ctx = self.scene_encoder(scene_params)
+        # v5.4.7 GPM 记忆桥: 加性场景偏置。零偏置短路 => 零初始化桥接入瞬间
+        # 不改变 ctx (尤其场景盲时保持 None, 避免零张量经 scene_proj 偏置失真)。
+        if scene_bias is not None and float(scene_bias.abs().sum()) > 0.0:
+            ctx = scene_bias if ctx is None else ctx + scene_bias
+        return ctx
 
     def forward(self, raw_seq: torch.Tensor,
                 scene_context: Optional[torch.Tensor] = None,
-                scene_params: Optional[torch.Tensor] = None):
+                scene_params: Optional[torch.Tensor] = None,
+                scene_bias: Optional[torch.Tensor] = None):
         """
         raw_seq: [B, W, RAW_DIM]
+        scene_bias (v5.4.7): 可选 [B, scene_dim] 加性场景记忆 (来自 GPM 桥);
+            零张量/None 时与旧版逐位一致。
         返回:
             decoded_ticks [B, RAW_DIM, T] 每个内部 tick 对应的物理预测
             certainties    [B, 2, T]
             last           [B, RAW_DIM]   最终 tick 预测
             info
         """
-        scene_context = self._resolve_context(scene_context, scene_params)
+        scene_context = self._resolve_context(
+            scene_context, scene_params, scene_bias)
         h = self.obs_encoder(raw_seq)
         preds, certs, _, info = self.ctm(h, scene_context=scene_context)
         # preds [B, out, T] -> 逐 tick 解码: [B, T, out] -> decoder -> [B, T, RAW]
@@ -111,6 +120,7 @@ class PhysicsPredictor(nn.Module):
     def predict_next(self, raw_seq: torch.Tensor,
                      scene_context: Optional[torch.Tensor] = None,
                      scene_params: Optional[torch.Tensor] = None,
+                     scene_bias: Optional[torch.Tensor] = None,
                      guard: bool = False,
                      hybrid: bool = False,
                      dt: float = 0.5
@@ -124,6 +134,7 @@ class PhysicsPredictor(nn.Module):
           * scene_params 含 NaN/inf 时显式 ValueError (不静默传播 inf);
           * guard 在 hybrid 之后执行 => guard 清洗的是 hybrid 修正后的最终输出
             (hybrid=False 时与旧路径逐位一致)。
+        v5.4.7: scene_bias (GPM 记忆桥) 透传, 含 NaN/inf 同样显式拒绝。
         """
         self.eval()
         if scene_params is not None:
@@ -132,8 +143,14 @@ class PhysicsPredictor(nn.Module):
                 raise ValueError(
                     "scene_params 含 NaN/inf 非有限值 (拒绝静默 inf 传播); "
                     "请提供有限场景参数或显式处置")
+        if scene_bias is not None:
+            sb = torch.as_tensor(scene_bias, dtype=torch.float32)
+            if not bool(torch.isfinite(sb).all()):
+                raise ValueError(
+                    "scene_bias 含 NaN/inf 非有限值 (拒绝静默 inf 传播)")
         out = self(raw_seq, scene_context=scene_context,
-                    scene_params=scene_params)[2]
+                    scene_params=scene_params,
+                    scene_bias=scene_bias)[2]
         if hybrid and self.hybrid is not None:
             out = self.hybrid(out, raw_seq[:, -1, :], dt, enabled=True)
         if guard:
@@ -196,14 +213,16 @@ class PhysicsPredictor(nn.Module):
     @torch.no_grad()
     def rollout(self, raw_window: torch.Tensor, horizon: int,
                 scene_context: Optional[torch.Tensor] = None,
-                scene_params: Optional[torch.Tensor] = None
+                scene_params: Optional[torch.Tensor] = None,
+                scene_bias: Optional[torch.Tensor] = None
                 ) -> torch.Tensor:
         """
         v2.1 多步自由滚动推演: 把每步预测拼回窗口递归预测 H 步。
         raw_window [B,W,RAW_DIM] -> [B,H,RAW_DIM]
+        v5.4.7: scene_bias (GPM 记忆桥) 在 ctx 解析时一次性并入, 多步复用。
         """
         self.eval()
-        ctx = self._resolve_context(scene_context, scene_params)
+        ctx = self._resolve_context(scene_context, scene_params, scene_bias)
         window, outs = raw_window, []
         for _ in range(horizon):
             nxt = self(window, scene_context=ctx)[2]

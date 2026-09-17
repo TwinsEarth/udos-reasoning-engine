@@ -101,4 +101,4 @@ def test_comprehensive_eval_json(model):
 
 
 def test_version():
-    assert __version__ == "5.4.6"
+    assert __version__ == "5.4.7"

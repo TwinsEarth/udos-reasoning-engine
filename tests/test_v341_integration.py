@@ -133,4 +133,4 @@ def test_icm_unknown_route_404(live_server):
 
 
 def test_version():
-    assert __version__ == "5.4.6"
+    assert __version__ == "5.4.7"

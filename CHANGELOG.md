@@ -3,6 +3,16 @@
 本文件记录 UDOS 推演引擎的显著变更，遵循 Keep a Changelog 与语义化版本。
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 
+## v5.4.7（双引擎名副其实 3/5：GPM 记忆桥）
+
+> 性质：新增能力（独立外挂模块，零初始化，向后兼容），**不改主模型权重/checkpoint**；主 predictor 恒 52191 参数、eval_mse 恒 0.045556。本版把 GPM 的场景嵌入（latent 维）接通到训练过的主预测员 CTM（scene_dim=32），消除"GPM 丰富场景记忆只喂未训练演示 CTM"的第二处断点；桥未训练前输出严格为 0，真实增益在 v5.5.0 联合训练后产生。
+
+- **Added**：`udos/gpm_memory_bridge.py` 的 `GPMSceneBridge`（`Linear(latent→scene_dim)`，权重/偏置零初始化），由推理引擎按 predictor 实际 `ctm.cfg.scene_dim` 懒构建，独立 `nn.Module`、不进 `PhysicsPredictor.state_dict`，可独立训练/存权重/回滚。
+- **Changed**：`PhysicsPredictor` 的 `forward/predict_next/rollout` 新增可选 `scene_bias`，`_resolve_context` 做加性融合 `ctx = scene_encoder(params) + bias`；**零偏置短路**保证零桥在场景盲时 ctx 仍为 None（避免零张量经 scene_proj 偏置失真），有参数时浮点 +0 恒等；`scene_bias` 与 `scene_params` 同样拒绝 NaN/inf。
+- **Changed**：`reason()` 计算桥偏置并传入主预测员；`ReasoningResult`/`summary()`/HTTP `/reason` 透出 `gpm_bridge_active`、`gpm_bridge_norm`（零桥 norm=0，训练后 >0 即 GPM 记忆真正调制主预测）。`attach_predictor` 更换模型时重置桥按新维度懒重建；构造开关 `use_gpm_bridge`（默认开，零初始化无副作用）。
+- **反死路证据**：与 LoRA"注入演示基座却从不 forward"不同，测试证明桥权重置非零后主预测输出真实改变（`test_nonzero_bridge_changes_prediction`）；零桥在带参/场景盲/关桥三路径与 v5.4.6 在 6 位 JSON 舍入容差内逐位一致。
+- **Tests**：`tests/test_v547_gpm_memory_bridge.py` 7 项契约（零初始化输出 0、带参/盲/关桥逐位兼容、非零桥真实改变预测、独立于 52191 锚点且可独立存取、`_resolve_context` 加性/短路规则、维度懒建）；先 RED 后 GREEN；training/v21_multistep/service 等回归 58 项全绿。
+
 ## v5.4.6（双引擎名副其实 2/5：主预测链接线）
 
 > 性质：新增能力（行为变更，向后兼容），**不改模型、算法、checkpoint**；主 predictor 恒 52191 参数、eval_mse 恒 0.045556。本版把 v5.4.5 的场景参数通道真正接进训练过场景门的主预测员，消除"GPM 记录场景却不影响物理轨迹"的断点。

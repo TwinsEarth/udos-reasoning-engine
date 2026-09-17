@@ -96,4 +96,4 @@ def test_change_signal_shape():
 
 
 def test_version():
-    assert __version__ == "5.4.6"
+    assert __version__ == "5.4.7"

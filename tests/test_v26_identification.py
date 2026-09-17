@@ -47,7 +47,7 @@ def model():
 
 
 def test_version():
-    assert __version__ == "5.4.6"
+    assert __version__ == "5.4.7"
 
 
 def test_identify_uniform_v0(model):

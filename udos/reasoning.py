@@ -35,6 +35,7 @@ from .gpm_engine import (
 )
 from .pce_format import PhysicalToken, PhysicsScene, PhysicsSceneEncoder
 from .scene_bridge import extract_scene_params
+from .gpm_memory_bridge import GPMSceneBridge
 from .dynamics import RAW_DIM
 
 
@@ -57,6 +58,10 @@ class ReasoningResult:
     predictor_conditioned: bool = False
     scene_params: Optional[List[float]] = None       # 4 维隐藏物理参数
     scene_params_source: Optional[str] = None        # metadata / attributes / None
+    # v5.4.7: GPM 记忆桥是否在位并参与本次主预测; norm 为桥输出 L2 范数
+    # (零初始化/未训练时为 0, 训练后 >0 表示 GPM 场景记忆真正调制主预测)。
+    gpm_bridge_active: bool = False
+    gpm_bridge_norm: float = 0.0
 
     def convergence(self) -> float:
         return float(self.certainty_trajectory[1, -1])
@@ -71,6 +76,8 @@ class ReasoningResult:
             "causal_edges": len(self.causal_chain),
             "scene_conditioned": self.scene_conditioned,
             "predictor_conditioned": self.predictor_conditioned,
+            "gpm_bridge_active": self.gpm_bridge_active,
+            "gpm_bridge_norm": round(self.gpm_bridge_norm, 6),
         }
         if self.scene_params is not None:
             out["scene_params"] = self.scene_params
@@ -89,10 +96,14 @@ class UDOSReasoningEngine(nn.Module):
                  base_model: Optional[nn.Module] = None,
                  lora_scaling: float = 1.0,
                  scene_conditioning: bool = True,
-                 predictor: Optional[Any] = None):
+                 predictor: Optional[Any] = None,
+                 use_gpm_bridge: bool = True):
         super().__init__()
         self.scene_conditioning = scene_conditioning
         self.predictor = predictor  # 可选: 训练好的 PhysicsPredictor, 提供可解释物理预测
+        # v5.4.7 GPM -> 主预测员 CTM 的零初始化记忆桥 (懒构建, 独立参数)
+        self.use_gpm_bridge = use_gpm_bridge
+        self.gpm_scene_bridge: Optional[GPMSceneBridge] = None
         # 未提供基座时给出轻量演示基座, 并自动探测 LoRA 维度
         if base_model is None:
             from .gpm_engine import TinyBaseModel
@@ -120,8 +131,33 @@ class UDOSReasoningEngine(nn.Module):
         self.scene_memory: Dict[str, LoRASet] = {}
 
     def attach_predictor(self, predictor: Any) -> None:
-        """挂载训练好的 PhysicsPredictor, reason 时输出可解释下一时刻物理量。"""
+        """挂载训练好的 PhysicsPredictor, reason 时输出可解释下一时刻物理量。
+
+        更换 predictor 会改变 CTM scene_dim, 故重置 GPM 记忆桥, 下次 reason
+        按新维度懒重建 (零初始化)。"""
         self.predictor = predictor
+        self.gpm_scene_bridge = None
+
+    def _gpm_scene_bias(self, scene: PhysicsScene):
+        """懒构建并计算 GPM 记忆桥对主预测员的加性场景偏置。
+
+        返回 (bias[1,scene_dim] | None, active, norm)。仅当启用桥且挂载的
+        predictor 的 CTM 具备 scene_dim 注入点时激活。零初始化桥输出严格 0,
+        由 PhysicsPredictor._resolve_context 的零偏置短路保证逐位兼容。
+        """
+        if not self.use_gpm_bridge or self.predictor is None:
+            return None, False, 0.0
+        scene_dim = getattr(getattr(self.predictor, "ctm", None),
+                            "cfg", None)
+        scene_dim = getattr(scene_dim, "scene_dim", None)
+        if scene_dim is None:
+            return None, False, 0.0
+        if self.gpm_scene_bridge is None:
+            self.gpm_scene_bridge = GPMSceneBridge(
+                self.gpm.cfg.latent_size, int(scene_dim))
+        emb = self.gpm.scene_embedding(scene).unsqueeze(0)  # [1, latent]
+        bias = self.gpm_scene_bridge(emb)                   # [1, scene_dim]
+        return bias, True, float(bias.detach().norm())
 
     @staticmethod
     def _tokens_raw(scene: PhysicsScene, window: Optional[int] = None
@@ -184,9 +220,12 @@ class UDOSReasoningEngine(nn.Module):
         predictor_conditioned = False
         sp_values: Optional[List[float]] = None
         sp_source: Optional[str] = None
+        bridge_active = False
+        bridge_norm = 0.0
         if self.predictor is not None and len(scene.tokens) >= 1:
             raw = self._tokens_raw(scene)
             H = max(1, int(horizon))
+            scene_bias, bridge_active, bridge_norm = self._gpm_scene_bias(scene)
             sp = extract_scene_params(scene)
             if sp is not None:
                 predictor_conditioned = True
@@ -194,9 +233,11 @@ class UDOSReasoningEngine(nn.Module):
                 sp_values = [round(float(v), 6) for v in
                              sp.values.flatten().tolist()]
                 roll = self.predictor.rollout(
-                    raw, H, scene_params=sp.values)[0]  # [H,6]
+                    raw, H, scene_params=sp.values,
+                    scene_bias=scene_bias)[0]  # [H,6]
             else:
-                roll = self.predictor.rollout(raw, H)[0]  # 场景盲旧路径
+                roll = self.predictor.rollout(
+                    raw, H, scene_bias=scene_bias)[0]  # 场景盲旧路径
             def _state(vec):
                 return {"position": [round(v, 6) for v in vec[:3]],
                         "velocity": [round(v, 6) for v in vec[3:6]]}
@@ -222,6 +263,8 @@ class UDOSReasoningEngine(nn.Module):
             predictor_conditioned=predictor_conditioned,
             scene_params=sp_values,
             scene_params_source=sp_source,
+            gpm_bridge_active=bridge_active,
+            gpm_bridge_norm=bridge_norm,
         )
 
     def _build_causal_chain(self, scene: PhysicsScene,
