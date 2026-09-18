@@ -4,6 +4,20 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.4.0（第一人称经验数据飞轮：Coverage-aware 采集 + State Coverage + Yield；cpu-proto）
+
+> 对标 egocentric data boom（Maxinsights/Dyna-2/GENE-26.5 公开报道，数字均 unverified）：把“人类经验→training-ready 数据”的工业管线在引擎内做成可跑、可对照的 CPU 原型。
+
+- **Added `udos7/egodata/`**：
+  - `episodes.py` 在 v7.3.7 具身环境上合成第一人称片段（手部轨迹代理、接触、子任务边界、4 任务×12 参数变体），按 25% 注入静止/镜头漂移/重复摆拍三类缺陷；
+  - `coverage.py` 细粒度状态单元 `(任务,x,y,速度,接触)`，区分 Task Coverage 与 State Coverage；
+  - `processing.py` 盲检 QC（轨迹长度、相机系抖动二阶差分、量化签名去重）、经验密度、Yield 良率台账；
+  - `collection.py` 被动偏态采集 vs Coverage-aware 子模贪心采集（边际新状态最大化，1-1/e 近似）+ 同池消融。
+- **实测（160 候选/48 预算=144 原始分钟）**：被动 Yield 0.667、覆盖 oracle 0.695、密度 7.80；Coverage-aware Yield **0.854**、覆盖 **0.951**、密度 **11.38**；消融（偏态池+贪心）0.889——收益约一半来自主动选择、一半来自采集分布多样化。
+- **Added** `scripts7/egodata_flywheel_demo.py`（CLI `udos demo flywheel`）、报告、`docs7/EGODATA_FLYWHEEL_v7.4.0.md`。
+- **Tests** 新增 `tests7/test_v740_flywheel.py` 10 项（确定性、三类缺陷盲检、Task/State 覆盖区分、密度排序、主动>被动、良率台账、基准确定性与证据分级、缺口引导）。
+- **限制/闸门**：无真实第一视角视频/手部追踪/SLAM/MaxVLM；缺陷合成、状态单元手工离散。真实采集网络、视频理解大模型 key、跨本体真机验证列为闸门；外部 150 万/200 万/98%/1000 万小时等数字仅 unverified 参照。
+
 ## v7.3.9（高斯泼溅 3DGS-lite + Real-to-Sim / Sim-to-Real 闭环；cpu-proto）
 
 > 在 v7.3.8 显式几何之上补 Atlas 类世界模型的另外三块：可微高斯泼溅输出、真实到仿真的重建管线、仿真到真实的失配与鲁棒性。外部 3DGS/Atlas 指标不与本仓数字互证。

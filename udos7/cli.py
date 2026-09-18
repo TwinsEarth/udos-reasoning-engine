@@ -162,6 +162,7 @@ _DEMOS = {
     "embodied": "embodied_hybrid_demo.py",
     "spatial": "spatial_novelview_demo.py",
     "splat": "splat_transfer_demo.py",
+    "flywheel": "egodata_flywheel_demo.py",
     "scaling": "agent_scaling_bench.py",
 }
 

@@ -1,0 +1,1 @@
+{"ts": "2026-09-18T22:12:25", "service": "udos-engine", "trace_id": "7a8ca2ca4ce94bf0", "span_id": "bd9746ebe3894ad4", "parent_id": null, "step": "egodata.flywheel", "status": "ok", "latency_ms": 4889.419, "token_usage": {"input": 0, "output": 0}, "attributes": {"version": "v7.4.0"}}
