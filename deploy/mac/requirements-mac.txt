@@ -1,0 +1,8 @@
+# UDOS 推演引擎 macOS（Apple Silicon / Intel）运行依赖
+# 说明：macOS 上直接从默认 PyPI 安装 torch 即可（官方 wheel，Apple Silicon 原生，
+#       CPU 运行，引擎本身只用 CPU 线程，不需要 CUDA、不需要 Docker）。
+#       切勿使用 Linux 的 download.pytorch.org/whl/cpu 索引（那是 Linux 专用）。
+torch>=2.2
+numpy>=1.24
+huggingface_hub>=0.20
+pytest>=7.0

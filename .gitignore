@@ -53,3 +53,6 @@ Thumbs.db
 *.db-journal
 data/raw/
 data/cache/
+
+# macOS 一键部署虚拟环境
+.venv-udos/
