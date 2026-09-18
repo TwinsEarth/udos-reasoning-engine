@@ -4,6 +4,25 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.0.3（解析运动学积分 + 学习门控混合预测头；补丁版）
+
+> 性质：在 v7.0.2 统一内核上的**根因修复补丁**，单一 delta——把已能精确反演的加速度从“通用上下文”升级为“解析积分路径”，由一个只依赖确定性运动学特征的独立门控决定何时信任。所有数字为 CPU 固定 seed 实测（verified），同合同 A/B 与踩坑过程见 docs7/VERIFICATION.md。
+
+- **根因（位置误差随视界二次增长，非“速度预测不准”）**：对 v7.0.2 checkpoint 分步探针发现 accel 误差几乎全是**位置误差**且随视界爆炸——oracle accel 分步 MSE `[0.0088, 0.042, 0.114, 0.245]`、位置 MSE 0.187 vs 速度 0.018。GRU 用通用残差 `next=last+Δ` 难以对恒定加速度做精确**二次积分**。确定性天花板探针：用观测 `a_lin` 做解析积分（`v+=a·dt，p+=v·dt+½a·dt²`），uniform/accel MSE **精确为 0**，spring 1.98、collision 0.29（恒定加速度模型在后两类失配）。
+- **Added**：`WorldModelCore.analytic_kinematic_step`（固定 a 的恒定加速度解析积分）；混合预测头 `nxt = learned + g·(analytic−learned)`。`a` 与门控量在 rollout 中由**初始观测窗算一次并固定**（恒定加速度模型里 a 不随时间变；避免预测帧滑窗导致门在 spring 中途误开）。
+- **Added**：运动学特征新增第 11 维 **`ca_conf`（恒定加速度一致性置信）**=速度对时间线性拟合 R² × (1−ω_valid)(1−jump_valid)。实测（seed2026）uniform/accel 中位与 p05 均=1.0、spring/collision=0（单用 R² 不够：spring .924、collision .860，必须乘 valid 标志）。
+- **门控设计（三个被实测否决的错误方案，见 VERIFICATION）**：`g = ca_conf·tanh(MLP(kin)/2)`。① 零初始化 `clamp(linear,0,1)` 因 raw=0 恰处边界、**边界梯度为 0 冻死**（门全程 0、两臂逐位相同）→ 改 0 点可导的 tanh；② 门读共享 GRU 隐状态 h，门在 accel 饱和后改变共享表征梯度，**拖累 spring（盲路径 0.044→0.58）** → 改为只吃确定性 kin 的独立小头（11→32→6，末层零初始化），与共享路径解耦；③ rollout 每步重测 ca 会在 spring 预测帧上翻转误开 → a/ca 固定自初始窗。门末层零初始化 ⇒ 未训练 `tanh(0)=0` 即 **g≡0，严格恒等**（M1 契约 atol 1e-6 保持）。
+- **Changed**：`KIN_DIM 10→11`；`persistence.load_worldmodel` 对 v7.0.2 旧权重做**零列填充迁移**（`scene.kin_encoder` [32,10]→[32,11]，新 ca_conf 列补 0）+ 门控小头缺失零初始化，加载后行为与 v7.0.2 逐位一致；任何 unexpected 键或非白名单 missing 键直接 RuntimeError。
+- **实测（held-out seed=2026，verified；选中 hidden=256，967,796 参数，门控小头仅 582 个）**：
+  - 盲路径 rollout4 MSE：overall **0.02482→0.01037（−58%）**、accel **0.06926→0.01410（−80%）**、uniform 0.00733→0.00573、spring 0.01933→0.01862（不退化）、collision 0.00334→0.00304（不退化）。
+  - oracle overall 0.02090→0.00663、accel 0.06175→0.01090；**盲路径 accel（.0141）已逼近 oracle（.0109）**——解析积分用的是观测 a_lin 而非显式 accel_a。
+  - 门控均值（test）：uniform 0.63、accel 0.66、spring **0.00**、collision 0.15（“窗内无跳变但视界内可能碰撞”保持谨慎，这是保留可学习门而非硬 g=ca_conf 的原因）。
+  - conformal 覆盖仍达标（oracle 0.784/0.898/0.958，blind 0.776/0.900/0.956，±0.05）；参数扇形包络 0.859；延迟 predict_next≈2.36ms / rollout4≈4.83ms（CPU 2 线程 batch1）。
+  - 选档（val 准则 3%）：64=95,348 参数/blind .01527、128=271,476/.01172、256=967,796/.01037，选 256。
+- **门禁**：verify_v7 在 15 项基础上新增 6 条 v7.0.3 门禁（accel≤.035、overall 不退化、spring/collision 不退化超 15%、accel 门≥.3、spring 门≤.02），共 **21 项 all_pass**。
+- **Tests**：新增 `tests7/test_v703_kin_gate.py` 7 条（未训练恒等、解析积分数学正确、ca_conf 分离、饱和路由、关通道无门、v7.0.2 权重零列填充迁移、小训练门启用且 accel 误差下降的突变敏感性）；`tests7` 共 **33 全绿**；legacy `tests/` 全量回归见 VERIFICATION。
+- **诚实边界**：解析积分只在**恒定加速度模型成立**时可信，ca_conf 是合成四类数据上的确定性选择量；真实非平稳/接触动力学下需重新标定门控与 ca_conf，不得把 uniform/accel 的 0 天花板外推。GPU/0.5B/5B、vLLM KV-offload、NEURON DHS、MuJoCo-MJX 仍为 M5 闸门。
+
 ## v7.0.2（确定性可观测运动学通道 + 两个真实 bug 修复；补丁版）
 
 > 性质：在 v7.0.1 统一内核上的**根因修复补丁**，不新增第二套链路。核心是把“状态里本就可直接反演的量”从盲估计隐藏标量改为确定性计算 + 零初始化学习注入。所有数字为 CPU 固定 seed 实测（verified），同合同 A/B 见 docs7/VERIFICATION.md。

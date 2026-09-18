@@ -1,35 +1,5 @@
 {
-  "version": "7.0.3",
-  "evidence_grade": "verified",
-  "torch_version": "2.14.0+cpu",
-  "device": "cpu",
-  "threads": 2,
   "params": 967796,
-  "checkpoint_config": {
-    "window": 6,
-    "hidden": 256,
-    "n_layers": 2,
-    "scene_dim": 32,
-    "use_kinematics": true
-  },
-  "dataset": {
-    "train": {
-      "windows": 1280,
-      "trajectories": 256
-    },
-    "val": {
-      "windows": 640,
-      "trajectories": 128
-    },
-    "test": {
-      "windows": 640,
-      "trajectories": 128
-    },
-    "calib": {
-      "windows": 640,
-      "trajectories": 128
-    }
-  },
   "test_metrics": {
     "oracle": {
       "oracle_overall": 0.006627843715250492,
@@ -137,39 +107,6 @@
     "empirical_coverage": 0.8592,
     "pass": true
   },
-  "kinematic_recovery": {
-    "accel_vector": {
-      "mse_vs_truth": 0.0,
-      "mse_mean_predictor": 0.218239,
-      "skill": 1.0,
-      "mae_norm": 0.0
-    },
-    "uniform_accel_falsepos_norm": 0.0,
-    "spring_omega": {
-      "recall": 1.0,
-      "mae_on_valid": 0.0231,
-      "false_positive_rate_non_spring": 0.0
-    },
-    "collision_jump": {
-      "detection_rate": 0.7437,
-      "false_positive_rate_non_collision": 0.0
-    }
-  },
-  "improvement_vs_v701": {
-    "blind_overall_le_v701": true,
-    "blind_accel_le_0.075": true,
-    "blind_spring_le_v701": true,
-    "v701_baseline": {
-      "blind_overall": 0.0459,
-      "blind_accel": 0.1053,
-      "blind_spring": 0.0637
-    },
-    "observed": {
-      "blind_overall": 0.01037,
-      "blind_accel": 0.0141,
-      "blind_spring": 0.01862
-    }
-  },
   "latency_ms": {
     "predict_next_batch1_median": 2.3598,
     "rollout4_batch1_median": 4.8283
@@ -178,61 +115,6 @@
     "all_pass": true,
     "checked": 21,
     "note": "覆盖率容差 ±0.05（扇形 ±0.10），CPU 固定 seed"
-  },
-  "estimator_param_error": {
-    "v0": {
-      "mae": 0.6606,
-      "mae_mean_predictor": 0.9683,
-      "identifiability_skill": 0.318,
-      "mean_observability": 0.771,
-      "n": 480
-    },
-    "accel_a": {
-      "mae": 0.9256,
-      "mae_mean_predictor": 0.6138,
-      "identifiability_skill": -0.508,
-      "mean_observability": 0.798,
-      "n": 160
-    },
-    "spring_omega": {
-      "mae": 0.1471,
-      "mae_mean_predictor": 0.2563,
-      "identifiability_skill": 0.426,
-      "mean_observability": 0.914,
-      "n": 160
-    },
-    "other_v2": {
-      "mae": 0.0432,
-      "mae_mean_predictor": 0.2396,
-      "identifiability_skill": 0.82,
-      "mean_observability": 0.908,
-      "n": 160
-    }
-  },
-  "improvement_vs_v703": {
-    "blind_accel_le_0.035": true,
-    "blind_overall_le_v702": true,
-    "blind_spring_le_v702_x1.15": true,
-    "blind_collision_le_v702_x1.15": true,
-    "gate_activated_on_accel": true,
-    "gate_closed_on_spring": true,
-    "gate_mean_by_kind": {
-      "uniform": 0.6341,
-      "accel": 0.6624,
-      "spring": 0.0,
-      "collision": 0.1544
-    },
-    "v702_baseline": {
-      "blind_overall": 0.02482,
-      "blind_accel": 0.06926,
-      "blind_spring": 0.01933,
-      "blind_collision": 0.00334
-    },
-    "observed": {
-      "blind_overall": 0.01037,
-      "blind_accel": 0.0141,
-      "blind_spring": 0.01862,
-      "blind_collision": 0.00304
-    }
   }
 }
+saved /home/user/Doubao/chats/38439739717650178/release-v5.4.4/udos-engine/reports7/v7_verification.json

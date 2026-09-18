@@ -26,7 +26,7 @@ from udos7.metrics import evaluate, estimator_param_error, kinematic_recovery
 SIZES = [64, 128, 256]
 N_TRAIN = 64
 TOL = 0.03
-CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.2.pt"
+CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.3.pt"
 REPORT = REPO / "reports7" / "model_size_convergence.json"
 
 

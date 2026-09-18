@@ -1,4 +1,48 @@
-# UDOS v7.0.2 验证报告（可复现）
+# UDOS v7.0.3 验证报告（可复现）
+
+环境：Linux CPU，Python 3.12，PyTorch CPU（`torch.set_num_threads(2)`），无 GPU/docker/sudo。
+所有数字来自本机实测脚本，证据分级 **verified**（CPU 合同内）；不与 legacy 版本跨合同比较倍数。
+
+---
+
+## v7.0.3：解析运动学积分 + 学习门控混合头（同合同 A/B）
+
+**复现命令**：`python3 scripts7/train_v7.py` → `python3 scripts7/verify_v7.py`（落盘 `worldmodel_v7.0.3.pt`，写 `reports7/v7_verification.json`）；门控契约测试 `pytest tests7/test_v703_kin_gate.py -q`。
+
+### 根因探针（先证据，后改码）
+
+- v7.0.2 oracle accel **分步** MSE `[0.0088, 0.042, 0.114, 0.245]`，位置 MSE **0.187** vs 速度 **0.018** → 误差几乎全是随视界二次增长的**位置误差**。
+- 确定性天花板（观测 `a_lin` 解析积分）：uniform **0**、accel **0**、spring 1.98、collision 0.29。
+- 结论：恒定加速度类应走解析二次积分；spring/collision 恒定加速度模型失配，须由门控关闭。
+
+### 门控方案的三次同合同 A/B（失败方案保留证据）
+
+| 方案 | 小规模 A/B 结果（hidden96/45ep，blind MSE） | 裁决 |
+|---|---|---|
+| `g=clamp(linear(h),0,1)` 零初始化 | 门全程 0，ON/OFF 两臂**逐位相同**（overall .0329） | REJECT：raw=0 在 clamp 边界，梯度 0 冻死 |
+| `g=ca·tanh(linear(h)/2)`（门读共享 GRU h） | accel .072→.002、uniform→.0003，但 **spring .044→.58 崩坏**、collision .005→.041 | REJECT：门饱和后改变共享表征梯度，拖累 spring（force-gate=0 隔离证实） |
+| 每步重测 ca_conf | spring rollout 中预测帧 ca 翻转误开 | REJECT：a/ca 改为初始窗固定 |
+| **`g=ca_conf·tanh(MLP(kin)/2)`，独立小头只吃确定性 kin，a/ca 初始窗固定** | accel .072→.022、spring .044→.036、collision .005→.004、overall .033→.017 | **ACCEPT** |
+
+`ca_conf` 分离（seed2026 n=2560/类）：uniform/accel 中位与 p05 均=1.0；spring/collision 中位=0（spring 全 0）；单用速度线性 R² 不足（spring .924、collision .860），必须乘 (1−ω_valid)(1−jump_valid)。
+
+### 全量选档与 held-out 指标（verified）
+
+| hidden | 参数 | val 准则 | test oracle | test blind |
+|---|---|---|---|---|
+| 64  | 95,348 | 0.0119 | 0.0092 | 0.0153 |
+| 128 | 271,476 | 0.0095 | 0.0071 | 0.0117 |
+| **256（选中）** | **967,796** | **0.0082** | **0.0066** | **0.0104** |
+
+盲路径 rollout4 MSE（v7.0.2 → v7.0.3）：overall **.0248→.0104（−58%）**、uniform .0073→.0057、accel **.0693→.0141（−80%）**、spring .0193→.0186、collision .0033→.0030。oracle overall .0209→.0066、accel .0618→.0109；**盲 accel（.0141）已逼近 oracle（.0109）**。门控均值：uniform .63、accel .66、spring **.00**、collision .15。
+
+覆盖率（±.05）：oracle .784/.898/.958、blind .776/.900/.956；参数扇形包络 .859（名义 .8）。延迟 predict_next 2.36ms / rollout4 4.83ms（CPU 2 线程 batch1 中位）。verify 门禁 **21 项 all_pass**；HTTP 冒烟半宽 α=.2/.1/.05 = .092/.187/.305 严格递增、gating_all_pass=true。
+
+**诚实边界**：解析积分只在恒定加速度模型成立时可信；ca_conf 是合成四类数据上的确定性选择量，真实非平稳/接触动力学需重新标定。uniform/accel 的 0 天花板不得外推到 spring/collision 或真实数据。
+
+---
+
+# v7.0.2 验证报告（历史，保留）
 
 环境：Linux CPU，Python 3.12，PyTorch CPU（`torch.set_num_threads(2)`），无 GPU/docker/sudo。
 所有数字来自本机实测脚本，证据分级 **verified**（CPU 合同内）；不与 legacy 版本跨合同比较倍数。

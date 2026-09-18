@@ -3,19 +3,31 @@
 ## 关系
 
 - `udos/`（v5.5.5）：**冻结 legacy**，保留可运行、可对照、全部既有测试通过，但不再演进。
-- `udos7/`（v7.0.2）：**主线**，单一统一推理图。发行版 7.0.2 同时包含两者：
-  - 分发包版本（pyproject）= 7.0.2；
+- `udos7/`（v7.0.3）：**主线**，单一统一推理图。发行版 7.0.3 同时包含两者：
+  - 分发包版本（pyproject）= 7.0.3；
   - `udos.__version__` 保持 5.5.5（不动，避免破坏 legacy 版本断言）；
-  - `udos7.__version__` = 7.0.2。
+  - `udos7.__version__` = 7.0.3。
+
+## v7.0.2 → v7.0.3 权重兼容（加性迁移，自动）
+
+v7.0.3 把运动学特征 `KIN_DIM` 10→11（新增 `ca_conf`）并新增解析积分门控小头
+`kin_gate`（Sequential 11→32→6，末层零初始化）。`persistence.load_worldmodel`
+对 v7.0.2 权重自动做两处加性迁移，加载后预测与 v7.0.2 逐位一致（有测试守护）：
+
+1. `scene.kin_encoder.weight` 由 [32,10] **末列补零**到 [32,11]（新 ca_conf 列贡献 0）；
+2. `kin_gate.*` 缺失 → 保留零初始化（门输出 g≡0，等价纯学习残差）。
+
+任何 unexpected 键、或非白名单 missing 键直接 RuntimeError，不静默吞错。
 
 ## checkpoint 不兼容（有意为之）与 v7 内部兼容
 
-v7 模型结构（WorldModelCore：观测编码 + 场景通道 + 唯一 GRU + 残差解码）
+v7 模型结构（WorldModelCore：观测编码 + 场景通道 + 唯一 GRU + 残差/解析积分混合头）
 与 legacy `PhysicsPredictor`（CTM 多 tick + 独立 GPM/LoRA 演示链）不同，
 **旧 legacy checkpoint 不能、也不应被 v7 加载**。v7 checkpoint：
 
 ```
-checkpoints7/worldmodel_v7.0.2.pt   # hidden256, 967,182 参数, use_kinematics=True（默认）
+checkpoints7/worldmodel_v7.0.3.pt   # hidden256, 967,796 参数, use_kinematics=True（默认）
+checkpoints7/worldmodel_v7.0.2.pt   # hidden256, 967,182 参数, 加载时零列填充 KIN_DIM 10→11
 checkpoints7/worldmodel_v7.0.1.pt   # hidden256, 966,830 参数, 无运动学通道（保留对照）
 ```
 

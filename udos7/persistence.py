@@ -29,6 +29,32 @@ def load_worldmodel(path, map_location="cpu") -> Tuple[WorldModelCore, dict]:
                            n_layers=cfg.get("n_layers", 2),
                            # v7.0.1 checkpoint 无运动学通道 => 默认关闭以兼容旧权重
                            use_kinematics=cfg.get("use_kinematics", False))
-    model.load_state_dict(ckpt["model_state"])
+    # v7.0.2→v7.0.3 迁移：运动学特征 KIN_DIM 10→11（新增 ca_conf）。
+    # 旧 scene.kin_encoder 权重为 [scene_dim,10]，在末列补零升到 [scene_dim,11]，
+    # 使新特征 ca_conf 对旧模型贡献为 0（旧预测行为不变）；门控小头缺失则零初始化。
+    state = dict(ckpt["model_state"])
+    padded = []
+    ke = "scene.kin_encoder.weight"
+    if ke in state:
+        old_w = state[ke]
+        new_w = getattr(model, "scene").kin_encoder.weight
+        if old_w.shape != new_w.shape and old_w.shape[0] == new_w.shape[0] \
+                and old_w.shape[1] < new_w.shape[1]:
+            pad = torch.zeros(old_w.shape[0],
+                              new_w.shape[1] - old_w.shape[1],
+                              dtype=old_w.dtype, device=old_w.device)
+            state[ke] = torch.cat([old_w, pad], dim=1)
+            padded.append(ke)
+    # 非严格加载：新增门控小头在旧权重中缺失，保持零初始化（g≡0，等价旧版）。
+    missing, unexpected = model.load_state_dict(state, strict=False)
+    allowed_missing = {"kin_gate.0.weight", "kin_gate.0.bias",
+                       "kin_gate.2.weight", "kin_gate.2.bias"}
+    bad = [k for k in missing if k not in allowed_missing]
+    if bad or unexpected:
+        raise RuntimeError(
+            f"checkpoint 与模型结构不一致；bad_missing={bad} "
+            f"unexpected={unexpected}")
+    ckpt.setdefault("meta", {})["load_missing_zero_init"] = missing
+    ckpt["meta"]["load_padded_zero_cols"] = padded
     model.eval()
     return model, ckpt

@@ -17,9 +17,12 @@ v7.0.1 的诚实负结果是：盲路径 accel 缺口最大，且标量 ``accel_
   以“弹簧模型残差严格小于常加速度模型残差 + ω² 下限 + 残差门限”做**模型选择**，
   避免短窗二次轨迹被误判为简谐；
 - 碰撞 ``jump``+有效性：x 轴帧间速度跳变的稳健检测（中位尺度）。
+- ``ca_conf``[10]（v7.0.3）：**恒定加速度一致性置信** ∈[0,1]。速度对时间线性拟合
+  的逐窗 R²，再乘以 (1−弹簧有效)(1−碰撞有效)；uniform/accel≈1，spring/collision≈0。
+  用作解析积分门控的确定性选择量，避免门控在“解析有利/有害”的类型间收到冲突梯度。
 
-无效特征置 0 且有效性标志置 0（干净输入），不编造。所有量仅来自观测窗，
-推理 rollout 期间 ctx 只由初始窗计算一次（与既有设计一致，不跨视界泄漏）。
+无效特征置 0 且有效性标志置 0（干净输入），不编造。所有量仅来自观测窗；
+rollout 每步用当前滑窗重测一次（无未来泄漏）。
 """
 from __future__ import annotations
 
@@ -29,14 +32,15 @@ import torch
 
 from .contracts import STATE_DIM, VELOCITY_SLICE, POSITION_SLICE
 
-# 特征排布：v_c(3) a_lin(3) omega(1) omega_valid(1) jump(1) jump_valid(1)
-KIN_DIM = 10
+# 特征排布：v_c(3) a_lin(3) omega(1) omega_valid(1) jump(1) jump_valid(1) ca_conf(1)
+KIN_DIM = 11
 _VC = slice(0, 3)
 _AL = slice(3, 6)
 _OMEGA = 6
 _OMEGA_VALID = 7
 _JUMP = 8
 _JUMP_VALID = 9
+_CA_CONF = 10
 
 # 模型选择门限（探针在 seed 42/1337/314/2026 上：弹簧召回 1.0、其余误报 0）
 _OMEGA_MIN = 0.45          # ω² 下限（ω_floor）
@@ -104,6 +108,17 @@ def kinematic_features(window: torch.Tensor, dt: float) -> torch.Tensor:
     jump_valid = jump.abs() > _JUMP_MED_K * med + _JUMP_BIAS
     feat[:, _JUMP] = jump * jump_valid.float()
     feat[:, _JUMP_VALID] = jump_valid.float()
+
+    # --- 恒定加速度一致性 ca_conf：速度线性拟合 R²，并排除弹簧/碰撞窗 ---
+    vfit = vbar.unsqueeze(1) + tc * a_lin.unsqueeze(1)      # v(t)=v̄+a·t
+    sse = ((vel - vfit) ** 2).sum(dim=(1, 2))
+    sst = ((vel - vel.mean()) ** 2).sum() / B              # 全局基准（逐窗稳定）
+    r2 = (1.0 - sse / sst.clamp_min(1e-12)).clamp(0.0, 1.0)
+    if W >= 4:
+        ca_conf = r2 * (1.0 - omega_valid.float()) * (1.0 - jump_valid.float())
+    else:
+        ca_conf = r2 * (1.0 - jump_valid.float())
+    feat[:, _CA_CONF] = ca_conf
     return feat
 
 
@@ -119,4 +134,5 @@ def feature_names() -> Dict[str, object]:
     return {"KIN_DIM": KIN_DIM,
             "v_c": (0, 3), "a_lin": (3, 6),
             "omega": _OMEGA, "omega_valid": _OMEGA_VALID,
-            "jump": _JUMP, "jump_valid": _JUMP_VALID}
+            "jump": _JUMP, "jump_valid": _JUMP_VALID,
+            "ca_conf": _CA_CONF}

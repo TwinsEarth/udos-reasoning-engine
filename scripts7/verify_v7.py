@@ -17,13 +17,14 @@ sys.path.insert(0, str(REPO))
 
 from udos7 import __version__
 from udos7.dynamics import three_way_splits
+from udos7.kinematics import kinematic_features
 from udos7.persistence import load_worldmodel
 from udos7.metrics import (evaluate, estimator_param_error,
                            kinematic_recovery)
 from udos7.uncertainty import (ConformalCalibrator, MonteCarloParamFan,
                                empirical_coverage)
 
-CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.2.pt"
+CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.3.pt"
 OUT = REPO / "reports7" / "v7_verification.json"
 ALPHAS = (0.2, 0.1, 0.05)
 NOMINAL = {0.2: 0.80, 0.1: 0.90, 0.05: 0.95}
@@ -88,6 +89,41 @@ def main():
                      "blind_accel": round(blind["blind_accel"], 5),
                      "blind_spring": round(blind["blind_spring"], 5)}}
     gates.extend(improvement.values())
+
+    # ---- v7.0.3 解析运动学积分门控门禁（预注册，相对 v7.0.2 不放宽）----
+    # v7.0.2 盲路径基线（reports7 @7.0.2）：overall .02482、accel .06926、
+    #   spring .01933、collision .00334、uniform .00733。
+    # 门控把恒定加速度类（uniform/accel）路由到解析积分，应大幅压低 accel；
+    # spring/collision 由 ca_conf 确定性屏蔽，不得退化。
+    with torch.no_grad():
+        tX = splits["test"].X
+        kin = kinematic_features(tX, model.dt)
+        gmean = {}
+        for k_ in ("uniform", "accel", "spring", "collision"):
+            mk = splits["test"].kind_mask(k_)
+            g = kin[mk, 10:11] * torch.tanh(model.kin_gate(kin[mk]) / 2.0)
+            gmean[k_] = round(float(g.mean()), 4)
+    v703 = {
+        "blind_accel_le_0.035": blind["blind_accel"] <= 0.035,
+        "blind_overall_le_v702": blind["blind_overall"] <= 0.02482,
+        "blind_spring_le_v702_x1.15":
+            blind["blind_spring"] <= 0.01933 * 1.15,
+        "blind_collision_le_v702_x1.15":
+            blind["blind_collision"] <= 0.00334 * 1.15,
+        "gate_activated_on_accel": gmean["accel"] >= 0.3,
+        "gate_closed_on_spring": gmean["spring"] <= 0.02,
+    }
+    report["improvement_vs_v703"] = {
+        **{k: bool(v) for k, v in v703.items()},
+        "gate_mean_by_kind": gmean,
+        "v702_baseline": {"blind_overall": 0.02482, "blind_accel": 0.06926,
+                          "blind_spring": 0.01933,
+                          "blind_collision": 0.00334},
+        "observed": {"blind_overall": round(blind["blind_overall"], 5),
+                     "blind_accel": round(blind["blind_accel"], 5),
+                     "blind_spring": round(blind["blind_spring"], 5),
+                     "blind_collision": round(blind["blind_collision"], 5)}}
+    gates.extend(v703.values())
 
     # ---- conformal 覆盖率（oracle 与 blind 各自校准）----
     for mode, use_exp in (("oracle", True), ("blind", False)):

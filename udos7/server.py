@@ -24,7 +24,7 @@ from .persistence import load_worldmodel
 from .uncertainty import ConformalCalibrator, empirical_coverage
 
 REPO = Path(__file__).resolve().parents[1]
-DEFAULT_CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.2.pt"
+DEFAULT_CKPT = REPO / "checkpoints7" / "worldmodel_v7.0.3.pt"
 
 
 class V7Service:
