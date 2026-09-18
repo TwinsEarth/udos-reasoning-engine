@@ -213,22 +213,84 @@ def start_prometheus_exporter(reg: MetricsRegistry, host: str = "127.0.0.1",
 # --------------------------------------------------------------------------
 # 资源消耗（CPU/内存可测；GPU 需 nvidia-ml / GPU 节点，门禁）
 # --------------------------------------------------------------------------
-def resource_usage() -> Dict[str, Any]:
-    info: Dict[str, Any] = {
-        "cpu_count": os.cpu_count(),
-        "rss_mb": None,
-        "gpu_utilization": None,
-        "gpu_memory_mb": None,
-        "evidence": "cpu-proto",
-    }
+def _rss_mb_cross_platform() -> Optional[float]:
+    """跨平台进程常驻内存 RSS（MB）。Linux /proc；macOS、Windows 走回退。"""
+    import sys
+    # Linux：/proc/self/status VmRSS（kB）
     try:
         with open("/proc/self/status", "r", encoding="utf-8") as f:
             for line in f:
                 if line.startswith("VmRSS:"):
-                    info["rss_mb"] = round(int(line.split()[1]) / 1024.0, 1)
-                    break
+                    return round(int(line.split()[1]) / 1024.0, 1)
     except (OSError, ValueError, IndexError):
-        info["rss_mb"] = None
+        pass
+    # macOS / Linux 回退：resource.ru_maxrss（Linux 单位 kB，macOS 单位 byte）
+    try:
+        import resource
+        ru = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        if ru <= 0:
+            return None
+        return round(ru / (1024.0 if sys.platform.startswith("linux") else 1024.0 * 1024.0), 1)
+    except (OSError, ValueError, AttributeError):
+        pass
+    # Windows 回退：ctypes 调 psapi.GetProcessMemoryInfo（WorkingSetSize，byte）
+    if sys.platform.startswith("win"):
+        try:
+            import ctypes
+
+            class PMC(ctypes.Structure):
+                _fields_ = [(f"f{i}", ctypes.c_size_t) for i in range(10)]
+
+            psapi = ctypes.windll.psapi
+            kernel32 = ctypes.windll.kernel32
+            h = kernel32.GetCurrentProcess()
+            pmc = PMC()
+            if psapi.GetProcessMemoryInfo(h, ctypes.byref(pmc), ctypes.sizeof(pmc)):
+                return round(pmc.f[1] / (1024.0 * 1024.0), 1)  # WorkingSetSize
+        except (OSError, ValueError, AttributeError):
+            return None
+    return None
+
+
+def network_io_counters() -> Optional[Dict[str, int]]:
+    """累计网络收发字节（跨平台）。Linux 读 /proc/net/dev；其余平台用 psutil（若安装）。"""
+    try:  # Linux：汇总所有非 lo 接口
+        rx = tx = 0
+        with open("/proc/net/dev", "r", encoding="utf-8") as f:
+            for line in f.readlines()[2:]:
+                name, rest = line.split(":", 1)
+                if name.strip() == "lo":
+                    continue
+                parts = rest.split()
+                rx += int(parts[0])
+                tx += int(parts[8])
+        return {"bytes_recv": rx, "bytes_sent": tx}
+    except (OSError, ValueError, IndexError):
+        pass
+    try:  # macOS / Windows：psutil（可选依赖）
+        import psutil  # type: ignore
+
+        n = psutil.net_io_counters()
+        return {"bytes_recv": n.bytes_recv, "bytes_sent": n.bytes_sent}
+    except Exception:
+        return None
+
+
+def resource_usage() -> Dict[str, Any]:
+    import sys
+    info: Dict[str, Any] = {
+        "platform": sys.platform,
+        "cpu_count": os.cpu_count(),
+        "rss_mb": None,
+        "net": None,
+        "gpu_utilization": None,
+        "gpu_memory_mb": None,
+        "evidence": "cpu-proto",
+    }
+    info["rss_mb"] = _rss_mb_cross_platform()
+    info["net"] = network_io_counters()
+    if info["net"] is None:  # 取不到诚实留空，不编造
+        info["net_evidence"] = "unavailable-on-platform"
     return info
 
 

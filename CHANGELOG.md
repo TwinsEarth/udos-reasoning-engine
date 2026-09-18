@@ -4,6 +4,24 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.3.3（AI 可观测性加深：六层功能补齐 + 跨平台；功能版）
+
+> 性质：在 v7.3.0 可观测内核上按“3× 颗粒度”补齐生产栈缺口，新增 `udos7/observability/intelligence.py`
+> 与跨平台资源采集、Windows 一键部署。预测/协同内核行为不变。零第三方依赖，新增能力 CPU 实测 verified；
+> OTel Collector gRPC 直推、eBPF、GPU、LLM-as-judge 仍为部署/资源闸门（unverified-on-infra）。
+
+- **Added 会话关联（Session Correlation）**：`session_index()` 以根 Span 的 `session_id` 把多条 trace 聚成会话，输出 traces/span 数/错误 trace/总延迟。
+- **Added 实时护栏（Guardrails）**：`Guardrails.inspect()` 在输出到达用户前做 PII 泄露/毒性/格式违规/未接地(幻觉代理)/工具误用五类确定性拦截，拦截写入指标 `gen_ai_guardrail_blocks_total{type}` 与 Span 事件（拦截本身可观测）。
+- **Added 成本归因与 Token 效率**：`CostAccounting` 按 model/user/feature 汇总调用数、输入/输出 Token、USD（价格表可覆盖，示例价）、截断浪费计数；`attach_tracer()` 可从离线 trace 的 `gen_ai.usage.*` 回填成本。
+- **Added 智能分析层（确定性）**：`AnomalyDetector` 在线 Welford 均值/方差 + EWMA，按“纳入当前点之前”的统计量算 z 分（修复离群点自我稀释），spike/drop 告警；`root_cause()` 在 trace 内定位首个错误阶段、否则定位耗时热点及占比。
+- **Added 拓扑图 + 火焰图数据**：`trace_topology()` 输出阶段节点/调用数/错误/父子边（供图数据库/拓扑图）；`flame_profile()` 计算每 Span 自时间 self_ms（总时长−直接子时长）与深度（供火焰图）。
+- **Added OTLP/JSON 导出**：`to_otlp_json()/export_otlp_json()` 产出 OTLP resourceSpans 结构（traceId/spanId/parentSpanId/纳秒时间/status/attributes/events，PII 经 redact），可被 Collector/Tempo 以文件/管道摄取；真实 gRPC 推送标 unverified。
+- **Changed 跨平台资源采集（macOS + Windows）**：`resource_usage()` 新增 platform 与网络收发字节；RSS 在 Linux 读 /proc、macOS/Linux 回退 `resource.ru_maxrss`、Windows 用 ctypes(psapi)；`network_io_counters()` Linux 读 /proc/net/dev，macOS/Windows 用可选 psutil，取不到诚实留 null。
+- **Added Windows 一键部署**：`deploy/windows/UDOS-Windows一键启动.bat`（建 venv→装 CPU 依赖→tests7 回归→起 8777 服务，PyPI 失败自动切清华源）+ 小白 README（SmartScreen、PATH、端口、故障自查）；macOS 沿用 deploy/mac。
+- **Tests**：新增 `tests7/test_v733_observability_pro.py` 11 条（会话分组、护栏四类拦截与边界、成本数学与 trace 回填、异常 spike、根因错误/热点、拓扑与火焰自时间、OTLP 结构与导出、跨平台资源），全绿；TDD 过程抓到并修复两个真 bug（session_index 误 `return rec`、异常检测把离群点计入统计导致漏报）。
+- **Demo**：`scripts7/observability_pro_demo.py` 端到端跑通六层并产 `reports7/observability_pro_demo.{json,otlp.json}`。
+- **诚实边界**：本版不运行容器/eBPF/GPU，不接 LLM 评分与商业内容审核；价格表为示例价；这些路径留空或门禁，不以 CPU 数字冒充生产能力。
+
 ## v7.3.0（AI 可观测性体系；功能版）
 
 > 性质：在 v7.2.2 协同/军团之上新增**引擎内零依赖可观测层 `udos7/observability/`**，预测内核与协同层行为不变（默认 checkpoint 仍 v7.0.3）。对齐 OpenTelemetry GenAI 语义约定，落地“采集→管道→存储→分析→告警→治理”分层；引擎内可跑部分为 verified，Prometheus/Grafana/OTel Collector/eBPF/GPU/LLM-as-judge 给真实配置但标 unverified-on-infra（需 Docker/GPU/key）。

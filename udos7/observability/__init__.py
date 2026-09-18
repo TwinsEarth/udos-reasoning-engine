@@ -22,6 +22,11 @@ from .evaluation import (FormatJudge, GroundingJudge, ToolCorrectnessJudge,
                          ToxicityJudge, LLMJudge, OnlineEvaluator, QualityScore)
 from .instrument import (run_pipeline, AgentRegistry, observe_goal,
                          enable_autoinstrument, get_tracer, disable_autoinstrument)
+from .intelligence import (session_index, Guardrails, GuardrailResult,
+                           CostAccounting, AnomalyDetector,
+                           trace_topology, flame_profile,
+                           to_otlp_json, export_otlp_json)
+from .metrics import network_io_counters
 
 __all__ = [
     "SEMCONV_VERSION", "PIPELINE_STAGES",
@@ -38,4 +43,8 @@ __all__ = [
     "GEN_AI_PROMPT", "GEN_AI_COMPLETION",
     "EXT_AGENT_NAME", "EXT_AGENT_PURPOSE", "EXT_AGENT_STATUS",
     "EXT_STAGE", "EXT_EVIDENCE",
+    "network_io_counters",
+    "session_index", "Guardrails", "GuardrailResult", "CostAccounting",
+    "AnomalyDetector", "trace_topology", "flame_profile",
+    "to_otlp_json", "export_otlp_json",
 ]

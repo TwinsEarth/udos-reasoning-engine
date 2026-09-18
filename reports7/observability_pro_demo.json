@@ -1,0 +1,130 @@
+{
+  "version": "7.3.3",
+  "evidence": "verified (cpu, zero-3rd-party)",
+  "sessions": [
+    {
+      "session_id": "s1",
+      "traces": [
+        "94cf1a4b1f274c06",
+        "cffa127138b541eb"
+      ],
+      "span_count": 4,
+      "error_traces": 0,
+      "total_latency_ms": 0.155
+    },
+    {
+      "session_id": "s2",
+      "traces": [
+        "a29671b2509d4a9e"
+      ],
+      "span_count": 2,
+      "error_traces": 0,
+      "total_latency_ms": 0.03
+    }
+  ],
+  "guardrail_blocks": 1,
+  "guardrail_metric_series": {
+    "(('type', 'pii_leak'),)": 1.0
+  },
+  "cost_report": [
+    {
+      "model": "default",
+      "user": "u0",
+      "feature": "rag",
+      "calls": 2,
+      "input_tokens": 260,
+      "output_tokens": 160,
+      "cost_usd": 0.00058,
+      "truncated_calls": 0
+    },
+    {
+      "model": "default",
+      "user": "u1",
+      "feature": "rag",
+      "calls": 1,
+      "input_tokens": 130,
+      "output_tokens": 80,
+      "cost_usd": 0.00029,
+      "truncated_calls": 0
+    }
+  ],
+  "anomaly_alerts": [
+    {
+      "key": "ttft_ms",
+      "value": 900,
+      "mean": 125.625,
+      "zscore": 228.51,
+      "direction": "spike"
+    }
+  ],
+  "root_cause": {
+    "type": "latency_hotspot",
+    "stage": "retrieval",
+    "latency_ms": 80.0,
+    "share": 1.0
+  },
+  "topology_nodes": [
+    "request-0",
+    "llm.generate",
+    "request-1",
+    "request-2"
+  ],
+  "flame_rows": [
+    {
+      "name": "request-0",
+      "depth": 0,
+      "total_ms": 0.061,
+      "self_ms": 0.058,
+      "status": "ok"
+    },
+    {
+      "name": "request-1",
+      "depth": 0,
+      "total_ms": 0.033,
+      "self_ms": 0.031,
+      "status": "ok"
+    },
+    {
+      "name": "request-2",
+      "depth": 0,
+      "total_ms": 0.03,
+      "self_ms": 0.029,
+      "status": "ok"
+    },
+    {
+      "name": "llm.generate",
+      "depth": 1,
+      "total_ms": 0.003,
+      "self_ms": 0.003,
+      "status": "ok"
+    },
+    {
+      "name": "llm.generate",
+      "depth": 1,
+      "total_ms": 0.002,
+      "self_ms": 0.002,
+      "status": "ok"
+    },
+    {
+      "name": "llm.generate",
+      "depth": 1,
+      "total_ms": 0.001,
+      "self_ms": 0.001,
+      "status": "ok"
+    }
+  ],
+  "otlp_spans_exported": 6,
+  "otlp_path": "/home/user/Doubao/chats/38439739717650178/release-v5.4.4/udos-engine/reports7/observability_pro_demo.otlp.json",
+  "resource": {
+    "platform": "linux",
+    "cpu_count": 4,
+    "rss_mb": 226.5,
+    "net": {
+      "bytes_recv": 407980,
+      "bytes_sent": 284165
+    },
+    "gpu_utilization": null,
+    "gpu_memory_mb": null,
+    "evidence": "cpu-proto"
+  }
+}
