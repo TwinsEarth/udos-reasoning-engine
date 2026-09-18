@@ -4,6 +4,37 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.2.2（多 Agent 协同内核 + Agent 军团与 Scaling Law；功能版）
+
+> 性质：在 v7.0.3 统一预测内核之上新增**协同层 `udos7/agents/`**，预测权重/checkpoint 不变（默认仍 `worldmodel_v7.0.3.pt`）。本版一次落地两个里程碑：**v7.1.1 多 Agent 协同**（专家/分类/分工/讨论/碰撞/提名/投票/选优 + 共享记忆 + 协调器）与 **v7.2.2 Agent 军团**（岗位/部门/组织/领域层级、完全异步 fan-out、Agent 版 Scaling Law 实测、AL0–AL5 门禁）。所有定量结论为 CPU 固定 seed 实测，证据分级 verified / cpu-proto / unverified，原始数据 `reports7/agent_scaling.json`。
+>
+> **版本线说明（legacy 冻结）**：旧 `udos/` 包（v5.5.5）按 v7 既定契约为**冻结对照版**，本轮不另造 v5.6.x/v5.7.x；用户要求的“多 Agent / 军团”等价能力落在主线 `udos7` 的 v7.1.1 / v7.2.2。AGI/ASI 倒计时网站属独立 **v6.2 产品线**，v7 仍是纯引擎、不含网站。
+
+### v7.1.1 —— 多 Agent 协同内核（本版包含）
+- **Added `agents/types.py`**：Task（goal/kind/payload/deps/branch/status，`is_ready` DAG 判定）、WorkProduct（作者/客观分/指标/置信/证据级/资源声明/分支/父事件）、Vote、Claim、Collision、Decision、只追加 Event（全局血缘）。
+- **Added `agents/memory.py::SharedMemory`**：线程安全的唯一事实源——命名空间 KV + 单调版本 + **CAS**（过期版本写入失败）、每 Agent 私有 scratch（隔离工作区）、只追加事件日志、资源声明表（**读可共享，仅两个写锁碰撞**）、决策台账、`snapshot/merge`（KV 取高版本、事件按 id 去重按 ts 排序）供云端共享上下文。
+- **Added `agents/workers.py` 专家 Agent**（重活为同步纯函数，由协调器线程池异步调度）：
+  - `PredictionExpert` 三种**互为独立信息源**：`blind`（学习模型盲预测）、`explicit`（显式场景参数）、`analytic`（纯运动学解析积分基线）；
+  - `ActionCompareExpert`（外部候选动作 dv 脉冲分别 rollout，按目标距离+风险排序的 MPC 式比较，不自动发明动作）；
+  - `ValidatorExpert`（有真值用 MSE 客观打分、代码任务跑 harness）、`CriticExpert`（末位置共识离散度，超阈值标 needs_human）、`ClassifierExpert`、`DecomposerExpert`（确定性模板拆解；自由形式拆解需 AL4 LLM）、`CodePatchExpert`（**封闭候选策略集**、隔离分支草稿、不改主线）。
+- **Added `agents/protocols.py`**：验证→讨论→提名→投票→碰撞裁决→选优→合并。最终分 = 0.7 客观验证分 + 0.3 加权投票（无投票完全由验证分决定，避免“声音大”左右结果）；代码任务**仅获胜分支**按 PR 语义合并（`merge_winning_patch`）；预测另给 `weighted_ensemble`。
+- **Added `agents/coordinator.py::CoordinatorAgent`**：不写核心代码的项目经理/架构师。pull 共享上下文→分类→拆解 DAG→`asyncio` 信号量 + 线程池**完全异步**派发隔离分支→依赖调度（无就绪标 blocked、失败落 task_failed 不吞）→验证/讨论/投票选优→胜者合并→push 上下文。
+- **Tests**：`tests7/test_v71_agents.py` 14 条（CAS 冲突、事件血缘、读写/写写碰撞、分类拆解、客观选优必中最高分、集成形状、动作排序、补丁仅胜者合并不污染主线、异步 DAG 依赖顺序与全部完成、跨协调器 LocalTransport 真实同步、AL4/AL5 门禁），全绿。
+
+### v7.2.2 —— Agent 军团 + Scaling Law + AL 分级（本版）
+- **Added `agents/legion.py`**：
+  - `build_org(headcount, span)` 组织树（agent/team/department/domain/federation/planet/…）。**编制精确、对象有界**：每层节点数由 `org_level_sizes` 公式给出（可到亿级、O(层数)、实测 1 亿 headcount 构建 0.0012s、仅 2052 个预览节点），预算耗尽子树以 headcount 整数虚拟表示（materialized=False）。**亿级在线 LLM 子 Agent 不实例化、不冒充算力**。
+  - `hierarchical_select` 分层投票（team 内选优→department 从胜者中再选）。
+  - **Scaling Law 实测**（`scripts7/agent_scaling_bench.py`→`reports7/agent_scaling.json`）：
+    - **CPU 密集型吞吐** `throughput_curve`：固定 48 个独立预测任务变并发，实测 1→2 Agent 1.59×，4 Agent 1.03×、8 Agent 0.70×——受物理核/GIL/torch 线程约束，**超订反降**，如实记录不外推；
+    - **远程 I/O 型** `io_bound_curve`：用 asyncio.sleep 模拟远程 LLM/工具等待（云端数千子 Agent 的真实形态），并发 1/2/4/8 实测加速 1×/2.0×/4.0×/7.99×（simulation 时延，机制与协调器一致），近线性直到并发上限；
+    - **集成质量** `quality_curve`：按**独立校准集** MSE 做 softmax 加权（不偷看 test）。实测加权集成 held-out MSE 0.0092，而**朴素等权平均差专家把结果拖到 0.213（约 23 倍差）**；k 超过独立信息源数后追加最强专家近相关副本，质量在 0.0092 附近**饱和**（拟合 mse(k)=a+b/k，gain_b≈−4e-5）。结论：**增益来自多样性 + 验证加权，而非堆人头**；输出含 best_single/naive_equal 对照。
+- **Added `agents/automation.py`**：Epoch AI 口径 **AL0–AL5** 分级 + `CapabilityGate`（缺 LLM key/云上下文/RSI 即对 AL4/AL5 抛 `GateError`）与 `baseline_assessment` 诚实分级表（预测集成 AL2、窄域协调器 AL3 verified；自由云端 LLM AL4、RSI AL5 unverified）。
+- **Added `agents/cloud.py`**：`LocalTransport`（进程内多协调器真实发布/订阅/快照合并，verified）与 `CloudTransport`（跨机云共享上下文适配器，未配置 endpoint/token 即 AL4 门禁，真实后端属部署闸门）。
+- **Tests**：`tests7/test_v72_legion.py` 5 条（编制精确+对象有界+小规模全展开、分层投票选全局最优、CPU 吞吐实测、质量校准加权与饱和、I/O 近线性），全绿。
+- **演示/基准脚本**：`scripts7/legion_demo.py`、`scripts7/agent_scaling_bench.py`。
+- **诚实闸门（CPU 沙箱不可达，需用户资源）**：真实多供应商 LLM key（自由拆解/写码/交叉打分）、云端项目上下文与数千在线子 Agent、GPU/HPC（vLLM KV-offload、NEURON/CoreNEURON DHS、MuJoCo-MJX、0.5B/5B 端到端）。本版这些路径一律门禁拦截并标 unverified，绝不用 CPU 数字冒充。
+
 ## v7.0.3（解析运动学积分 + 学习门控混合预测头；补丁版）
 
 > 性质：在 v7.0.2 统一内核上的**根因修复补丁**，单一 delta——把已能精确反演的加速度从“通用上下文”升级为“解析积分路径”，由一个只依赖确定性运动学特征的独立门控决定何时信任。所有数字为 CPU 固定 seed 实测（verified），同合同 A/B 与踩坑过程见 docs7/VERIFICATION.md。

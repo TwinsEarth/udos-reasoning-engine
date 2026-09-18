@@ -1,0 +1,166 @@
+{
+  "schema": "udos7.agent_scaling/v1",
+  "evidence_grade": "cpu-proto",
+  "headline": {
+    "cpu_bound_peak": {
+      "agents": 2,
+      "tasks": 48,
+      "wall_s": 0.1966,
+      "tasks_per_s": 244.172,
+      "speedup_vs_1": 1.594
+    },
+    "io_bound_note": "远程Agent(I/O等待)区间并发近线性扩展，见 io_curve(simulation)",
+    "quality_note": "增益来自多样性+校准加权；同质化扩招饱和，见 quality_curve"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "torch": "2.14.0+cpu",
+    "threads": 2,
+    "device": "cpu",
+    "ckpt": "checkpoints7/worldmodel_v7.0.3.pt",
+    "ckpt_meta_keys": [
+      "config",
+      "evidence_grade",
+      "meta",
+      "model_state",
+      "runtime",
+      "splits",
+      "test_metrics",
+      "version"
+    ]
+  },
+  "workload": {
+    "independent_tasks": 48,
+    "quality_samples": 48
+  },
+  "throughput_curve_cpu_bound": [
+    {
+      "agents": 1,
+      "tasks": 48,
+      "wall_s": 0.3133,
+      "tasks_per_s": 153.208,
+      "speedup_vs_1": 1.0
+    },
+    {
+      "agents": 2,
+      "tasks": 48,
+      "wall_s": 0.1966,
+      "tasks_per_s": 244.172,
+      "speedup_vs_1": 1.594
+    },
+    {
+      "agents": 4,
+      "tasks": 48,
+      "wall_s": 0.3031,
+      "tasks_per_s": 158.386,
+      "speedup_vs_1": 1.034
+    },
+    {
+      "agents": 8,
+      "tasks": 48,
+      "wall_s": 0.4508,
+      "tasks_per_s": 106.485,
+      "speedup_vs_1": 0.695
+    }
+  ],
+  "io_curve_remote_agent_simulation": [
+    {
+      "agents": 1,
+      "tasks": 48,
+      "wall_s": 2.4071,
+      "tasks_per_s": 19.94,
+      "ideal_wall_s": 2.4,
+      "speedup_vs_1": 1.0
+    },
+    {
+      "agents": 2,
+      "tasks": 48,
+      "wall_s": 1.2038,
+      "tasks_per_s": 39.88,
+      "ideal_wall_s": 1.2,
+      "speedup_vs_1": 2.0
+    },
+    {
+      "agents": 4,
+      "tasks": 48,
+      "wall_s": 0.6023,
+      "tasks_per_s": 79.69,
+      "ideal_wall_s": 0.6,
+      "speedup_vs_1": 3.997
+    },
+    {
+      "agents": 8,
+      "tasks": 48,
+      "wall_s": 0.3014,
+      "tasks_per_s": 159.26,
+      "ideal_wall_s": 0.3,
+      "speedup_vs_1": 7.986
+    }
+  ],
+  "quality_curve": [
+    {
+      "agents": 1,
+      "weighted_ensemble_mse": 0.009196,
+      "best_single_mse": 0.009196,
+      "naive_equal_2_mse": 0.213141,
+      "independent": 1,
+      "evidence": "verified"
+    },
+    {
+      "agents": 2,
+      "weighted_ensemble_mse": 0.009196,
+      "best_single_mse": 0.009196,
+      "naive_equal_2_mse": 0.213141,
+      "independent": 2,
+      "evidence": "verified"
+    },
+    {
+      "agents": 3,
+      "weighted_ensemble_mse": 0.009357,
+      "best_single_mse": 0.009196,
+      "naive_equal_2_mse": 0.213141,
+      "independent": 2,
+      "evidence": "cpu-proto"
+    },
+    {
+      "agents": 5,
+      "weighted_ensemble_mse": 0.00922,
+      "best_single_mse": 0.009196,
+      "naive_equal_2_mse": 0.213141,
+      "independent": 2,
+      "evidence": "cpu-proto"
+    },
+    {
+      "agents": 9,
+      "weighted_ensemble_mse": 0.009227,
+      "best_single_mse": 0.009196,
+      "naive_equal_2_mse": 0.213141,
+      "independent": 2,
+      "evidence": "cpu-proto"
+    },
+    {
+      "agents": 17,
+      "weighted_ensemble_mse": 0.009223,
+      "best_single_mse": 0.009196,
+      "naive_equal_2_mse": 0.213141,
+      "independent": 2,
+      "evidence": "cpu-proto"
+    }
+  ],
+  "quality_saturation_fit": {
+    "model": "mse(k)=a+b/k",
+    "saturation_a": 0.00925204564425873,
+    "gain_b": -4.2334326400210196e-05
+  },
+  "bench_wall_s": 5.865,
+  "notes": [
+    "throughput_curve_cpu_bound：CPU 密集型本地推理，受物理核/GIL/torch 线程约束，",
+    "  并发超过并行度后可能不升反降（实测如实记录，不外推）。",
+    "io_curve_remote_agent_simulation：用 asyncio.sleep 模拟远程 LLM/工具等待，",
+    "  这是云端数千子 Agent 的真实受益区间，近线性直到并发上限(simulation 时延)。",
+    "quality_curve：按独立校准集 MSE 做 softmax 加权（不偷看 test）；k<=独立源数",
+    "  为 verified，更大 k 为最强专家的近相关副本(cpu-proto)，刻画同质化扩招饱和；",
+    "  并给 best_single/naive_equal 对照——等权平均差专家会拖差结果。",
+    "亿级在线 LLM 子 Agent 需 LLM key+云预算(AL4 门禁)，不在本基准范围。"
+  ]
+}
