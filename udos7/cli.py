@@ -161,6 +161,7 @@ _DEMOS = {
     "legion": "legion_demo.py",
     "embodied": "embodied_hybrid_demo.py",
     "spatial": "spatial_novelview_demo.py",
+    "splat": "splat_transfer_demo.py",
     "scaling": "agent_scaling_bench.py",
 }
 

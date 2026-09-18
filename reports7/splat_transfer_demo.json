@@ -1,0 +1,75 @@
+{
+  "module": "udos7.spatial gaussian splatting + real/sim transfer",
+  "version": "v7.3.9",
+  "evidence_grade": "cpu-proto",
+  "gaussian_splat": {
+    "n_gaussians": 150,
+    "iters": 40,
+    "novel_view": {
+      "silhouette_iou": 0.7285,
+      "coverage": 1.0,
+      "precision": 0.7285,
+      "depth_mae": 0.2525
+    },
+    "loss_history": [
+      {
+        "iter": 0,
+        "loss": 1.7217025756835938,
+        "color_l1": 0.03354265168309212,
+        "depth_l1": 0.5065322518348694
+      },
+      {
+        "iter": 10,
+        "loss": 0.7274536490440369,
+        "color_l1": 0.03098425827920437,
+        "depth_l1": 0.18019001185894012
+      },
+      {
+        "iter": 20,
+        "loss": 0.6126267910003662,
+        "color_l1": 0.028750121593475342,
+        "depth_l1": 0.1463823765516281
+      },
+      {
+        "iter": 30,
+        "loss": 0.5694027543067932,
+        "color_l1": 0.02835034392774105,
+        "depth_l1": 0.13277381658554077
+      }
+    ]
+  },
+  "real_to_sim": {
+    "success_rate": 1.0,
+    "plane_intersecting_clusters": 2,
+    "planning_obstacle": [
+      [
+        0.902,
+        -0.506,
+        0.0
+      ],
+      0.703
+    ],
+    "true_plane_obstacles": 2
+  },
+  "sim_to_real": {
+    "naive": {
+      "success_rate": 0.5,
+      "mean_collisions": 0.5
+    },
+    "robust": {
+      "success_rate": 1.0,
+      "mean_collisions": 0.0
+    },
+    "margin": 0.22
+  },
+  "known_limits": [
+    "轴对齐尺度、无旋转协方差/EWA，静态场景",
+    "Real-to-Sim 全局规划仅覆盖单主障碍过门",
+    "真实世界用固定 seed 扰动合成代理，非真机/MuJoCo"
+  ],
+  "gates": [
+    "完整 3DGS 训练与实时渲染需 GPU",
+    "真实深度相机标定与多目采集需硬件",
+    "MuJoCo(-MJX) 接触与真机 Sim-to-Real 需 GPU/HPC"
+  ]
+}

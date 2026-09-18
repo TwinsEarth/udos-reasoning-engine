@@ -4,6 +4,19 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.3.9（高斯泼溅 3DGS-lite + Real-to-Sim / Sim-to-Real 闭环；cpu-proto）
+
+> 在 v7.3.8 显式几何之上补 Atlas 类世界模型的另外三块：可微高斯泼溅输出、真实到仿真的重建管线、仿真到真实的失配与鲁棒性。外部 3DGS/Atlas 指标不与本仓数字互证。
+
+- **Added `udos7/spatial/splat.py`**：轴对齐三维高斯 + 针孔一阶 footprint + 前到后 alpha 合成；TSDF 占据点初始化，Adam 拟合颜色/深度（150 高斯、40 步、36×28）。实测留出视角轮廓 IoU 0.729、覆盖率 1.00、深度 MAE 0.253（cpu-proto，非论文级 3DGS）。
+- **Added `udos7/spatial/transfer.py`**：
+  - 带噪观测（深度噪声/丢点、位姿抖动）→ TSDF → 6-连通聚类抽障碍球（z=0 平面截圆 + 合成真值标定的体素膨胀校正）；
+  - Real-to-Sim：平面相交障碍簇数 2/真值 2，主障碍重建 r≈0.70（真值 0.69），重建仿真中 v7.3.7 hybrid 控制 8 回合 100%；
+  - Sim-to-Real：规划/执行环境分离，有偏估计 + 扰动“真实代理”世界，朴素规划成功率 50%/均碰撞 0.50，半径膨胀裕量 0.22 的鲁棒规划 100%/0 碰撞。
+- **Added** `scripts7/splat_transfer_demo.py`（CLI `udos demo splat`）、报告、`docs7/SPLAT_TRANSFER_v7.3.9.md`。
+- **Tests** 新增 `tests7/test_v739_splat_transfer.py` 8 项（单高斯投影、拟合降损、新视角几何、噪声确定性与损失、平面障碍恢复、重建控制、裕量降碰撞、基准确定性与证据分级）。
+- **已知限制**：无旋转协方差/EWA、静态场景；Real-to-Sim 全局规划仅覆盖单主障碍过门；半径校准来自合成真值。闸门：GPU 完整 3DGS、真实相机标定、MuJoCo(-MJX)/真机迁移。
+
 ## v7.3.8（新视角预测与空间上下文 New View Prediction / Spatial Context；cpu-proto）
 
 > 对标 Atlas 类世界模型“给定带位姿的多视角观察，预测任意新视角”的基础任务；外部主张（AI-complete、Real/Sim-to-Sim 成本）仅作 unverified 参照。

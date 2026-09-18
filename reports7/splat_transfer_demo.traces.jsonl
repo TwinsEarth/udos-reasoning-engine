@@ -1,0 +1,1 @@
+{"ts": "2026-09-18T19:06:07", "service": "udos-engine", "trace_id": "cc181113aa464498", "span_id": "bb339b7c7b9446a0", "parent_id": null, "step": "spatial.splat_transfer", "status": "ok", "latency_ms": 19088.316, "token_usage": {"input": 0, "output": 0}, "attributes": {"version": "v7.3.9"}}
