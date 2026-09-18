@@ -4,6 +4,16 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.3.6（CLI 易用性：双击命令行菜单 + 根目录便捷入口；工具版）
+
+> 解决“CLI 已实现但藏在 bin/ 子目录、未加 PATH，小白不知道怎么用”的问题。CLI 能力本身在 v7.3.4 引入、v7.3.5 接入共享环境，本版只加入口与引导，引擎行为不变。
+
+- **Added 双击命令行菜单（无需记命令）**：仓库根 `UDOS-命令行菜单.bat`（Windows）与 `UDOS-命令行菜单.command`（macOS/Linux），数字选择：环境信息 / 跑 tests7 / 启动服务 / 健康检查 / 可观测六层演示 / Agent 军团演示 / 完整帮助 / 手动修复共享环境。
+- **Added 根目录便捷入口**：Windows `udos.bat <命令>`、macOS/Linux `./udos.sh <命令>`，自动转发到 `bin/udos(.bat)`；说明只有 `pip install -e .` 后才能在任意目录直接敲 `udos`。
+- **Docs**：`docs7/CLI_v7.3.md` 顶部新增“最快用法（不用记命令）”，明确双击菜单、相对路径命令与全局命令的区别。
+- **Tests**：新增 `tests7/test_v736_menu.py` 4 条（两平台菜单存在且接好命令、POSIX 菜单 `bash -n` 语法通过、根便捷入口转发与真实 `version` 调用）；**tests7 全回归 99 项通过**。
+- 说明：Windows `.bat` 运行时在 Linux 沙箱不可执行，仅做静态契约校验；POSIX 菜单与转发脚本已实际执行验证。
+
 ## v7.3.5（共享虚拟环境：torch 只装一次，多版本复用；工具版）
 
 > 解决“每个版本解压后都要重复安装 torch”的问题。统一改为用户主目录下的**共享虚拟环境**，

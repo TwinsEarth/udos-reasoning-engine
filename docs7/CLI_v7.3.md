@@ -1,5 +1,15 @@
 # UDOS Engine 跨平台命令行工具（v7.3.4+）
 
+## 最快用法（不用记命令）
+- **Windows**：双击仓库根目录的 `UDOS-命令行菜单.bat`，按数字选择（信息/测试/启动/健康检查/演示…）。
+- **macOS**：双击 `UDOS-命令行菜单.command`（首次被 Gatekeeper 拦截时，右键→打开，或
+  `xattr -dr com.apple.quarantine UDOS-命令行菜单.command`）。
+- 根目录便捷命令：Windows `udos.bat info`；macOS/Linux `./udos.sh info`。
+- 习惯完整 CLI：Windows 用 `bin\udos.bat <命令>`，macOS/Linux 用 `./bin/udos <命令>`。
+- 只有执行过 `pip install -e .` 之后，才能在任意目录直接敲 `udos <命令>`（否则请用上面的相对路径）。
+
+---
+
 一个统一入口 `udos`，在 **macOS / Linux / Windows** 上用法完全一致。
 实现为纯标准库的 Python 模块 `udos7.cli`，并提供原生包装脚本与 pip 入口。
 
