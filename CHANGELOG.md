@@ -4,6 +4,17 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.3.4（跨平台命令行工具 udos；功能版）
+
+> 性质：在 v7.3.3 基础上新增统一命令行入口，macOS/Linux/Windows 用法一致。预测与可观测内核行为不变。
+
+- **Added `udos7/cli.py` 跨平台 CLI（纯标准库）**：子命令 `version / info / serve / test / train / verify / demo / health / metrics / predict`；统一退出码（0 成功、1 运行/连接失败、2 参数或依赖缺失），便于 shell、批处理与 CI 串联。
+- **Added 原生包装脚本**：`bin/udos`（macOS/Linux，自动选用 `.venv-udos`/`.venv`，回退 python3）与 `bin/udos.bat`（Windows，自动选用 `.venv-win`，回退 PATH 上的 python）；`pyproject.toml` 注册 console_scripts，`pip install -e .` 后可直接用 `udos`。
+- **Added** `serve --auto-port`：首选端口被占用时自动绑定空闲端口，避免直接崩溃；`info` 输出平台/Python/torch/CUDA·MPS/跨平台资源/默认检查点是否存在（JSON）；`health/metrics/predict` 用 urllib 直连运行中引擎。
+- **Added** `docs7/CLI_v7.3.md` 命令手册（含 macOS/Windows 示例与预测请求样例），Windows 部署 README 增补 CLI 一节。
+- **Tests**：新增 `tests7/test_v733_cli.py` 14 条（版本/帮助/info、健康检查连不上返回 1、serve 派发与自动换端口、test 派发、demo 列举/非法名/obs-pro 真实跑通、predict 非法 JSON 返回 2、两平台包装脚本就位且可执行、console_scripts 注册）；**tests7 全回归 86 项通过**；真实启动服务后 `udos health/metrics` 端到端 rc=0。
+- 证据：CLI 行为 verified（CPU 实测）；Windows `.bat` 在 Linux 沙箱无法执行，仅做静态契约校验，逻辑与已实测的 macOS/Linux 包装器同构（标 cpu-static for the bat runtime）。
+
 ## v7.3.3（AI 可观测性加深：六层功能补齐 + 跨平台；功能版）
 
 > 性质：在 v7.3.0 可观测内核上按“3× 颗粒度”补齐生产栈缺口，新增 `udos7/observability/intelligence.py`

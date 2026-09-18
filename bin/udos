@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# UDOS Engine 命令行包装器（macOS / Linux）。
+# 放在仓库 bin/ 下，自动定位仓库根，优先使用一键部署创建的虚拟环境，无需手动 activate。
+set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+if [ -x "$ROOT/.venv-udos/bin/python" ]; then
+  PY="$ROOT/.venv-udos/bin/python"      # macOS 一键部署虚拟环境
+elif [ -x "$ROOT/.venv/bin/python" ]; then
+  PY="$ROOT/.venv/bin/python"           # 通用虚拟环境
+elif command -v python3 >/dev/null 2>&1; then
+  PY="$(command -v python3)"
+else
+  echo "[UDOS] 未找到 python3，请先安装 Python 3.10+（macOS 可用 brew install python）。" >&2
+  exit 1
+fi
+
+cd "$ROOT"
+exec "$PY" -m udos7.cli "$@"

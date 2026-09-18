@@ -5,17 +5,17 @@
     {
       "session_id": "s1",
       "traces": [
-        "94cf1a4b1f274c06",
-        "cffa127138b541eb"
+        "f49d1c35be214d34",
+        "2f7c5f27f58f46cf"
       ],
       "span_count": 4,
       "error_traces": 0,
-      "total_latency_ms": 0.155
+      "total_latency_ms": 0.136
     },
     {
       "session_id": "s2",
       "traces": [
-        "a29671b2509d4a9e"
+        "b93ee3e85c9d4763"
       ],
       "span_count": 2,
       "error_traces": 0,
@@ -73,15 +73,8 @@
     {
       "name": "request-0",
       "depth": 0,
-      "total_ms": 0.061,
-      "self_ms": 0.058,
-      "status": "ok"
-    },
-    {
-      "name": "request-1",
-      "depth": 0,
-      "total_ms": 0.033,
-      "self_ms": 0.031,
+      "total_ms": 0.054,
+      "self_ms": 0.052,
       "status": "ok"
     },
     {
@@ -92,10 +85,10 @@
       "status": "ok"
     },
     {
-      "name": "llm.generate",
-      "depth": 1,
-      "total_ms": 0.003,
-      "self_ms": 0.003,
+      "name": "request-1",
+      "depth": 0,
+      "total_ms": 0.028,
+      "self_ms": 0.027,
       "status": "ok"
     },
     {
@@ -111,6 +104,13 @@
       "total_ms": 0.001,
       "self_ms": 0.001,
       "status": "ok"
+    },
+    {
+      "name": "llm.generate",
+      "depth": 1,
+      "total_ms": 0.001,
+      "self_ms": 0.001,
+      "status": "ok"
     }
   ],
   "otlp_spans_exported": 6,
@@ -118,10 +118,10 @@
   "resource": {
     "platform": "linux",
     "cpu_count": 4,
-    "rss_mb": 226.5,
+    "rss_mb": 385.6,
     "net": {
-      "bytes_recv": 407980,
-      "bytes_sent": 284165
+      "bytes_recv": 376945,
+      "bytes_sent": 258252
     },
     "gpu_utilization": null,
     "gpu_memory_mb": null,

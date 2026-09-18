@@ -37,3 +37,16 @@
   Linux 读 `/proc`，macOS 走 `resource`/`psutil`，Windows 走 `ctypes`(psapi)/`psutil`。
 - GPU 利用率/显存、eBPF、OTel Collector gRPC 直推属于部署/资源闸门：
   Windows 上同样需要 NVIDIA 驱动 + GPU 或独立 Collector，未配置时相关字段诚实留 `null`。
+
+## 五、命令行工具 udos（v7.3.4+）
+除双击一键启动外，还提供跨平台命令行（cmd / PowerShell，仓库根目录下）：
+```
+bin\udos.bat version      查看版本
+bin\udos.bat info         查看环境/资源
+bin\udos.bat test         跑回归测试
+bin\udos.bat serve        启动引擎（--auto-port 端口占用自动换）
+bin\udos.bat health       健康检查
+bin\udos.bat demo --list  列出演示（obs-pro 为可观测六层演示）
+bin\udos.bat predict 请求.json --pretty   向运行中引擎提交预测
+```
+完整说明见 docs7/CLI_v7.3.md。
