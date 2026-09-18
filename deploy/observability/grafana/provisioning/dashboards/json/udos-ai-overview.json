@@ -1,0 +1,22 @@
+{
+  "title": "UDOS AI Observability Overview",
+  "schemaVersion": 39,
+  "version": 1,
+  "timezone": "browser",
+  "refresh": "15s",
+  "panels": [
+    {"type": "timeseries", "title": "TTFT p95 (ms)", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+     "targets": [{"expr": "histogram_quantile(0.95, rate(gen_ai_client_ttft_ms_bucket[5m]))"}]},
+    {"type": "timeseries", "title": "ITL p95 (ms/token)", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+     "targets": [{"expr": "histogram_quantile(0.95, rate(gen_ai_client_itl_ms_bucket[5m]))"}]},
+    {"type": "timeseries", "title": "Token 吞吐 (in/out, rate)", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+     "targets": [{"expr": "rate(gen_ai_usage_input_tokens_total[5m])"},
+                 {"expr": "rate(gen_ai_usage_output_tokens_total[5m])"}]},
+    {"type": "timeseries", "title": "工具调用量(按状态)", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+     "targets": [{"expr": "sum by (status) (rate(gen_ai_tool_calls_total[5m]))"}]},
+    {"type": "stat", "title": "队列深度", "gridPos": {"h": 4, "w": 8, "x": 0, "y": 16},
+     "targets": [{"expr": "gen_ai_queue_depth"}]},
+    {"type": "table", "title": "错误(按类型)", "gridPos": {"h": 8, "w": 16, "x": 8, "y": 16},
+     "targets": [{"expr": "sum by (type) (rate(gen_ai_errors_total[5m]))", "format": "table"}]}
+  ]
+}

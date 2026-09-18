@@ -1,0 +1,38 @@
+# UDOS v7.3 AI 可观测性：Prometheus + Grafana 自托管栈（开源自建路径）
+# 用法：
+#   1) 引擎侧暴露 /metrics：PYTHONPATH=. python3 -c
+#      "from udos7.observability.metrics import MetricsRegistry,start_prometheus_exporter;
+#       r=MetricsRegistry(); start_prometheus_exporter(r, '0.0.0.0', 8778); import time; time.sleep(10**9)"
+#      （生产中应由服务进程持有同一个 registry；本 compose 的抓取目标见 prometheus.yml）
+#   2) docker compose up -d
+#   3) 打开 http://localhost:3000 （admin/admin，首登改密），UDOS AI 看板已预置。
+# 证据级：配置本身有效；真实容器部署/抓取在本 CPU 沙箱未运行，标 unverified-on-infra。
+services:
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prom_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  prom_data:
+  grafana_data:

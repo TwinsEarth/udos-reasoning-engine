@@ -4,6 +4,20 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.3.0（AI 可观测性体系；功能版）
+
+> 性质：在 v7.2.2 协同/军团之上新增**引擎内零依赖可观测层 `udos7/observability/`**，预测内核与协同层行为不变（默认 checkpoint 仍 v7.0.3）。对齐 OpenTelemetry GenAI 语义约定，落地“采集→管道→存储→分析→告警→治理”分层；引擎内可跑部分为 verified，Prometheus/Grafana/OTel Collector/eBPF/GPU/LLM-as-judge 给真实配置但标 unverified-on-infra（需 Docker/GPU/key）。
+
+- **Added `observability/semconv.py`**：版本化语义契约 `gen-ai-semconv-v1-udos1`，标准 `gen_ai.*`（system/request.model/operation.name/usage.input|output_tokens/prompt/completion）与 UDOS 扩展 `udos.*` 前缀分离；定义 RAG/Agent 七段流水线。
+- **Added `observability/tracing.py`**：Trace→嵌套 Span 树（contextvars 维护父栈）、属性/事件/Token 用量/状态、延迟；结构化 JSONL 日志（强制 trace_id/span_id/parent_id/step/status/latency_ms/token_usage）；`redact()` 邮箱/手机/身份证 PII 脱敏；`tail_sample_keep()` 尾采样（错误/超延迟/命中PII 100% 保留，成功 trace 按 trace_id 稳定哈希默认采 10%）。
+- **Added `observability/metrics.py`**：Counter/Gauge/Histogram（p50/p95/p99）；AI 专用指标 TTFT、ITL、Token in/out、工具调用量与延迟、错误按类型、队列深度；`resource_usage()`（CPU 核数、RSS 可测，GPU 诚实留 null、evidence=cpu-proto）；`render_prometheus()` 文本 0.0.4 + `start_prometheus_exporter()` stdlib `/metrics` 与 `/health`（HTTP 抓取实测 verified）；七项 SLI 清单与多窗口**燃尽率告警** `burn_rate/alert_burn_rate`（page 14.4/14.4、ticket 6/1）。
+- **Added `observability/evaluation.py`**：`OnlineEvaluator` 按采样率对生产流量跑确定性 judge——格式合规（JSON 可解析）、接地性（claim 命中上下文，cpu-proto）、工具调用正确性、毒性阻断词；滚动窗口**质量回归告警**；`LLMJudge` 无供应商 key 即 `GateError`（AL4），不提供伪评分。
+- **Added `observability/instrument.py`**：`run_pipeline()` 对 意图分类→查询重写→检索→重排序→上下文压缩→LLM生成→事实校验 建嵌套 Span；`AgentRegistry`（名字/用途/状态/进程）；`observe_goal()` 非侵入包裹协调器 run 并记录决策数/失败数；`UDOS_OTEL_AUTO=1` + `enable_autoinstrument()` **零代码自动埋点**协调器 run（可 disable 还原）。
+- **Added `deploy/observability/`**：Prometheus+Grafana docker-compose、抓取配置、TTFT/ITL/错误率 SLO 告警规则、预置 Grafana 看板与数据源、中文部署 README（开源自建路径 + OTel/Langfuse 双轨说明）。
+- **Added `scripts7/observability_demo.py`**：20 条模拟请求端到端跑通追踪→指标→尾采样→JSONL→质量评估→Prom 文本，产 `reports7/observability_demo.{json,prom,jsonl}`。
+- **Tests**：新增 `tests7/test_v73_observability.py` 12 条（脱敏、嵌套树/JSONL、尾采样三保留一丢弃、百分位、Prom 文本、HTTP /metrics 实测、资源快照、燃尽率 page/ticket、四类 judge、质量回归、LLM judge 门禁、流水线 Span 顺序、Agent 注册表、自动埋点开关还原），全绿。
+- **诚实边界**：本版不运行容器/eBPF/GPU，不接 LLM 评分与商业审核；这些路径留空或门禁，绝不用 CPU 原型数字冒充生产可观测能力。复现与分层映射见 `docs7/OBSERVABILITY_v7.3.md`。
+
 ## v7.2.2（多 Agent 协同内核 + Agent 军团与 Scaling Law；功能版）
 
 > 性质：在 v7.0.3 统一预测内核之上新增**协同层 `udos7/agents/`**，预测权重/checkpoint 不变（默认仍 `worldmodel_v7.0.3.pt`）。本版一次落地两个里程碑：**v7.1.1 多 Agent 协同**（专家/分类/分工/讨论/碰撞/提名/投票/选优 + 共享记忆 + 协调器）与 **v7.2.2 Agent 军团**（岗位/部门/组织/领域层级、完全异步 fan-out、Agent 版 Scaling Law 实测、AL0–AL5 门禁）。所有定量结论为 CPU 固定 seed 实测，证据分级 verified / cpu-proto / unverified，原始数据 `reports7/agent_scaling.json`。

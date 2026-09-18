@@ -1,0 +1,61 @@
+# HELP gen_ai_usage_input_tokens_total Input tokens
+# TYPE gen_ai_usage_input_tokens_total counter
+gen_ai_usage_input_tokens_total{model="udos-cpu"} 1600.0
+# HELP gen_ai_usage_output_tokens_total Output tokens
+# TYPE gen_ai_usage_output_tokens_total counter
+gen_ai_usage_output_tokens_total{model="udos-cpu"} 2400.0
+# HELP gen_ai_tool_calls_total Tool calls by status
+# TYPE gen_ai_tool_calls_total counter
+gen_ai_tool_calls_total{status="error",tool="kb_search"} 2.0
+gen_ai_tool_calls_total{status="success",tool="kb_search"} 18.0
+# HELP gen_ai_errors_total Errors by type
+# TYPE gen_ai_errors_total counter
+gen_ai_errors_total{type="rate_limit_429"} 2.0
+# HELP gen_ai_queue_depth Pending inference requests
+# TYPE gen_ai_queue_depth gauge
+gen_ai_queue_depth 3.0
+# HELP gen_ai_client_ttft_ms Time to first token (ms)
+# TYPE gen_ai_client_ttft_ms histogram
+gen_ai_client_ttft_ms_bucket{le="5",model="udos-cpu"} 0
+gen_ai_client_ttft_ms_bucket{le="10",model="udos-cpu"} 0
+gen_ai_client_ttft_ms_bucket{le="25",model="udos-cpu"} 0
+gen_ai_client_ttft_ms_bucket{le="50",model="udos-cpu"} 0
+gen_ai_client_ttft_ms_bucket{le="100",model="udos-cpu"} 0
+gen_ai_client_ttft_ms_bucket{le="250",model="udos-cpu"} 0
+gen_ai_client_ttft_ms_bucket{le="500",model="udos-cpu"} 7
+gen_ai_client_ttft_ms_bucket{le="1000",model="udos-cpu"} 18
+gen_ai_client_ttft_ms_bucket{le="2500",model="udos-cpu"} 20
+gen_ai_client_ttft_ms_bucket{le="5000",model="udos-cpu"} 20
+gen_ai_client_ttft_ms_bucket{le="+Inf",model="udos-cpu"} 20
+gen_ai_client_ttft_ms_sum{model="udos-cpu"} 13311.52
+gen_ai_client_ttft_ms_count{model="udos-cpu"} 20
+# HELP gen_ai_client_itl_ms Inter-token latency (ms)
+# TYPE gen_ai_client_itl_ms histogram
+gen_ai_client_itl_ms_bucket{le="5",model="udos-cpu"} 0
+gen_ai_client_itl_ms_bucket{le="10",model="udos-cpu"} 0
+gen_ai_client_itl_ms_bucket{le="25",model="udos-cpu"} 0
+gen_ai_client_itl_ms_bucket{le="50",model="udos-cpu"} 12
+gen_ai_client_itl_ms_bucket{le="100",model="udos-cpu"} 20
+gen_ai_client_itl_ms_bucket{le="250",model="udos-cpu"} 20
+gen_ai_client_itl_ms_bucket{le="500",model="udos-cpu"} 20
+gen_ai_client_itl_ms_bucket{le="1000",model="udos-cpu"} 20
+gen_ai_client_itl_ms_bucket{le="2500",model="udos-cpu"} 20
+gen_ai_client_itl_ms_bucket{le="5000",model="udos-cpu"} 20
+gen_ai_client_itl_ms_bucket{le="+Inf",model="udos-cpu"} 20
+gen_ai_client_itl_ms_sum{model="udos-cpu"} 950.74
+gen_ai_client_itl_ms_count{model="udos-cpu"} 20
+# HELP gen_ai_tool_latency_ms Tool call latency (ms)
+# TYPE gen_ai_tool_latency_ms histogram
+gen_ai_tool_latency_ms_bucket{le="5",tool="kb_search"} 0
+gen_ai_tool_latency_ms_bucket{le="10",tool="kb_search"} 6
+gen_ai_tool_latency_ms_bucket{le="25",tool="kb_search"} 20
+gen_ai_tool_latency_ms_bucket{le="50",tool="kb_search"} 20
+gen_ai_tool_latency_ms_bucket{le="100",tool="kb_search"} 20
+gen_ai_tool_latency_ms_bucket{le="250",tool="kb_search"} 20
+gen_ai_tool_latency_ms_bucket{le="500",tool="kb_search"} 20
+gen_ai_tool_latency_ms_bucket{le="1000",tool="kb_search"} 20
+gen_ai_tool_latency_ms_bucket{le="2500",tool="kb_search"} 20
+gen_ai_tool_latency_ms_bucket{le="5000",tool="kb_search"} 20
+gen_ai_tool_latency_ms_bucket{le="+Inf",tool="kb_search"} 20
+gen_ai_tool_latency_ms_sum{tool="kb_search"} 284.15
+gen_ai_tool_latency_ms_count{tool="kb_search"} 20

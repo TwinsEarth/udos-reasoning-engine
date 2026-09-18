@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+# 尾采样/错误预算燃尽率告警（与 metrics.alert_burn_rate 同口径的 PromQL 版）
+rule_files:
+  - alerts.yml
+
+scrape_configs:
+  - job_name: udos-engine
+    metrics_path: /metrics
+    static_configs:
+      # 引擎内置 stdlib exporter（start_prometheus_exporter）。
+      # Linux 宿主用 host.docker.internal 需 extra_hosts，或直接填宿主 IP。
+      - targets: ["host.docker.internal:8778"]
+        labels:
+          service: udos-engine
+          evidence: cpu-proto

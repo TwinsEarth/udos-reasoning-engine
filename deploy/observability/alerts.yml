@@ -1,0 +1,22 @@
+groups:
+  - name: udos-ai-slo
+    rules:
+      # TTFT p95 > 2s
+      - alert: UDOS_TTFT_p95_High
+        expr: histogram_quantile(0.95, rate(gen_ai_client_ttft_ms_bucket[5m])) > 2000
+        for: 5m
+        labels: {severity: page}
+        annotations: {summary: "首 Token 延迟 p95 超过 2s"}
+      # ITL p95 > 80ms/token（暴露厂商降级）
+      - alert: UDOS_ITL_p95_High
+        expr: histogram_quantile(0.95, rate(gen_ai_client_itl_ms_bucket[5m])) > 80
+        for: 5m
+        labels: {severity: ticket}
+        annotations: {summary: "Token 间延迟 p95 超过 80ms/token"}
+      # 错误率（按 type 标签拆分，区分限流与服务故障）
+      - alert: UDOS_ErrorRate_High
+        expr: sum(rate(gen_ai_errors_total[5m]))
+          / sum(rate(gen_ai_tool_calls_total[5m])) > 0.01
+        for: 10m
+        labels: {severity: page}
+        annotations: {summary: "AI 调用错误率超过 1% 预算"}

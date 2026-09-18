@@ -7,7 +7,7 @@ ctx 求和）→ 唯一残差循环世界模型 → 解码 → 按 α 校准的�
 """
 from __future__ import annotations
 
-__version__ = "7.2.2"
+__version__ = "7.3.0"
 
 from .contracts import (DT, HORIZON, KINDS, SCENE_DIM, SCENE_PARAM_NAMES,
                         STATE_DIM, WINDOW, EvidenceGrade, StateContract)

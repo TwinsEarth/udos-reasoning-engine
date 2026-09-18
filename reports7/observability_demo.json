@@ -1,0 +1,22 @@
+{
+  "schema": "udos7.observability_demo/v1",
+  "evidence": "verified",
+  "requests": 20,
+  "traces_kept_by_tail_sampling": 4,
+  "structured_log_lines": 160,
+  "quality_mean": 0.9,
+  "quality_regression": null,
+  "resource": {
+    "cpu_count": 4,
+    "rss_mb": 227.4,
+    "gpu_utilization": null,
+    "gpu_memory_mb": null,
+    "evidence": "cpu-proto"
+  },
+  "semconv": "gen-ai-semconv-v1-udos1",
+  "agents_registered": [],
+  "notes": [
+    "引擎内零依赖：追踪/指标/脱敏/尾采样/确定性评估均为 verified。",
+    "Prometheus/Grafana/OTel Collector/eBPF/GPU/LLM-as-judge 为部署/资源闸门。"
+  ]
+}
