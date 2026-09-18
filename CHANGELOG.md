@@ -4,6 +4,19 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.3.7（具身混合控制：语义层 × 动作先验 TopK 候选 + 闭环接管；cpu-proto）
+
+> 对标公开仿真报告中「通用大模型语义判断/修正 + VLA（π0.5）物理动作先验」的混合架构，在引擎 6 维状态契约上做可复跑 CPU 原型；外部报告数字（62.6 分/48%/14.4% 接管/Token 量）仅作 UNVERIFIED 参照，不与本仓数字互证。
+
+- **Added `udos7/embodied/`**：
+  - `env.py` 三维点质量闭环环境：有序目标、球形障碍接触（可终止失败）、中途扰动；任务套件 reach_free / ordered_sort / contact_gate / disturb_recover。
+  - `hybrid.py` `MotionPrior`（K=32 候选动作段，PD 机动+横向避让）+ `SemanticCritic`（确定性规则语义裁决：顺序/进展/碰撞/努力度；hybrid 含 1 条短接管程序），三模式 direct / motion / hybrid；输出成功率、分数、碰撞、接管率、Token 代理量；接可观测 Tracer（motion.propose / semantic.critic / intervention 事件）。
+  - `benchmark.py` 三模式×四任务配对对比，证据等级 cpu-proto，外部口径单列 external_reference(unverified)。
+- **实测（CPU，seed 1000–1009，每任务 10 回合，可复现）**：hybrid 成功率 100%/均分 100/零碰撞/接管率 5%；direct 75%/77（contact_gate 0%）；motion 53%/69.6（ordered_sort 0%、disturb 10%）。语义层强在顺序与恢复、动作先验强在接触，互补性成立。Token 代理 hybrid 约为 direct 一半（方向同外部报告；proxy 非真实计费）。
+- **Added** `scripts7/embodied_hybrid_demo.py`（CLI `udos demo embodied`）、`reports7/embodied_hybrid_demo.{json,traces.jsonl}`、`docs7/EMBODIED_HYBRID_v7.3.7.md`。
+- **Tests** 新增 `tests7/test_v737_hybrid.py` 9 条（状态契约/有序目标/碰撞终止/K 候选/裁决选无碰撞/接管率边界/同 seed 确定性/套件互补性/Token 方向/Tracing）。
+- **闸门**：LLM 语义裁判需 API key（token proxy→真实 usage）；MuJoCo(-MJX) 接触与学习型 π/世界模型需 GPU/HPC，未在本版冒充。
+
 ## v7.3.6（CLI 易用性：双击命令行菜单 + 根目录便捷入口；工具版）
 
 > 解决“CLI 已实现但藏在 bin/ 子目录、未加 PATH，小白不知道怎么用”的问题。CLI 能力本身在 v7.3.4 引入、v7.3.5 接入共享环境，本版只加入口与引导，引擎行为不变。

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "udos-reasoning-engine"
-version = "7.3.6"
+version = "7.3.7"
 description = "UDOS unified world-model engine v7 (single residual recurrent predictor + calibrated uncertainty); legacy udos/ 5.5.5 frozen"
 requires-python = ">=3.10"
 dependencies = ["torch>=2.0", "numpy>=1.24", "huggingface_hub>=0.20"]
