@@ -1,0 +1,7 @@
+# UDOS 引擎 CPU 依赖（与 bin/udos-env.py 保持一致；torch 锁定同一版本，跨版本共享环境）
+# Linux/Windows 的 torch 走 CPU 专用索引：https://download.pytorch.org/whl/cpu
+# macOS 直接用 PyPI 官方 wheel（arm64 含 MPS）。
+torch==2.14.0
+numpy>=1.26
+huggingface_hub>=0.20
+pytest>=7

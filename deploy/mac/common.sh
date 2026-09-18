@@ -8,7 +8,15 @@ set -o pipefail
 # ---------- 路径（自动定位仓库根，不依赖双击时的当前目录）----------
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # .../deploy/mac
 ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"                        # 仓库根
-VENV="$ROOT/.venv-udos"
+# 共享环境：默认放在用户主目录 ~/.udos/venv，多个 UDOS 版本只装一次 torch；
+# 可用 UDOS_VENV 自定义；若旧版本在仓库内建过 .venv-udos 则继续沿用。
+if [ -n "${UDOS_VENV:-}" ]; then
+  VENV="$UDOS_VENV"
+elif [ -x "$ROOT/.venv-udos/bin/python" ]; then
+  VENV="$ROOT/.venv-udos"
+else
+  VENV="$HOME/.udos/venv"
+fi
 PYBIN="$VENV/bin/python"
 REQ_MAC="$SCRIPT_DIR/requirements-mac.txt"
 LOG_DIR="$SCRIPT_DIR/logs"

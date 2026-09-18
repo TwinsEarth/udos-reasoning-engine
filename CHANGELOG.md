@@ -4,6 +4,22 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.3.5（共享虚拟环境：torch 只装一次，多版本复用；工具版）
+
+> 解决“每个版本解压后都要重复安装 torch”的问题。统一改为用户主目录下的**共享虚拟环境**，
+> 并锁定 torch 同一版本；仅当依赖清单哈希变化时才增量安装。引擎/CLI 行为不变。
+
+- **Added `bin/udos-env.py` 跨平台环境引导（纯标准库）**：
+  - 环境位置解析：`UDOS_VENV` 环境变量 > 主目录共享环境（Windows `%USERPROFILE%\.udos\venv`，macOS/Linux `~/.udos/venv`）> 旧的仓库内 `.venv-udos/.venv-win`（已存在则沿用，不强迫迁移）。
+  - 幂等 provision：以 `BOOTSTRAP_VERSION + 依赖清单` 的 sha256 作为标记（`<venv>/udos_provision.json`），并实际 `import torch,numpy,huggingface_hub,pytest` 自检；标记匹配且导入成功则**零安装直接复用**，否则才增量安装。
+  - **锁定 `torch==2.14.0`**：Linux/Windows 走 CPU 专用索引 download.pytorch.org/whl/cpu（无 CUDA、体积小），macOS 走 PyPI 官方 wheel（arm64 含 MPS）；轻依赖官方源失败回退清华镜像。
+  - 子命令 `ensure/path/info`；`ensure` 末行打印 venv 的 python 路径供包装脚本捕获。
+- **Changed 包装器与一键脚本统一走共享环境**：`bin/udos`、`bin/udos.bat` 通过引导脚本取解释器；Windows 一键启动不再在每个版本目录建 `.venv-win`；mac `deploy/mac/common.sh` 的 VENV 默认改为 `~/.udos/venv`（尊重 `UDOS_VENV`，沿用旧 `.venv-udos`）。
+- **Added** `deploy/requirements-cpu.txt` 作为可读/可手动安装的依赖清单（与引导脚本同源同版本）。
+- **Docs**：`docs7/CLI_v7.3.md` 增补“一次安装、多版本共享”说明与自定义环境/离线建议。
+- **Tests**：新增 `tests7/test_v735_shared_env.py` 9 条（环境解析优先级、平台路径、标记哈希、旧环境沿用、标记+导入双条件、info JSON），同步更新 CLI 包装器契约断言；**tests7 全回归 95 项通过**。
+- **实测（Linux CPU）**：首次 ensure 建共享环境并写标记、第二次 ensure 静默零安装、`UDOS_VENV=... ./bin/udos version` 确认走共享环境；Windows `.bat` 运行时在沙箱不可执行，仅静态契约校验（与已实测引导逻辑同构）。
+
 ## v7.3.4（跨平台命令行工具 udos；功能版）
 
 > 性质：在 v7.3.3 基础上新增统一命令行入口，macOS/Linux/Windows 用法一致。预测与可观测内核行为不变。

@@ -73,3 +73,17 @@ udos predict window.json --pretty   # 终端 2
 - CLI 本身零第三方强依赖；`serve/train/test/demo` 仍需安装引擎依赖（torch/numpy/pytest）。
 - Windows 首次使用若执行 `.bat` 被 SmartScreen 拦截，点“更多信息→仍要运行”。
 - 卸载或换 Python 后，删除仓库内 `.venv-win`（Windows）/`.venv-udos`（mac）后重跑一键脚本即可重建。
+
+## 一次安装、多版本共享（v7.3.5+）
+torch 等重依赖**只安装一次**：所有 UDOS 版本共用主目录下的一个虚拟环境，升级/换版本目录默认零安装。
+- 共享环境位置：
+  - Windows：`%USERPROFILE%\.udos\venv`
+  - macOS / Linux：`~/.udos/venv`
+- 想换位置：设置环境变量 `UDOS_VENV`（Windows：`setx UDOS_VENV D:\udos-venv`；macOS：`export UDOS_VENV=~/udos-venv`）。
+- 何时会再安装：仅当依赖清单变化（标记文件 `udos_provision.json` 内哈希不匹配）或导入自检失败时，才增量安装；torch 锁定 `2.14.0` CPU/macOS 官方 wheel。
+- 旧版本在仓库内建过 `.venv-udos` / `.venv-win` 的，会被自动沿用，不重复下载。
+- 手动一次性安装（可选）：
+  - Linux/Windows CPU：`pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cpu`
+  - macOS：`pip install torch==2.14.0`
+  - 其余：`pip install -r deploy/requirements-cpu.txt`
+- 离线/内网：可预先在一台联网机执行一次，再把整个共享环境目录或 pip 缓存（`pip cache dir`）拷贝到同平台机器。

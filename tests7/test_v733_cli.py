@@ -114,9 +114,10 @@ def test_native_wrappers_present():
     win = ROOT / "bin" / "udos.bat"
     assert posix.exists() and os.access(posix, os.X_OK)
     p = posix.read_text(encoding="utf-8")
-    assert "udos7.cli" in p and ".venv-udos" in p
+    assert "udos7.cli" in p and "udos-env.py" in p  # 走共享环境引导
     w = win.read_text(encoding="utf-8")
-    assert "udos7.cli" in w and ".venv-win" in w
+    assert "udos7.cli" in w and "udos-env.py" in w
+    assert (ROOT / "bin" / "udos-env.py").exists()
 
 
 def test_console_script_registered():

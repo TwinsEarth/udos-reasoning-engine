@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
 # UDOS Engine 命令行包装器（macOS / Linux）。
-# 放在仓库 bin/ 下，自动定位仓库根，优先使用一键部署创建的虚拟环境，无需手动 activate。
+# 通过 bin/udos-env.py 复用“用户主目录下的共享虚拟环境”，多个 UDOS 版本只装一次 torch。
+# 可用环境变量 UDOS_VENV 指定自定义环境路径。
 set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-if [ -x "$ROOT/.venv-udos/bin/python" ]; then
-  PY="$ROOT/.venv-udos/bin/python"      # macOS 一键部署虚拟环境
-elif [ -x "$ROOT/.venv/bin/python" ]; then
-  PY="$ROOT/.venv/bin/python"           # 通用虚拟环境
-elif command -v python3 >/dev/null 2>&1; then
-  PY="$(command -v python3)"
-else
-  echo "[UDOS] 未找到 python3，请先安装 Python 3.10+（macOS 可用 brew install python）。" >&2
-  exit 1
+# 选择一个可用的基础 Python（仅用于引导，真正运行在共享 venv 内）
+if command -v python3 >/dev/null 2>&1; then BASE="$(command -v python3)";
+elif command -v python >/dev/null 2>&1; then BASE="$(command -v python)";
+else echo "[UDOS] 未找到 python3，请先安装 Python 3.10+。" >&2; exit 1; fi
+
+# ensure 的进度打印到 stdout，最后一行是 venv 的 python 路径
+PY="$( "$BASE" "$ROOT/bin/udos-env.py" ensure | tail -n 1 )"
+if [ -z "$PY" ] || [ ! -x "$PY" ]; then
+  echo "[UDOS] 共享环境引导失败，回退系统 Python。" >&2
+  PY="$BASE"
 fi
 
 cd "$ROOT"
