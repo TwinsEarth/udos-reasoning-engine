@@ -1,0 +1,152 @@
+{
+  "module": "udos7.spatial novel-view prediction",
+  "version": "v7.3.8",
+  "evidence_grade": "cpu-proto",
+  "config": {
+    "n_train_views": 8,
+    "n_novel_views": 6,
+    "voxel": 0.1,
+    "representation": "TSDF voxel (explicit)"
+  },
+  "results": {
+    "single_view": {
+      "silhouette_iou": 0.7147,
+      "coverage": 0.7456,
+      "precision": 0.9472,
+      "depth_mae": 0.3186,
+      "gt_hit_ratio": 0.1694
+    },
+    "multi_view": {
+      "silhouette_iou": 0.8897,
+      "coverage": 0.9957,
+      "precision": 0.8931,
+      "depth_mae": 0.0924,
+      "gt_hit_ratio": 0.1694
+    }
+  },
+  "per_view_rows": [
+    {
+      "context": "single_view",
+      "metrics": {
+        "silhouette_iou": 0.7147,
+        "coverage": 0.7456,
+        "precision": 0.9472,
+        "depth_mae": 0.3186,
+        "gt_hit_ratio": 0.1694
+      },
+      "per_view": [
+        {
+          "silhouette_iou": 0.8747,
+          "coverage": 0.9263,
+          "precision": 0.9401,
+          "depth_mae": 0.1481,
+          "gt_hit_ratio": 0.1962
+        },
+        {
+          "silhouette_iou": 0.6435,
+          "coverage": 0.6677,
+          "precision": 0.9467,
+          "depth_mae": 0.1613,
+          "gt_hit_ratio": 0.1846
+        },
+        {
+          "silhouette_iou": 0.6149,
+          "coverage": 0.6463,
+          "precision": 0.9268,
+          "depth_mae": 0.4528,
+          "gt_hit_ratio": 0.1701
+        },
+        {
+          "silhouette_iou": 0.7194,
+          "coverage": 0.7398,
+          "precision": 0.963,
+          "depth_mae": 0.6378,
+          "gt_hit_ratio": 0.1424
+        },
+        {
+          "silhouette_iou": 0.5614,
+          "coverage": 0.5755,
+          "precision": 0.9581,
+          "depth_mae": 0.3801,
+          "gt_hit_ratio": 0.1609
+        },
+        {
+          "silhouette_iou": 0.8741,
+          "coverage": 0.9179,
+          "precision": 0.9483,
+          "depth_mae": 0.1313,
+          "gt_hit_ratio": 0.162
+        }
+      ]
+    },
+    {
+      "context": "multi_view",
+      "metrics": {
+        "silhouette_iou": 0.8897,
+        "coverage": 0.9957,
+        "precision": 0.8931,
+        "depth_mae": 0.0924,
+        "gt_hit_ratio": 0.1694
+      },
+      "per_view": [
+        {
+          "silhouette_iou": 0.9035,
+          "coverage": 0.9941,
+          "precision": 0.9084,
+          "depth_mae": 0.1202,
+          "gt_hit_ratio": 0.1962
+        },
+        {
+          "silhouette_iou": 0.8827,
+          "coverage": 0.9906,
+          "precision": 0.8901,
+          "depth_mae": 0.0788,
+          "gt_hit_ratio": 0.1846
+        },
+        {
+          "silhouette_iou": 0.8988,
+          "coverage": 0.9966,
+          "precision": 0.9015,
+          "depth_mae": 0.0858,
+          "gt_hit_ratio": 0.1701
+        },
+        {
+          "silhouette_iou": 0.8849,
+          "coverage": 1.0,
+          "precision": 0.8849,
+          "depth_mae": 0.0769,
+          "gt_hit_ratio": 0.1424
+        },
+        {
+          "silhouette_iou": 0.877,
+          "coverage": 1.0,
+          "precision": 0.877,
+          "depth_mae": 0.0933,
+          "gt_hit_ratio": 0.1609
+        },
+        {
+          "silhouette_iou": 0.891,
+          "coverage": 0.9929,
+          "precision": 0.8968,
+          "depth_mae": 0.0997,
+          "gt_hit_ratio": 0.162
+        }
+      ]
+    }
+  ],
+  "finding": "多视角空间上下文在留出视角上的轮廓 IoU/覆盖率显著高于单视角，证明新视角预测依赖相机几何与三维一致性。",
+  "external_reference": {
+    "source": "Atlas（世界模型）公开资料转述：新视角预测、空间上下文、高斯泼溅、Real/Sim-to-Real",
+    "grade": "unverified",
+    "claims": [
+      "新视角预测被认为与下一 token 预测一样是潜在的 AI-complete 基础任务",
+      "高斯泼溅渲染快但难表达动态，Atlas 支持但不再强制依赖",
+      "可压缩 Real-to-Sim 成本、减少对真实扫描环境模型的依赖"
+    ],
+    "note": "均为外部主张，非本仓实测；本基准只验证显式几何机制。"
+  },
+  "gates": [
+    "学习型 NeRF/3DGS 新视角合成与真实图像需 GPU（v7.3.9 给 CPU 版高斯泼溅原型）",
+    "真实相机标定/多目采集需硬件"
+  ]
+}

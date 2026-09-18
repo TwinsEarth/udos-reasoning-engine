@@ -11,7 +11,7 @@
     test        运行回归测试（tests7 / tests / all）
     train       训练 v7 预测器（透传给 scripts7/train_v7.py）
     verify      运行 v7 验证与证据报告（scripts7/verify_v7.py）
-    demo        运行内置演示：obs / obs-pro / legion / scaling / embodied
+    demo        运行内置演示：obs / obs-pro / legion / scaling / embodied / spatial / splat
     health      探测运行中引擎的健康检查
     predict     向运行中的引擎提交一段窗口 JSON 做预测
     metrics     拉取运行中引擎的指标 JSON
@@ -160,6 +160,7 @@ _DEMOS = {
     "obs-pro": "observability_pro_demo.py",
     "legion": "legion_demo.py",
     "embodied": "embodied_hybrid_demo.py",
+    "spatial": "spatial_novelview_demo.py",
     "scaling": "agent_scaling_bench.py",
 }
 

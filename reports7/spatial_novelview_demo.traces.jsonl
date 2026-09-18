@@ -1,0 +1,1 @@
+{"ts": "2026-09-18T18:54:40", "service": "udos-engine", "trace_id": "1947772ceafb4a30", "span_id": "8038a7cde7c2428a", "parent_id": null, "step": "spatial.novelview_benchmark", "status": "ok", "latency_ms": 309.177, "token_usage": {"input": 0, "output": 0}, "attributes": {"n_train": 8}}

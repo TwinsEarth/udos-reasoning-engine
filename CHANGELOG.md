@@ -4,6 +4,20 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.3.8（新视角预测与空间上下文 New View Prediction / Spatial Context；cpu-proto）
+
+> 对标 Atlas 类世界模型“给定带位姿的多视角观察，预测任意新视角”的基础任务；外部主张（AI-complete、Real/Sim-to-Sim 成本）仅作 unverified 参照。
+
+- **Added `udos7/spatial/`**：
+  - `camera.py` 针孔相机（look-at 位姿、投影/反投影闭合、逐像素世界视线）；
+  - `scene.py` 球体基元合成场景 + 解析光线求交，渲染真值深度/颜色/掩膜；
+  - `fusion.py` `VoxelContext` 多视角深度 TSDF 体素融合（显式空间上下文）+ 任意新视角深度预测 + IoU/覆盖率/精确率/深度 MAE；
+  - `benchmark.py` 8 训练视角 / 6 错开留出视角，单视角 vs 多视角对比。
+- **实测（CPU 可复现）**：多视角融合在留出视角上轮廓 IoU 0.890、覆盖率 0.996、深度 MAE 0.092，显著优于单视角 0.715/0.746/0.319；机制上验证新视角预测依赖相机几何与三维一致性。
+- **Added** `scripts7/spatial_novelview_demo.py`（CLI `udos demo spatial`）、报告、`docs7/SPATIAL_NOVELVIEW_v7.3.8.md`。
+- **Tests** 新增 `tests7/test_v738_novelview.py` 7 项（投影反投影闭合、渲染可见、融合占据、训练位姿一致性、多视角优于单视角、指标完全匹配、确定性）。
+- **闸门**：真实多目采集/标定、GPU 上 NeRF/3DGS 训练、动态场景；学习型高斯泼溅见 v7.3.9（CPU 原型）。
+
 ## v7.3.7（具身混合控制：语义层 × 动作先验 TopK 候选 + 闭环接管；cpu-proto）
 
 > 对标公开仿真报告中「通用大模型语义判断/修正 + VLA（π0.5）物理动作先验」的混合架构，在引擎 6 维状态契约上做可复跑 CPU 原型；外部报告数字（62.6 分/48%/14.4% 接管/Token 量）仅作 UNVERIFIED 参照，不与本仓数字互证。
