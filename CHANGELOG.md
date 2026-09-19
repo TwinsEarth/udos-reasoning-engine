@@ -4,6 +4,12 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.4.8（多层熔断、隔离与回滚；cpu-proto）
+
+- 新增 `udos7/topology/circuit_breaker.py`：Agent 级滑动窗口错误率断路器（closed/open/half_open + 冷却探测）、子矩阵级隔离比例熔断、全局 kill-switch；故障时在途工单登记并改派健康节点。
+- TraceLedger 快照/回滚：派发前记录长度与末哈希，故障后截断半截状态并重派，回滚后哈希链仍可验。
+- Tests 新增 `tests7/test_v748_circuit_breaker.py` 11 项。
+
 ## v7.4.7（分布式停止共识 BFT-lite；cpu-proto）
 
 - 新增 `udos7/topology/consensus.py`：委员会对 stop/continue 投票，n≥3f+1、2f+1 法定人数；拜占庭谎报无法对抗诚实多数，同轮重复投票（equivocation）检出并整轮作废，超 f 缺席触发 view_change 而非提前终止/无限等待。
