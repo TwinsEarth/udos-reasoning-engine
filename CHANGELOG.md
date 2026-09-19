@@ -4,6 +4,12 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.4.7（分布式停止共识 BFT-lite；cpu-proto）
+
+- 新增 `udos7/topology/consensus.py`：委员会对 stop/continue 投票，n≥3f+1、2f+1 法定人数；拜占庭谎报无法对抗诚实多数，同轮重复投票（equivocation）检出并整轮作废，超 f 缺席触发 view_change 而非提前终止/无限等待。
+- 安全性断言：诚实票总数 n−f 下冲突决定不可能各凑齐法定人数；非委员会投票者被拒；签名占位确定性可验。
+- Tests 新增 `tests7/test_v747_consensus.py` 10 项。
+
 ## v7.4.6（分层混合拓扑：b 叉聚合树与百万级扇出基准；cpu-proto）
 
 - 新增 `udos7/topology/hierarchy.py`：顶层 Orchestrator / 中层 Handoff / 底层 Swarm 的 b 叉聚合树；小规模逐边显式模拟并与闭式计数互验，大规模（≤100 万 Agent）用已验证公式外推（explicit/analytical 分级标注）。
