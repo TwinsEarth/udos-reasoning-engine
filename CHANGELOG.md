@@ -4,6 +4,13 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.4.1（多智能体拓扑内核：Orchestrator/Handoff/Swarm；cpu-proto）
+
+- 新增 `udos7/topology/`：统一工单契约（triage→specialist→qa 三阶段、内置真值）、可注入故障（drop_context/byzantine/duplicate/crash）的 AgentSpec、TraceEvent 父事件链与 RunMetrics（成功数/消息数/跳数/重复劳动/Owner 登记）。
+- 三种拓扑跑**同一套处理器**：星型中心派发（2 消息/阶段）、链式 Transfer 接力（1 移交/阶段）、网状 contract-net 广播-投标-授标（负载均衡）。
+- 实测（12 工单干净舰队）三拓扑均 12/12 成功；网状消息量 > 星型 > 链式；QA 双 Agent 在网状下被均衡使用。
+- Tests 新增 `tests7/test_v741_topologies.py` 8 项。
+
 ## v7.4.0（第一人称经验数据飞轮：Coverage-aware 采集 + State Coverage + Yield；cpu-proto）
 
 > 对标 egocentric data boom（Maxinsights/Dyna-2/GENE-26.5 公开报道，数字均 unverified）：把“人类经验→training-ready 数据”的工业管线在引擎内做成可跑、可对照的 CPU 原型。
