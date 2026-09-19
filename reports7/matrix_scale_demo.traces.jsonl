@@ -1,0 +1,1 @@
+{"ts": "2026-09-19T20:58:45", "service": "udos-engine", "trace_id": "a92b61d32b884046", "span_id": "7d0ba5f2c4ca4775", "parent_id": null, "step": "topology.matrix", "status": "ok", "latency_ms": 6.057, "token_usage": {"input": 0, "output": 0}, "attributes": {"version": "v7.5.0"}}

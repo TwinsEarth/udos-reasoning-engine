@@ -4,6 +4,15 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.5.0（百万级 Agent 矩阵集成收口；cpu-proto）
+
+- 新增 `udos7/topology/matrix.py`：Stigmergy 黑板派单 → 分层 specialist 执行（熔断节点排除）→ 失败回滚 trace 并释放改派 → BFT-lite QA 委员会 2f+1 验收 → 内部市场按验收结算 → 哈希链 Trace + 治理审计的端到端闭环。
+- 实测（24 工单，7 人 QA 含 2 拜占庭，3 个故障 specialist：crash/drop_context/byzantine 各一）：24/24 验收收口，3 个故障节点全部隔离，5 次返工改派，治理 ok、市场守恒、Trace 链完整；全领域故障+零重试预算时 kill-switch 触发并如实报告未收口，不冒充成功。
+- 规模基准（b=8，显式模拟与闭式互验后外推）：百万级目标档实际 2,396,745 节点/7 层；星型中心扇入 20,971,520 条消息、串行 8,388,608 轮；分层每节点最大扇入恒 9、14 轮收敛。
+- 新增 `scripts7/matrix_demo.py` 与 `reports7/matrix_scale_demo.json(.traces.jsonl)`；CLI `udos demo matrix`；`topology/__init__.py` 全量导出 68 个符号；新增 `docs7/TOPOLOGY_MATRIX_v7.5.0.md`。
+- 修复版本号单一来源：此前 `udos7/__init__.py` 与 `pyproject.toml` 停在 `v7.4.2`（带 v 前缀导致 v7.4.3 起的版本替换未生效），现统一为 `7.5.0`，CLI 显示自动带 v 前缀。
+- Tests 新增 `tests7/test_v750_matrix.py` 9 项；**全量回归 236 项全绿**（拓扑层 v7.4.1–v7.5.0 共新增 103 项）。
+
 ## v7.4.10（Stigmergy 环境媒介协作；cpu-proto）
 
 - 新增 `udos7/topology/stigmergy.py`：共享黑板 + 原子认领（同一任务不会被两人认领，杜绝重复劳动）+ 完成标记 + 信息素蒸发/加权引导；Agent 间零直接通信。

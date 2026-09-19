@@ -1,0 +1,227 @@
+{
+  "evidence_grade": "cpu-proto",
+  "clean": {
+    "evidence_grade": "cpu-proto",
+    "n_orders": 24,
+    "accepted": 24,
+    "qa_rounds": 24,
+    "retries": 0,
+    "isolated_agents": [],
+    "tripped_groups": [],
+    "kill_switch": false,
+    "board_messages": 48,
+    "market": {
+      "total_budget": 240.0,
+      "total_paid": 240.0,
+      "slashed": 0.0,
+      "balance_sum": 240.0,
+      "holds": 0.0,
+      "conserved": true
+    },
+    "governance": {
+      "ok": true,
+      "state_loss": 0,
+      "duplicate_work": 0,
+      "no_closer": 0,
+      "premature_completion": 0,
+      "unbounded": 0,
+      "trace_gaps": 0
+    },
+    "trace_verified": true,
+    "trace_len": 48,
+    "scale": [
+      {
+        "target_agents": 10,
+        "actual_agents": 73,
+        "depth": 2,
+        "units": 256,
+        "grade": "explicit",
+        "star_center_fanin": 640,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 256,
+        "layered_rounds": 4,
+        "explicit_total_messages": 400,
+        "formula_total_messages": 400,
+        "explicit_matches_formula": true
+      },
+      {
+        "target_agents": 100,
+        "actual_agents": 585,
+        "depth": 3,
+        "units": 2048,
+        "grade": "explicit",
+        "star_center_fanin": 5120,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 2048,
+        "layered_rounds": 6,
+        "explicit_total_messages": 3216,
+        "formula_total_messages": 3216,
+        "explicit_matches_formula": true
+      },
+      {
+        "target_agents": 1000,
+        "actual_agents": 4681,
+        "depth": 4,
+        "units": 16384,
+        "grade": "analytical",
+        "star_center_fanin": 40960,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 16384,
+        "layered_rounds": 8
+      },
+      {
+        "target_agents": 10000,
+        "actual_agents": 37449,
+        "depth": 5,
+        "units": 131072,
+        "grade": "analytical",
+        "star_center_fanin": 327680,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 131072,
+        "layered_rounds": 10
+      },
+      {
+        "target_agents": 100000,
+        "actual_agents": 299593,
+        "depth": 6,
+        "units": 1048576,
+        "grade": "analytical",
+        "star_center_fanin": 2621440,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 1048576,
+        "layered_rounds": 12
+      },
+      {
+        "target_agents": 1000000,
+        "actual_agents": 2396745,
+        "depth": 7,
+        "units": 8388608,
+        "grade": "analytical",
+        "star_center_fanin": 20971520,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 8388608,
+        "layered_rounds": 14
+      }
+    ]
+  },
+  "stressed": {
+    "evidence_grade": "cpu-proto",
+    "n_orders": 24,
+    "accepted": 24,
+    "qa_rounds": 25,
+    "retries": 5,
+    "isolated_agents": [
+      "spec-kinematics-0",
+      "spec-spatial-1",
+      "spec-dataflywheel-2"
+    ],
+    "tripped_groups": [],
+    "kill_switch": false,
+    "board_messages": 54,
+    "market": {
+      "total_budget": 240.0,
+      "total_paid": 240.0,
+      "slashed": 0.0,
+      "balance_sum": 240.0,
+      "holds": 0.0,
+      "conserved": true
+    },
+    "governance": {
+      "ok": true,
+      "state_loss": 0,
+      "duplicate_work": 0,
+      "no_closer": 0,
+      "premature_completion": 0,
+      "unbounded": 0,
+      "trace_gaps": 0
+    },
+    "trace_verified": true,
+    "trace_len": 50,
+    "scale": [
+      {
+        "target_agents": 10,
+        "actual_agents": 73,
+        "depth": 2,
+        "units": 256,
+        "grade": "explicit",
+        "star_center_fanin": 640,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 256,
+        "layered_rounds": 4,
+        "explicit_total_messages": 400,
+        "formula_total_messages": 400,
+        "explicit_matches_formula": true
+      },
+      {
+        "target_agents": 100,
+        "actual_agents": 585,
+        "depth": 3,
+        "units": 2048,
+        "grade": "explicit",
+        "star_center_fanin": 5120,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 2048,
+        "layered_rounds": 6,
+        "explicit_total_messages": 3216,
+        "formula_total_messages": 3216,
+        "explicit_matches_formula": true
+      },
+      {
+        "target_agents": 1000,
+        "actual_agents": 4681,
+        "depth": 4,
+        "units": 16384,
+        "grade": "analytical",
+        "star_center_fanin": 40960,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 16384,
+        "layered_rounds": 8
+      },
+      {
+        "target_agents": 10000,
+        "actual_agents": 37449,
+        "depth": 5,
+        "units": 131072,
+        "grade": "analytical",
+        "star_center_fanin": 327680,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 131072,
+        "layered_rounds": 10
+      },
+      {
+        "target_agents": 100000,
+        "actual_agents": 299593,
+        "depth": 6,
+        "units": 1048576,
+        "grade": "analytical",
+        "star_center_fanin": 2621440,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 1048576,
+        "layered_rounds": 12
+      },
+      {
+        "target_agents": 1000000,
+        "actual_agents": 2396745,
+        "depth": 7,
+        "units": 8388608,
+        "grade": "analytical",
+        "star_center_fanin": 20971520,
+        "layered_max_fanin": 9,
+        "layered_top_fanin": 8,
+        "star_rounds": 8388608,
+        "layered_rounds": 14
+      }
+    ]
+  }
+}
