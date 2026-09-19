@@ -4,6 +4,12 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.4.10（Stigmergy 环境媒介协作；cpu-proto）
+
+- 新增 `udos7/topology/stigmergy.py`：共享黑板 + 原子认领（同一任务不会被两人认领，杜绝重复劳动）+ 完成标记 + 信息素蒸发/加权引导；Agent 间零直接通信。
+- 实测（30 任务/5 Agent）：stigmergy 每任务 2 条痕迹共 60 条消息，contract-net 协商每任务 8 条共 240 条；40 任务/4 Agent 负载差 ≤1；高信息素任务被优先选中。
+- Tests 新增 `tests7/test_v7410_stigmergy.py` 8 项。
+
 ## v7.4.9（Agent 内部市场与贡献结算；cpu-proto）
 
 - 新增 `udos7/topology/market.py`：任务投标按质量/成本性价比授标（质量门槛、负载兜底）；贡献台账仅对验收通过的唯一完成者付费，重复劳动不付费，拜占庭/被拒结果不付费并可罚没保证金。
