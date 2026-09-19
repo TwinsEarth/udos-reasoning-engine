@@ -4,6 +4,12 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.4.3（Transfer Bundle：交接即责任转移；cpu-proto）
+
+- 新增 `udos7/topology/transfer.py`：Goal/Context/Done/Todo/Trace/Owner 六字段交接包；validate 机械校验缺失字段、空 todo、done/todo 重叠；handoff 仅在包完整时转移 Owner，否则返回类型化缺口、责任不转移。
+- advance 推进阶段并留痕，replay 仅凭交接包重建工作状态；故障注入验证 drop_context（缺 result）在交接点被拦截。
+- Tests 新增 `tests7/test_v743_transfer.py` 9 项。
+
 ## v7.4.2（Agent-as-Tool：专家 Agent 工具化封装；cpu-proto）
 
 - 新增 `udos7/topology/agent_tool.py`：ToolInput/ToolEnvelope 固定契约（report/confidence/error_type/trace_ref），主 Agent 只收信封、不收专家内部 trace，上下文增量有界。
