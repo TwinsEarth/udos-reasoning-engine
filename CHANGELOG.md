@@ -4,6 +4,12 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.4.5（拓扑决策树：控制需求驱动选型；cpu-proto）
+
+- 新增 `udos7/topology/decision.py`：流程明确→Orchestrator；需专家接力→Handoff；能力可封装→Agent-as-Tool；开放探索→Swarm；目标不清或高风险自治→escalate（高风险 Swarm 不放任）。
+- 自治度等级随分支单调；规模 ≥1000 且需接力/探索时建议分层混合（v7.4.6 落地）。
+- Tests 新增 `tests7/test_v745_decision.py` 12 项（含全分支参数化与高风险护栏）。
+
 ## v7.4.4（Owner/Trace/Stop Condition 治理：三类失败机械审计；cpu-proto）
 
 - 新增 `udos7/topology/governance.py`：哈希链追加式 TraceLedger（篡改/断链可检出）、StopCondition（完成谓词+最大跳数，区分正常停止/无限循环）、audit_run 机械检测状态丢失、重复劳动、无人收口、提前终止。
