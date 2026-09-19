@@ -4,6 +4,12 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.4.9（Agent 内部市场与贡献结算；cpu-proto）
+
+- 新增 `udos7/topology/market.py`：任务投标按质量/成本性价比授标（质量门槛、负载兜底）；贡献台账仅对验收通过的唯一完成者付费，重复劳动不付费，拜占庭/被拒结果不付费并可罚没保证金。
+- 守恒断言：总支出 ≤ 总预算，余额和 = 已付 − 罚没，未付预算留在池内；实测 3 任务混合（通过/拒付罚没/通过）守恒成立。
+- Tests 新增 `tests7/test_v749_market.py` 10 项。
+
 ## v7.4.8（多层熔断、隔离与回滚；cpu-proto）
 
 - 新增 `udos7/topology/circuit_breaker.py`：Agent 级滑动窗口错误率断路器（closed/open/half_open + 冷却探测）、子矩阵级隔离比例熔断、全局 kill-switch；故障时在途工单登记并改派健康节点。
