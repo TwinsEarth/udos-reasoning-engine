@@ -4,6 +4,12 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.4.6（分层混合拓扑：b 叉聚合树与百万级扇出基准；cpu-proto）
+
+- 新增 `udos7/topology/hierarchy.py`：顶层 Orchestrator / 中层 Handoff / 底层 Swarm 的 b 叉聚合树；小规模逐边显式模拟并与闭式计数互验，大规模（≤100 万 Agent）用已验证公式外推（explicit/analytical 分级标注）。
+- 实测（branch=8，100 万 Agent）：星型中心扇入 >100 万消息、串行轮次=单元数；分层每节点最大扇入恒为 b+1=9、顶层只见 8 条领域汇总、并行轮次 2log_b N=14。
+- Tests 新增 `tests7/test_v746_hierarchy.py` 9 项（含显式/公式一致性、对数轮次、百万外推）。
+
 ## v7.4.5（拓扑决策树：控制需求驱动选型；cpu-proto）
 
 - 新增 `udos7/topology/decision.py`：流程明确→Orchestrator；需专家接力→Handoff；能力可封装→Agent-as-Tool；开放探索→Swarm；目标不清或高风险自治→escalate（高风险 Swarm 不放任）。
