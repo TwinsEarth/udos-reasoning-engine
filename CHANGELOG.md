@@ -4,6 +4,12 @@
 定量结论以对应 `docs/VERIFICATION_v*.md` 与 `benchmarks/results/*.json` 为准。
 v7 重写线（`udos7/`，纯引擎，不含 AGI/ASI 倒计时网站——网站属独立 v6.2 线）的结论以 `docs7/VERIFICATION.md` 与 `reports7/*.json` 为准。
 
+## v7.4.2（Agent-as-Tool：专家 Agent 工具化封装；cpu-proto）
+
+- 新增 `udos7/topology/agent_tool.py`：ToolInput/ToolEnvelope 固定契约（report/confidence/error_type/trace_ref），主 Agent 只收信封、不收专家内部 trace，上下文增量有界。
+- 类型化错误：bad_input / capability_gap / internal_error / timeout / low_confidence；专家内部异常不外泄；置信度门槛可配；专家实现可独立迭代而契约不变。
+- Tests 新增 `tests7/test_v742_agent_tool.py` 8 项。
+
 ## v7.4.1（多智能体拓扑内核：Orchestrator/Handoff/Swarm；cpu-proto）
 
 - 新增 `udos7/topology/`：统一工单契约（triage→specialist→qa 三阶段、内置真值）、可注入故障（drop_context/byzantine/duplicate/crash）的 AgentSpec、TraceEvent 父事件链与 RunMetrics（成功数/消息数/跳数/重复劳动/Owner 登记）。
